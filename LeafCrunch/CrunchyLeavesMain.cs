@@ -20,7 +20,7 @@ namespace LeafCrunch
             Objects = new List<GenericGameObject>()
             {
                 Player,
-                new Room(pbBackground),
+                new Room(pbLevel1), //eventually make it so it comes with leaves in a list from ext configuration maybe.
                 //random leaves
             };
             timer1.Start();
@@ -43,25 +43,55 @@ namespace LeafCrunch
                 ChangeSpeed(e);
             }
 
+            public override void OnKeyUp(KeyEventArgs e)
+            {
+                ChangeSpeed(e, true);
+            }
+
             protected void UpdateLocation()
             {
                 if (Control == null) return;
 
-                //we probably don't need to care about speed y actually in this particular iteration
                 Control.Left += Speed.vx;
                 if (Control.Left <= 0)
                 {
                     while (Control.Left <= 0) Control.Left++;
                 }
+
+                Control.Top += Speed.vy;
+                if (Control.Top <= 0)
+                {
+                    while (Control.Top <= 0) Control.Top++;
+                }
+
                 //this should probably be moved to collision checking code but right now let's just do it like this.
                 if ((Control.Left + Control.Width) >= GlobalVars.RoomWidth)
                 {
                     while ((Control.Left + Control.Width) >= GlobalVars.RoomWidth) Control.Left--;
                 }
+                if ((Control.Top + Control.Height) >= GlobalVars.RoomHeight)
+                {
+                    while ((Control.Top + Control.Height) >= GlobalVars.RoomHeight) Control.Top--;
+                }
             }
 
-            protected void ChangeSpeed(KeyEventArgs e)
+            //the only problem with this is we can't move diagonally for some reason.
+            //I think we need to just record what key is down and store it and until we get that key up event
+            protected void ChangeSpeed(KeyEventArgs e, bool stop = false)
             {
+                if (stop)
+                {
+                    if (e.KeyCode == Keys.Left || e.KeyCode == Keys.Right)
+                    {
+                        Speed.vx = 0;
+                    }
+                    if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down)
+                    {
+                        Speed.vy = 0;
+                    }
+                    return;
+                }
+
                 if (e.KeyCode == Keys.Left)
                 {
                     if (Speed.vx > 0) Speed.vx = 0; //change direction
@@ -78,13 +108,13 @@ namespace LeafCrunch
                 }
                 if (e.KeyCode == Keys.Up)
                 {
-                    if (Speed.vy < 75)
-                        Speed.vy += 5;
+                    if (Speed.vy > 0) Speed.vy = 0; //change direction
+                        Speed.vy -= 10;
                 }
                 else if (e.KeyCode == Keys.Down)
                 {
-                    if (Speed.vy > 0)
-                        Speed.vy -= 5;
+                    if (Speed.vy < 0) Speed.vy = 0; //change direction
+                        Speed.vy += 10;
                 }
             }
         }
@@ -137,6 +167,7 @@ namespace LeafCrunch
 
             public virtual void Update() { }
             public virtual void OnKeyPress(KeyEventArgs e) { }
+            public virtual void OnKeyUp(KeyEventArgs e) { }
         }
 
         public class Speed
@@ -159,6 +190,15 @@ namespace LeafCrunch
             foreach (var obj in Objects)
             {
                 obj.Update();
+            }
+        }
+
+        private void CrunchyLeavesMain_KeyUp(object sender, KeyEventArgs e)
+        {
+            //go through list of objects and fire off key up events
+            foreach (var obj in Objects)
+            {
+                obj.OnKeyUp(e);
             }
         }
     }
