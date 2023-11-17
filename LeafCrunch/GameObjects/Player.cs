@@ -6,6 +6,17 @@ namespace LeafCrunch.GameObjects
 {
     public class Player : InteractiveGameObject
     {
+        private int _maxRainbowPoints = 100;
+        private int _rainbowPoints = 0;
+        public int RainbowPoints
+        {
+            get { return _rainbowPoints; }
+            set {
+                if (value > _maxRainbowPoints) _rainbowPoints = _maxRainbowPoints;
+                else _rainbowPoints = value; 
+            }
+        }
+
         public Player(Control control) : base(control)
         {
         }

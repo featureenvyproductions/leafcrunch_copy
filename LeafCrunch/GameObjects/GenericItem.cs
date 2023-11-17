@@ -23,7 +23,7 @@ namespace LeafCrunch.GameObjects
         public GenericItem(Control control) : base(control)
         {
             Active = false;
-            Operation = null;
+           // Operation = null;
             MarkedForDeletion = false;
         }
 
@@ -121,6 +121,11 @@ namespace LeafCrunch.GameObjects
         {
         }
 
+        public InstantItem(Control control, Operation operation)
+            : base(control)
+        {
+        }
+
         public override void HandleResult(Result result)
         {
             //regardless of the outcome, the item is used so we delete it
@@ -137,6 +142,8 @@ namespace LeafCrunch.GameObjects
         }
     }
 
+    //this would be like when i have cooler stuff like pine cones and they give you a point multiplier or something
+    //for a limited time
     public class TemporaryItem : GenericItem
     {
         private int _ticks = 10000;
@@ -167,6 +174,113 @@ namespace LeafCrunch.GameObjects
             if (!Active || Ticks <= 0 || Operation == null) return;
 
             HandleResult(Operation.Execute());
+        }
+    }
+
+
+    #region Too many fucking comments
+    //some simple items to start
+    //leaves
+    //if you stand on a leaf and press enter
+    //it becomes active
+    //although I'm not sure who decides that yet
+    //since each object can only occupy a spot, it's probably better to have the player loop through and see if it's colliding
+    //with an object. then we'll stop checking all the objects most of the time before going through the lot of them
+    //if every object checks for the player, I always have to check every object
+    //there's probably a better way to do this but I'm too stupid to know what it is right now
+    //OH you know what might be a good way to do this since I'm planning on keeping everything the same size rn
+    //divide my board up into virtual tiles and calculate what tile the player is on
+    //and calculate when a leaf is initialized what tile it's on (since the board doesn't really change size either)
+    //and then I can see if the player and board are on the same tiles.
+    //we can get more granular with this later too and make the tiles smaller and have like board regions and then tile regions and then
+    //partial tile regions.
+    //maybe I'll do like quadrants and tiles idk. tiles for now and then we can do better later
+    //we can also use that thing where we just search half the things for a tile index match
+    //and then keep halving the list
+
+
+    #endregion
+    //ok so the way this works is that the rainbow bar reflects the player's rainbow points
+    //and the leaf operates on the player to produce that result
+    //when the operation is complete the leaf can be removed from the list of room items
+    public abstract class Leaf : InstantItem
+    {
+        protected static int _pointIncrement = 10;
+
+        public Leaf(Control control) : base(control)
+        {
+        }
+
+        public Leaf(Control control, Operation operation)
+            : base(control, operation)
+        {
+        }
+
+        //what we'll ultimately use as the operation
+        public static Result PointChange(Player player)
+        {
+            player.RainbowPoints += _pointIncrement;
+            return new Result() { Value = true };
+        }
+    }
+
+    public class GreenLeaf : Leaf
+    {
+        //god it's annoying that have to have this constructor everywhere why did i do this
+        public GreenLeaf(Control control) : base(control)
+        {
+            _pointIncrement = 1;
+        }
+
+        public GreenLeaf(Control control, Operation operation)
+            : base(control, operation)
+        {
+            _pointIncrement = 1;
+        }
+    }
+
+    public class YellowLeaf : Leaf
+    {
+        //god it's annoying that have to have this constructor everywhere why did i do this
+        public YellowLeaf(Control control) : base(control)
+        {
+            _pointIncrement = 5;
+        }
+
+        public YellowLeaf(Control control, Operation operation)
+            : base(control, operation)
+        {
+            _pointIncrement = 5;
+        }
+    }
+
+    public class OrangeLeaf : Leaf
+    {
+        //god it's annoying that have to have this constructor everywhere why did i do this
+        public OrangeLeaf(Control control) : base(control)
+        {
+            _pointIncrement = 10;
+        }
+
+        public OrangeLeaf(Control control, Operation operation)
+            : base(control, operation)
+        {
+            _pointIncrement = 10;
+        }
+    }
+
+    public class RedLeaf : Leaf
+    {
+        //god it's annoying that have to have this constructor everywhere why did i do this
+        public RedLeaf(Control control) : base(control)
+        {
+            _pointIncrement = 15;
+        }
+
+        public RedLeaf(Control control, Operation operation)
+            : base(control, operation)
+        {
+            _pointIncrement = 15;
         }
     }
 }
