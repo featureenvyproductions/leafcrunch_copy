@@ -52,8 +52,13 @@
     <Compile Include="CrunchyLeavesMain.Designer.cs">
       <DependentUpon>CrunchyLeavesMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="GameObjects\GenericGameObject.cs" />
+    <Compile Include="GameObjects\InteractiveGameObject.cs" />
+    <Compile Include="GameObjects\Player.cs" />
+    <Compile Include="GameObjects\Room.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\CommonProperties.cs" />
     <EmbeddedResource Include="CrunchyLeavesMain.resx">
       <DependentUpon>CrunchyLeavesMain.cs</DependentUpon>
     </EmbeddedResource>
