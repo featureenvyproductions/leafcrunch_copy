@@ -20,6 +20,14 @@ namespace LeafCrunch.GameObjects
     //temporary - executes the operation on the target immediately but the effect changes with each tick (or it just lasts for a certain number of ticks)
     public class GenericItem : InteractiveGameObject
     {
+        private Keys _activationKey = Keys.None; //if we keep this as none, it means just being on the same tile will activate it
+
+        public Keys ActivationKey
+        {
+            get { return _activationKey; }
+            set { _activationKey = value; }
+        }
+
         public GenericItem(Control control) : base(control)
         {
             Active = false;

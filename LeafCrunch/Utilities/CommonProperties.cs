@@ -10,6 +10,9 @@ namespace LeafCrunch.Utilities
     {
         public static int RoomWidth { get; set; }
         public static int RoomHeight { get; set; }
+
+        public static int RoomTileSizeW { get; set; }
+        public static int RoomTileSizeH { get; set; }
     }
 
     public class Speed

@@ -1,18 +1,82 @@
 ﻿using LeafCrunch.Utilities;
+using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace LeafCrunch.GameObjects
 {
     public class Room : GenericGameObject
     {
-        public Room(Control control) : base(control)
+        public Room(Control control) : base(control) //tbd we need a list of items maybe?
         {
             GlobalVars.RoomWidth = control.Width;
             GlobalVars.RoomHeight = control.Height;
+            GlobalVars.RoomTileSizeW = 32; //for now
+            GlobalVars.RoomTileSizeH = 32;
         }
+
+        //i guess we should know about the player
+        public Player Player { get; set; }
 
         public override void Update()
         {
+            PerformItemOperations();
+            //should we check afterwards to make sure we didn't miss anything marked for deletion?
+            //or do it as we cycle through?
+            //idk if any solution is really perfect here
+            CleanUpItems();
         }
+
+        List<GenericItem> Items = new List<GenericItem>();
+
+        protected bool ItemActiveKeyPressed(GenericItem i) => i.ActivationKey == Keys.None || ActiveKeys.Contains(i.ActivationKey);
+
+        protected bool ItemTileActive(GenericItem i) => i.TileIndex == Player.TileIndex;
+
+        protected bool IsItemActive(GenericItem i)
+        {
+            return i.Active || (ItemTileActive(i) && ItemActiveKeyPressed(i));
+        }
+
+        protected void CleanUpItems() => Items.RemoveAll(i => i.MarkedForDeletion);
+
+        //the room SHOULD know about the player right
+        public void PerformItemOperations()
+        {
+            //look at the items in the room
+            var activeItems = Items.Where(i => i != null && IsItemActive(i));
+            //then execute the operation
+
+            foreach (var i in activeItems)
+            {
+                i.Update();
+            }
+        }
+
+        private List<Keys> _activeKeys = new List<Keys>();
+        List<Keys> ActiveKeys
+        {
+            get
+            {
+                return _activeKeys;
+            }
+
+            set
+            {
+                _activeKeys = value;
+            }
+        }
+
+        public override void OnKeyPress(KeyEventArgs e)
+        {
+            if (!ActiveKeys.Contains(e.KeyCode))
+                ActiveKeys.Add(e.KeyCode);
+        }
+
+        public override void OnKeyUp(KeyEventArgs e)
+        {
+            ActiveKeys.Remove(e.KeyCode);
+        }
+
     }
 }
