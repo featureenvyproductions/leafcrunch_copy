@@ -35,17 +35,35 @@ namespace LeafCrunch
 
             public override void Update()
             {
+                UpdateSpeed();
                 UpdateLocation();
             }
 
+            private List<Keys> _activeKeys = new List<Keys>();
+            List<Keys> ActiveKeys 
+            {
+                get
+                {
+                   return _activeKeys;
+                }
+
+                set
+                { 
+                    _activeKeys = value;
+                } 
+            }
+            
             public override void OnKeyPress(KeyEventArgs e)
             {
-                ChangeSpeed(e);
+                //ChangeSpeed(e);
+                if (!ActiveKeys.Contains(e.KeyCode))
+                    ActiveKeys.Add(e.KeyCode);
             }
 
             public override void OnKeyUp(KeyEventArgs e)
             {
-                ChangeSpeed(e, true);
+                //ChangeSpeed(e, true);
+                ActiveKeys.Remove(e.KeyCode);
             }
 
             protected void UpdateLocation()
@@ -75,29 +93,14 @@ namespace LeafCrunch
                 }
             }
 
-            //the only problem with this is we can't move diagonally for some reason.
-            //I think we need to just record what key is down and store it and until we get that key up event
-            protected void ChangeSpeed(KeyEventArgs e, bool stop = false)
+            protected void UpdateVx()
             {
-                if (stop)
-                {
-                    if (e.KeyCode == Keys.Left || e.KeyCode == Keys.Right)
-                    {
-                        Speed.vx = 0;
-                    }
-                    if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down)
-                    {
-                        Speed.vy = 0;
-                    }
-                    return;
-                }
-
-                if (e.KeyCode == Keys.Left)
+                if (ActiveKeys.Contains(Keys.Left))
                 {
                     if (Speed.vx > 0) Speed.vx = 0; //change direction
                     Speed.vx -= 10;
                 }
-                else if (e.KeyCode == Keys.Right)
+                else if (ActiveKeys.Contains(Keys.Right))
                 {
                     if (Speed.vx < 0) Speed.vx = 0; //change direction
                     Speed.vx += 10;
@@ -106,16 +109,30 @@ namespace LeafCrunch
                 {
                     Speed.vx = 0;
                 }
-                if (e.KeyCode == Keys.Up)
+            }
+
+            protected void UpdateVy()
+            {
+                if (ActiveKeys.Contains(Keys.Up))
                 {
                     if (Speed.vy > 0) Speed.vy = 0; //change direction
-                        Speed.vy -= 10;
+                    Speed.vy -= 10;
                 }
-                else if (e.KeyCode == Keys.Down)
+                else if (ActiveKeys.Contains(Keys.Down))
                 {
                     if (Speed.vy < 0) Speed.vy = 0; //change direction
-                        Speed.vy += 10;
+                    Speed.vy += 10;
                 }
+                else
+                {
+                    Speed.vy = 0;
+                }
+            }
+            
+            protected void UpdateSpeed()
+            {
+                UpdateVx();
+                UpdateVy();
             }
         }
 
