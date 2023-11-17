@@ -88,13 +88,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Images\Other\" />
-    <Folder Include="Images\PointItems\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Images\Player\player_static.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Images\Background\level1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\PointItems\greenleaf.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

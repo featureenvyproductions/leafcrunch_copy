@@ -27,7 +27,7 @@ namespace LeafCrunch.GameObjects
             CleanUpItems();
         }
 
-        List<GenericItem> Items = new List<GenericItem>();
+        public List<GenericItem> Items = new List<GenericItem>();
 
         protected bool ItemActiveKeyPressed(GenericItem i) => i.ActivationKey == Keys.None || ActiveKeys.Contains(i.ActivationKey);
 

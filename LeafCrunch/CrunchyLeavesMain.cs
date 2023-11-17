@@ -12,11 +12,22 @@ namespace LeafCrunch
         {
             InitializeComponent();
             var Player = new Player(pbPlayer);
+            var Room = new Room(pbLevel1);
+            //let's try adding a leaf
+            Room.Player = Player;
+            Room.Items.Add(new GreenLeaf(pbGreenLeaf01,
+                new Operation()
+                {
+                    Target = Player,
+                    ToExecute = Leaf.PointChange
+                }));
+            var stats = new StatsDisplay(lblRainbowPoints, Player);
+
             Objects = new List<GenericGameObject>()
             {
                 Player,
-                new Room(pbLevel1), //eventually make it so it comes with leaves in a list from ext configuration maybe.
-                //random leaves
+                stats,
+                Room
             };
             timer1.Start();
         }

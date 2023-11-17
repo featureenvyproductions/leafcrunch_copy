@@ -60,6 +60,12 @@ namespace LeafCrunch.GameObjects
         {
 
         }
+
+        ~GenericItem()
+        {
+            var parent = Control.Parent;
+            parent.Controls.Remove(Control); //this is dumb I should figure out a better way to do this
+        }
     }
 
     public class Result
@@ -222,11 +228,15 @@ namespace LeafCrunch.GameObjects
         public Leaf(Control control, Operation operation)
             : base(control, operation)
         {
+            ActivationKey = Keys.Enter;
         }
 
         //what we'll ultimately use as the operation
-        public static Result PointChange(Player player)
+        public static Result PointChange(GenericGameObject genericGameObject)
         {
+            var player = genericGameObject as Player;
+            if (player == null) return new Result() { Value = false }; //who knows what happened...we should only be operating on the player.
+
             player.RainbowPoints += _pointIncrement;
             return new Result() { Value = true };
         }
