@@ -61,7 +61,7 @@ namespace LeafCrunch.GameObjects
 
         }
 
-        ~GenericItem()
+        public void Cleanup()
         {
             var parent = Control.Parent;
             parent.Controls.Remove(Control); //this is dumb I should figure out a better way to do this
@@ -136,7 +136,7 @@ namespace LeafCrunch.GameObjects
         }
 
         public InstantItem(Control control, Operation operation)
-            : base(control)
+            : base(control, operation)
         {
         }
 

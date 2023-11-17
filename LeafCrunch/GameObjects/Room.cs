@@ -38,7 +38,16 @@ namespace LeafCrunch.GameObjects
             return i.Active || (ItemTileActive(i) && ItemActiveKeyPressed(i));
         }
 
-        protected void CleanUpItems() => Items.RemoveAll(i => i.MarkedForDeletion);
+        protected void CleanUpItems()
+        {
+            var items = Items.Where(i => i.MarkedForDeletion);
+            foreach (var item in items)
+            {
+                item.Active = false;
+                item.Cleanup();
+            }
+            Items.RemoveAll(i => i.MarkedForDeletion);
+        }
 
         //the room SHOULD know about the player right
         public void PerformItemOperations()
@@ -49,6 +58,8 @@ namespace LeafCrunch.GameObjects
 
             foreach (var i in activeItems)
             {
+                //in case the item should be active but isn't yet.
+                i.Active = true;
                 i.Update();
             }
         }
