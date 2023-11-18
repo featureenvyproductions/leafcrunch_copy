@@ -5,6 +5,10 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Linq;
 using LeafCrunch.Utilities;
+using LeafCrunch.GameObjects.Items;
+using LeafCrunch.GameObjects.Items.InstantItems;
+using LeafCrunch.GameObjects.Items.ItemOperations;
+using LeafCrunch.GameObjects.Items.TemporaryItems;
 
 namespace LeafCrunch
 {
@@ -19,6 +23,10 @@ namespace LeafCrunch
     //note to self: pauses work but my "ignore the keys and do them later" code is still a bit wonky.
     //it seems to register them as pressed even if i press them while the menu is up and that stuff should be ignored.
     //it's fine we can come back and fix it later.
+    //but yeah let's just short circuit the key down events
+
+    //i should really just make a global keys list
+    //and also just have Suspend() operations for the player and the room. 
     public partial class CrunchyLeavesMain : Form
     {
         private List<GenericGameObject> Objects { get; set; }

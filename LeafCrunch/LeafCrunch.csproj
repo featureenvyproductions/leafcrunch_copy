@@ -53,13 +53,25 @@
       <DependentUpon>CrunchyLeavesMain.cs</DependentUpon>
     </Compile>
     <Compile Include="GameObjects\GenericGameObject.cs" />
-    <Compile Include="GameObjects\GenericItem.cs" />
     <Compile Include="GameObjects\InteractiveGameObject.cs" />
+    <Compile Include="GameObjects\Items\GenericItem.cs" />
+    <Compile Include="GameObjects\Items\InstantItem.cs" />
+    <Compile Include="GameObjects\Items\InstantItems\GreenLeaf.cs" />
+    <Compile Include="GameObjects\Items\InstantItems\Leaf.cs" />
+    <Compile Include="GameObjects\Items\InstantItems\OrangeLeaf.cs" />
+    <Compile Include="GameObjects\Items\InstantItems\RedLeaf.cs" />
+    <Compile Include="GameObjects\Items\InstantItems\YellowLeaf.cs" />
+    <Compile Include="GameObjects\Items\ItemOperations\IOperation.cs" />
+    <Compile Include="GameObjects\Items\ItemOperations\MultiTargetOperation.cs" />
+    <Compile Include="GameObjects\Items\ItemOperations\Operation.cs" />
+    <Compile Include="GameObjects\Items\TemporaryItem.cs" />
+    <Compile Include="GameObjects\Items\TemporaryItems\PineCone.cs" />
     <Compile Include="GameObjects\Player.cs" />
     <Compile Include="GameObjects\Room.cs" />
     <Compile Include="Menus\GenericInterrupt.cs" />
     <Compile Include="Menus\GenericMenu.cs" />
     <Compile Include="Menus\HelpMenu.cs" />
+    <Compile Include="Menus\Pause.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\CommonProperties.cs" />
