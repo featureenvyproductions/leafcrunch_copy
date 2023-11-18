@@ -57,6 +57,8 @@
     <Compile Include="GameObjects\InteractiveGameObject.cs" />
     <Compile Include="GameObjects\Player.cs" />
     <Compile Include="GameObjects\Room.cs" />
+    <Compile Include="Menus\GenericInterrupt.cs" />
+    <Compile Include="Menus\GenericMenu.cs" />
     <Compile Include="Menus\HelpMenu.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

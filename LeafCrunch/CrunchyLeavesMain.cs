@@ -14,6 +14,11 @@ namespace LeafCrunch
     //and barriers
     //sounds also
     //do we want some kind of mystery box thing?
+
+
+    //note to self: pauses work but my "ignore the keys and do them later" code is still a bit wonky.
+    //it seems to register them as pressed even if i press them while the menu is up and that stuff should be ignored.
+    //it's fine we can come back and fix it later.
     public partial class CrunchyLeavesMain : Form
     {
         private List<GenericGameObject> Objects { get; set; }
@@ -85,6 +90,10 @@ namespace LeafCrunch
                 {
                     IsActive = false,
                     Control = pnHelpMenu
+                },
+                new Pause()
+                {
+                    IsActive = false
                 }
             };
 
@@ -108,29 +117,60 @@ namespace LeafCrunch
             if (!activeKeys.Contains(e.KeyCode)) activeKeys.Add(e.KeyCode);
 
             //the first thing we do is check to see if we're leaving a menu
-            if (e.KeyCode == Keys.Escape && interruptActive)
+            if (interruptActive)
             {
-                var activeInterrupts = Interrupts.Where(i => i != null && i.IsActive);
-                foreach (var i in activeInterrupts)
+                //are we leaving a specific menu?
+                var activeInterrupt = Interrupts.Where(i => i != null && i.IsActive && i.ActivationKey == e.KeyCode).FirstOrDefault();
+                if (activeInterrupt != null)
                 {
-                    i.Deactivate();
-                }
-                interruptActive = false;
-
-                //check any keys that were pressed before we opened the menu
-                //see if they're still pressed
-                //and if not, fire any key up events
-                foreach (var key in storedActiveKeys)
-                {
-                    if (!activeKeys.Contains(key))
+                    //just leave this menu
+                    activeInterrupt.Deactivate();
+                    //was that the last one?
+                    var remaining = Interrupts.Where(i => i != null && i.IsActive);
+                    if (remaining == null || remaining.Count() == 0)
                     {
-                        delayedDeactivationKeys.Add(key);
-                    }
-                }
-                storedActiveKeys.Clear();
-                return;
-            }
+                        //do all of the cleanup and key ups
+                        interruptActive = false;
 
+                        //check any keys that were pressed before we opened the menu
+                        //see if they're still pressed
+                        //and if not, fire any key up events
+                        foreach (var key in storedActiveKeys)
+                        {
+                            if (!activeKeys.Contains(key))
+                            {
+                                delayedDeactivationKeys.Add(key);
+                            }
+                        }
+                        storedActiveKeys.Clear();
+                    }
+                    return;
+                }
+
+                //brute force close of all menus
+                if (e.KeyCode == Keys.Escape)
+                {
+                    var activeInterrupts = Interrupts.Where(i => i != null && i.IsActive);
+                    foreach (var i in activeInterrupts)
+                    {
+                        i.Deactivate();
+                    }
+                    interruptActive = false;
+
+                    //check any keys that were pressed before we opened the menu
+                    //see if they're still pressed
+                    //and if not, fire any key up events
+                    foreach (var key in storedActiveKeys)
+                    {
+                        if (!activeKeys.Contains(key))
+                        {
+                            delayedDeactivationKeys.Add(key);
+                        }
+                    }
+                    storedActiveKeys.Clear();
+                    return;
+                }
+            }
             //if we're not then see if we're entering one
             var relevantInterrupts = Interrupts.Where(i => i != null && i.ActivationKey == e.KeyCode);
 
@@ -141,6 +181,9 @@ namespace LeafCrunch
             //or reserved keys like left/right/up/down/enter
             if (relevantInterrupts.Any())
             {
+                //i should do a thing to make sure we can't activate more than one menu
+                //unless it's a specific kind of menu
+                //or if we press the same key again it'll hide the menu
                 interruptActive = true; 
                 foreach (var i in relevantInterrupts)
                 {
