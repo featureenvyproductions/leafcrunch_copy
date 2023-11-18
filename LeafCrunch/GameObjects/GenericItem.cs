@@ -83,16 +83,17 @@ namespace LeafCrunch.GameObjects
     //does a thing to a target
     public class Operation : IOperation
     {
-        public delegate Result TargetOperation(GenericGameObject target);
+        public delegate Result TargetOperation(GenericGameObject target, object paramList);
 
         public GenericGameObject Target { get; set; }
+        public object Params { get; set; } //must be passed but can be null
         public TargetOperation ToExecute { get; set; }
 
         public Result Execute()
         {
             if (Target != null && ToExecute != null)
             {
-                return ToExecute(Target);
+                return ToExecute(Target, Params);
             }
             return null;
         }
@@ -118,7 +119,7 @@ namespace LeafCrunch.GameObjects
                 {
                     results.Add( new Result()
                     {
-                        Value = ToExecute(Target)
+                        Value = ToExecute(Target, Params)
                     });
                 }
             }
@@ -219,7 +220,14 @@ namespace LeafCrunch.GameObjects
     //when the operation is complete the leaf can be removed from the list of room items
     public abstract class Leaf : InstantItem
     {
-        protected static int _pointIncrement = 10;
+        protected int _pointIncrement = 10;
+        
+        //hacky but eh
+        virtual public int PointIncrement
+        {
+            get { return _pointIncrement; }
+            set { _pointIncrement = value; }
+        }
 
         public Leaf(Control control) : base(control)
         {
@@ -229,76 +237,110 @@ namespace LeafCrunch.GameObjects
             : base(control, operation)
         {
             ActivationKey = Keys.Enter;
+            Operation.ToExecute = PointChange;
+            Operation.Params = null;
         }
 
         //what we'll ultimately use as the operation
-        public static Result PointChange(GenericGameObject genericGameObject)
+        public Result PointChange(GenericGameObject genericGameObject, object paramList)
         {
             var player = genericGameObject as Player;
             if (player == null) return new Result() { Value = false }; //who knows what happened...we should only be operating on the player.
 
-            player.RainbowPoints += _pointIncrement;
+            player.RainbowPoints += PointIncrement;
             return new Result() { Value = true };
         }
     }
 
     public class GreenLeaf : Leaf
     {
+        new protected int _pointIncrement = 1;
+
+        override public int PointIncrement
+        {
+            get { return _pointIncrement; }
+            set { _pointIncrement = value; }
+        }
+
         //god it's annoying that have to have this constructor everywhere why did i do this
         public GreenLeaf(Control control) : base(control)
         {
-            _pointIncrement = 1;
+            
         }
 
         public GreenLeaf(Control control, Operation operation)
             : base(control, operation)
         {
-            _pointIncrement = 1;
+         //   _pointIncrement = 1;
         }
     }
 
     public class YellowLeaf : Leaf
     {
+        new protected int _pointIncrement = 5;
+
+        override public int PointIncrement
+        {
+            get { return _pointIncrement; }
+            set { _pointIncrement = value; }
+        }
+
         //god it's annoying that have to have this constructor everywhere why did i do this
         public YellowLeaf(Control control) : base(control)
         {
-            _pointIncrement = 5;
+           // _pointIncrement = 5;
         }
 
         public YellowLeaf(Control control, Operation operation)
             : base(control, operation)
         {
-            _pointIncrement = 5;
+          //  _pointIncrement = 5;
         }
     }
 
     public class OrangeLeaf : Leaf
     {
+        new protected int _pointIncrement = 10;
+
+        override public int PointIncrement
+        {
+            get { return _pointIncrement; }
+            set { _pointIncrement = value; }
+        }
+
         //god it's annoying that have to have this constructor everywhere why did i do this
         public OrangeLeaf(Control control) : base(control)
         {
-            _pointIncrement = 10;
+           // _pointIncrement = 10;
         }
 
         public OrangeLeaf(Control control, Operation operation)
             : base(control, operation)
         {
-            _pointIncrement = 10;
+           // _pointIncrement = 10;
         }
     }
 
     public class RedLeaf : Leaf
     {
+        new protected int _pointIncrement = 15;
+
+        override public int PointIncrement
+        {
+            get { return _pointIncrement; }
+            set { _pointIncrement = value; }
+        }
+
         //god it's annoying that have to have this constructor everywhere why did i do this
         public RedLeaf(Control control) : base(control)
         {
-            _pointIncrement = 15;
+           // _pointIncrement = 15;
         }
 
         public RedLeaf(Control control, Operation operation)
             : base(control, operation)
         {
-            _pointIncrement = 15;
+           // _pointIncrement = 15;
         }
     }
 }

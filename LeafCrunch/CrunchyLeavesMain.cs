@@ -12,15 +12,38 @@ namespace LeafCrunch
         {
             InitializeComponent();
             var Player = new Player(pbPlayer);
-            var Room = new Room(pbLevel1);
+
             //let's try adding a leaf
-            Room.Player = Player;
-            Room.Items.Add(new GreenLeaf(pbGreenLeaf01,
-                new Operation()
+            //would be nice if we eventually randomly added leaves to the board and blew some away.
+            //like the beginning levels would be easy, we'd just have static leaves.
+            //but then as they get harder we can have some blowing in or blowing away
+            //we also need an obstacles engine now for mazes.
+            var Room = new Room(pbLevel1)
+            {
+                Player = Player,
+                Items = new List<GenericItem>()
                 {
-                    Target = Player,
-                    ToExecute = Leaf.PointChange
-                }));
+                    new GreenLeaf(pbGreenLeaf01, new Operation()
+                    {
+                        Target = Player
+                    }),
+                    new YellowLeaf(pbYellowLeaf01, new Operation()
+                    {
+                        Target = Player,
+                    }),
+                    new OrangeLeaf(pbOrangeLeaf01, new Operation()
+                    {
+                        Target = Player
+                    }),
+                    new RedLeaf(pbRedLeaf01, new Operation()
+                    {
+                        Target = Player
+                    })
+                }
+            };
+            
+            //eventually we can add timer and power ups (e.g. pine cone active) and whatever else we want in stats
+            
             var stats = new StatsDisplay(lblRainbowPoints, Player);
 
             Objects = new List<GenericGameObject>()

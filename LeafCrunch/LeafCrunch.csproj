@@ -98,5 +98,14 @@
   <ItemGroup>
     <None Include="Images\PointItems\greenleaf.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\PointItems\yellowleaf.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\PointItems\orangeleaf.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\PointItems\redleaf.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

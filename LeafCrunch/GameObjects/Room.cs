@@ -31,6 +31,7 @@ namespace LeafCrunch.GameObjects
 
         protected bool ItemActiveKeyPressed(GenericItem i) => i.ActivationKey == Keys.None || ActiveKeys.Contains(i.ActivationKey);
 
+        //same idea can apply eventually to wall collisions.
         protected bool ItemTileActive(GenericItem i) => i.TileIndex == Player.TileIndex;
 
         protected bool IsItemActive(GenericItem i)
@@ -53,6 +54,9 @@ namespace LeafCrunch.GameObjects
         public void PerformItemOperations()
         {
             //look at the items in the room
+            //note, we may want to rewrite this to stop as soon as we find an active item
+            //we we want to make use of the fact that an obstacle and an item won't be in the same tile,
+            //so if we find an item, we can short circuit and not check for a wall/obstacle.
             var activeItems = Items.Where(i => i != null && IsItemActive(i));
             //then execute the operation
 

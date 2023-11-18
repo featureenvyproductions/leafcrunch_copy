@@ -30,10 +30,16 @@
         {
             this.components = new System.ComponentModel.Container();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.lblRainbowPoints = new System.Windows.Forms.Label();
+            this.pbYellowLeaf01 = new System.Windows.Forms.PictureBox();
+            this.pbRedLeaf01 = new System.Windows.Forms.PictureBox();
+            this.pbOrangeLeaf01 = new System.Windows.Forms.PictureBox();
             this.pbGreenLeaf01 = new System.Windows.Forms.PictureBox();
             this.pbPlayer = new System.Windows.Forms.PictureBox();
             this.pbLevel1 = new System.Windows.Forms.PictureBox();
-            this.lblRainbowPoints = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.pbYellowLeaf01)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbRedLeaf01)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbOrangeLeaf01)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbGreenLeaf01)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbPlayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbLevel1)).BeginInit();
@@ -42,6 +48,42 @@
             // timer1
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // lblRainbowPoints
+            // 
+            this.lblRainbowPoints.AutoSize = true;
+            this.lblRainbowPoints.Location = new System.Drawing.Point(92, 42);
+            this.lblRainbowPoints.Name = "lblRainbowPoints";
+            this.lblRainbowPoints.Size = new System.Drawing.Size(0, 16);
+            this.lblRainbowPoints.TabIndex = 3;
+            // 
+            // pbYellowLeaf01
+            // 
+            this.pbYellowLeaf01.Image = global::LeafCrunch.Properties.Resources.yellowleaf;
+            this.pbYellowLeaf01.Location = new System.Drawing.Point(385, 403);
+            this.pbYellowLeaf01.Name = "pbYellowLeaf01";
+            this.pbYellowLeaf01.Size = new System.Drawing.Size(49, 50);
+            this.pbYellowLeaf01.TabIndex = 6;
+            this.pbYellowLeaf01.TabStop = false;
+            // 
+            // pbRedLeaf01
+            // 
+            this.pbRedLeaf01.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
+            this.pbRedLeaf01.Image = global::LeafCrunch.Properties.Resources.redleaf;
+            this.pbRedLeaf01.Location = new System.Drawing.Point(95, 426);
+            this.pbRedLeaf01.Name = "pbRedLeaf01";
+            this.pbRedLeaf01.Size = new System.Drawing.Size(49, 50);
+            this.pbRedLeaf01.TabIndex = 5;
+            this.pbRedLeaf01.TabStop = false;
+            // 
+            // pbOrangeLeaf01
+            // 
+            this.pbOrangeLeaf01.Image = global::LeafCrunch.Properties.Resources.orangeleaf;
+            this.pbOrangeLeaf01.Location = new System.Drawing.Point(697, 386);
+            this.pbOrangeLeaf01.Name = "pbOrangeLeaf01";
+            this.pbOrangeLeaf01.Size = new System.Drawing.Size(49, 50);
+            this.pbOrangeLeaf01.TabIndex = 4;
+            this.pbOrangeLeaf01.TabStop = false;
             // 
             // pbGreenLeaf01
             // 
@@ -70,19 +112,14 @@
             this.pbLevel1.TabIndex = 1;
             this.pbLevel1.TabStop = false;
             // 
-            // lblRainbowPoints
-            // 
-            this.lblRainbowPoints.AutoSize = true;
-            this.lblRainbowPoints.Location = new System.Drawing.Point(92, 42);
-            this.lblRainbowPoints.Name = "lblRainbowPoints";
-            this.lblRainbowPoints.Size = new System.Drawing.Size(0, 16);
-            this.lblRainbowPoints.TabIndex = 3;
-            // 
             // CrunchyLeavesMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(843, 540);
+            this.Controls.Add(this.pbYellowLeaf01);
+            this.Controls.Add(this.pbRedLeaf01);
+            this.Controls.Add(this.pbOrangeLeaf01);
             this.Controls.Add(this.lblRainbowPoints);
             this.Controls.Add(this.pbGreenLeaf01);
             this.Controls.Add(this.pbPlayer);
@@ -91,6 +128,9 @@
             this.Text = "Crunchy Leaves";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CrunchyLeavesMain_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CrunchyLeavesMain_KeyUp);
+            ((System.ComponentModel.ISupportInitialize)(this.pbYellowLeaf01)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbRedLeaf01)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbOrangeLeaf01)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbGreenLeaf01)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbPlayer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbLevel1)).EndInit();
@@ -106,6 +146,9 @@
         private System.Windows.Forms.PictureBox pbLevel1;
         private System.Windows.Forms.PictureBox pbGreenLeaf01;
         private System.Windows.Forms.Label lblRainbowPoints;
+        private System.Windows.Forms.PictureBox pbOrangeLeaf01;
+        private System.Windows.Forms.PictureBox pbRedLeaf01;
+        private System.Windows.Forms.PictureBox pbYellowLeaf01;
     }
 }
 
