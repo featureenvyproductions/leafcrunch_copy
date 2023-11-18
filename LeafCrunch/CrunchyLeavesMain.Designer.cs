@@ -39,6 +39,8 @@
             this.pbGreenLeaf01 = new System.Windows.Forms.PictureBox();
             this.pbPlayer = new System.Windows.Forms.PictureBox();
             this.pbLevel1 = new System.Windows.Forms.PictureBox();
+            this.pnHelpMenu = new System.Windows.Forms.Panel();
+            this.lblHelpText = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pbPineCone01)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbYellowLeaf01)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbRedLeaf01)).BeginInit();
@@ -46,6 +48,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbGreenLeaf01)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbPlayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbLevel1)).BeginInit();
+            this.pnHelpMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // timer1
@@ -132,11 +135,30 @@
             this.pbLevel1.TabIndex = 1;
             this.pbLevel1.TabStop = false;
             // 
+            // pnHelpMenu
+            // 
+            this.pnHelpMenu.Controls.Add(this.lblHelpText);
+            this.pnHelpMenu.Location = new System.Drawing.Point(12, 12);
+            this.pnHelpMenu.Name = "pnHelpMenu";
+            this.pnHelpMenu.Size = new System.Drawing.Size(819, 516);
+            this.pnHelpMenu.TabIndex = 9;
+            this.pnHelpMenu.Visible = false;
+            // 
+            // lblHelpText
+            // 
+            this.lblHelpText.AutoSize = true;
+            this.lblHelpText.Location = new System.Drawing.Point(373, 174);
+            this.lblHelpText.Name = "lblHelpText";
+            this.lblHelpText.Size = new System.Drawing.Size(129, 16);
+            this.lblHelpText.TabIndex = 0;
+            this.lblHelpText.Text = "this is some help text";
+            // 
             // CrunchyLeavesMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(843, 540);
+            this.Controls.Add(this.pnHelpMenu);
             this.Controls.Add(this.pbPineCone01);
             this.Controls.Add(this.lblCountDown);
             this.Controls.Add(this.pbYellowLeaf01);
@@ -157,6 +179,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbGreenLeaf01)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbPlayer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbLevel1)).EndInit();
+            this.pnHelpMenu.ResumeLayout(false);
+            this.pnHelpMenu.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -174,6 +198,8 @@
         private System.Windows.Forms.PictureBox pbYellowLeaf01;
         private System.Windows.Forms.Label lblCountDown;
         private System.Windows.Forms.PictureBox pbPineCone01;
+        private System.Windows.Forms.Panel pnHelpMenu;
+        private System.Windows.Forms.Label lblHelpText;
     }
 }
 

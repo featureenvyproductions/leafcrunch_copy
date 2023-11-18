@@ -84,27 +84,78 @@ namespace LeafCrunch
                 new HelpMenu()
                 {
                     IsActive = false,
-                    //Control = ???
+                    Control = pnHelpMenu
                 }
             };
+
+            //before we start, hide all the menus
+            foreach (var interrupt in Interrupts)
+            {
+                interrupt.Hide();
+            }
 
             timer1.Start();
         }
 
+        private bool interruptActive = false; //so we don't have to loop through all the interrupts for 3 different event handlers seeing if something is active
+
+        private List<Keys> activeKeys = new List<Keys>();
+        private List<Keys> storedActiveKeys = new List<Keys>();
+        private List<Keys> delayedDeactivationKeys = new List<Keys>();
+
         private void CrunchyLeavesMain_KeyDown(object sender, KeyEventArgs e)
         {
-            var relevantInterrupts = Interrupts.Where(i => i != null && !i.IsActive /*we don't need already active ones*/
-                                                            && i.ActivationKey == e.KeyCode);
-            foreach (var i in relevantInterrupts)
+            if (!activeKeys.Contains(e.KeyCode)) activeKeys.Add(e.KeyCode);
+
+            //the first thing we do is check to see if we're leaving a menu
+            if (e.KeyCode == Keys.Escape && interruptActive)
             {
-                i.IsActive = true;
+                var activeInterrupts = Interrupts.Where(i => i != null && i.IsActive);
+                foreach (var i in activeInterrupts)
+                {
+                    i.Deactivate();
+                }
+                interruptActive = false;
+
+                //check any keys that were pressed before we opened the menu
+                //see if they're still pressed
+                //and if not, fire any key up events
+                foreach (var key in storedActiveKeys)
+                {
+                    if (!activeKeys.Contains(key))
+                    {
+                        delayedDeactivationKeys.Add(key);
+                    }
+                }
+                storedActiveKeys.Clear();
+                return;
             }
+
+            //if we're not then see if we're entering one
+            var relevantInterrupts = Interrupts.Where(i => i != null && i.ActivationKey == e.KeyCode);
 
             //don't waste time looping through objects if we're in a menu or paused
             //note: we'll have to do more here later on as we flesh out the menus of course
             //in case menus have key shortcuts
-            //hm i wonder if escape should close them actually
-            if (relevantInterrupts.Any()) return;
+            //eventually we'll have to add something that checks on load to make sure menus arent configured with the same shortcuts
+            //or reserved keys like left/right/up/down/enter
+            if (relevantInterrupts.Any())
+            {
+                interruptActive = true; 
+                foreach (var i in relevantInterrupts)
+                {
+                    //if we're entering a menu for the first time, we need to store the active keys.
+                    //not the one for the current menu of course
+                    if (!i.IsActive)
+                    {
+                        storedActiveKeys.AddRange(activeKeys.Where(k => k != e.KeyCode));
+                    }
+                    i.Activate();
+                    //call their update functions
+                    i.OnKeyPress(e);
+                }
+                return;
+            }
             
             //go through list of objects and fire off keypress events
             //you know I also wonder if we want to just store the key in general and not just for the player
@@ -116,14 +167,16 @@ namespace LeafCrunch
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            var activeInterrupts = Interrupts.Where(i => i != null && i.IsActive);
-            foreach (var i in activeInterrupts)
+            if (interruptActive)
             {
-                var menu = i as GenericMenu;
-                if (menu != null) menu.Update();
+                var activeInterrupts = Interrupts.Where(i => i != null && i.IsActive);
+                foreach (var i in activeInterrupts)
+                {
+                    i.Update();
+                }
+                return;
             }
 
-            if (!activeInterrupts.Any()) return; //don't do gameplay objects during interrupt.
             foreach (var obj in Objects)
             {
                 obj.Update();
@@ -134,15 +187,42 @@ namespace LeafCrunch
 
         private void CrunchyLeavesMain_KeyUp(object sender, KeyEventArgs e)
         {
-            if (Interrupts.Where(i => i != null && i.IsActive).Any()) return; //short circuit if a menu is up
-            //note: could cause an issue later though if we have a keydown and the person is still holding it when we do the menu
-            //maybe we should force a key up if that happens....somehow.
-            
-            //or we could store the active keys actually and then check if they're still pressed when we leave the menu.
-            //yeah that could work
-            //and then if not fire off the key up handler for the ones that aren't down anymore.
+            if (activeKeys.Contains(e.KeyCode)) activeKeys.Remove(e.KeyCode);
 
-            //go through list of objects and fire off key up events
+            //if there are any delayed key up events (i.e. we went into a menu with a key pressed and released the key before
+            //leaving the menu
+            //like say we were walking and hit the menu button
+            //but stopped walking
+            //idk maybe this is overkill
+            //but it's whatever
+            //i think i'm trying to prevent a thing where we never see the key up event so you leave the menu
+            //and like KEEP WALKING WHEN YOURE NOT PUSHING ANYTHING you know
+            //this doesn't quite work but eh. we can fix it later
+
+            if (delayedDeactivationKeys != null)
+            {
+                foreach (var key in delayedDeactivationKeys)
+                {
+                    foreach (var obj in Objects)
+                    {
+                        obj.OnKeyUp(e);
+                    }
+                }
+                delayedDeactivationKeys.Clear();
+            }
+
+            //see if we have any menus active
+            if (interruptActive)
+            {
+                //fire off the menu key up events instead.
+                var activeInterrupts = Interrupts.Where(i => i != null && i.IsActive);
+                foreach (var i in activeInterrupts)
+                {
+                    i.OnKeyUp(e);
+                }
+                return;
+            }
+
             foreach (var obj in Objects)
             {
                 obj.OnKeyUp(e);
