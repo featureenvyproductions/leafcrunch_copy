@@ -5,6 +5,12 @@ using System.Windows.Forms;
 
 namespace LeafCrunch
 {
+    //still need a main timer
+    //maybe a help screen
+    //and transitions between levels
+    //and barriers
+    //sounds also
+    //do we want some kind of mystery box thing?
     public partial class CrunchyLeavesMain : Form
     {
         private List<GenericGameObject> Objects { get; set; }
@@ -12,6 +18,36 @@ namespace LeafCrunch
         {
             InitializeComponent();
             var Player = new Player(pbPlayer);
+            var items = new List<GenericItem>()
+            {
+                new GreenLeaf(pbGreenLeaf01, new Operation()
+                {
+                    Target = Player
+                }),
+                new YellowLeaf(pbYellowLeaf01, new Operation()
+                {
+                    Target = Player,
+                }),
+                new OrangeLeaf(pbOrangeLeaf01, new Operation()
+                {
+                    Target = Player
+                }),
+                new RedLeaf(pbRedLeaf01, new Operation()
+                {
+                    Target = Player
+                })
+            };
+            var pinecone = new PineCone(pbPineCone01, new MultiTargetOperation()
+            {
+                Targets = new List<GenericGameObject>()
+            }, lblCountDown);
+
+            //oh i've made this quite stupid actually wow i need to make this considerably less stupid
+            var pineconeTargets = (pinecone.Operation as MultiTargetOperation).Targets;
+            foreach (GenericGameObject item in items)
+            {
+                pineconeTargets.Add(item);
+            }
 
             //let's try adding a leaf
             //would be nice if we eventually randomly added leaves to the board and blew some away.
@@ -22,25 +58,10 @@ namespace LeafCrunch
             {
                 Player = Player,
                 Items = new List<GenericItem>()
-                {
-                    new GreenLeaf(pbGreenLeaf01, new Operation()
-                    {
-                        Target = Player
-                    }),
-                    new YellowLeaf(pbYellowLeaf01, new Operation()
-                    {
-                        Target = Player,
-                    }),
-                    new OrangeLeaf(pbOrangeLeaf01, new Operation()
-                    {
-                        Target = Player
-                    }),
-                    new RedLeaf(pbRedLeaf01, new Operation()
-                    {
-                        Target = Player
-                    })
-                }
             };
+            Room.Items.AddRange(items);
+            Room.Items.Add(pinecone);
+            Room.RegisterTemporaryItems();
             
             //eventually we can add timer and power ups (e.g. pine cone active) and whatever else we want in stats
             

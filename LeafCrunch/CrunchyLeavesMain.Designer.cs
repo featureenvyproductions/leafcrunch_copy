@@ -31,12 +31,15 @@
             this.components = new System.ComponentModel.Container();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.lblRainbowPoints = new System.Windows.Forms.Label();
+            this.lblCountDown = new System.Windows.Forms.Label();
+            this.pbPineCone01 = new System.Windows.Forms.PictureBox();
             this.pbYellowLeaf01 = new System.Windows.Forms.PictureBox();
             this.pbRedLeaf01 = new System.Windows.Forms.PictureBox();
             this.pbOrangeLeaf01 = new System.Windows.Forms.PictureBox();
             this.pbGreenLeaf01 = new System.Windows.Forms.PictureBox();
             this.pbPlayer = new System.Windows.Forms.PictureBox();
             this.pbLevel1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pbPineCone01)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbYellowLeaf01)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbRedLeaf01)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbOrangeLeaf01)).BeginInit();
@@ -56,6 +59,23 @@
             this.lblRainbowPoints.Name = "lblRainbowPoints";
             this.lblRainbowPoints.Size = new System.Drawing.Size(0, 16);
             this.lblRainbowPoints.TabIndex = 3;
+            // 
+            // lblCountDown
+            // 
+            this.lblCountDown.AutoSize = true;
+            this.lblCountDown.Location = new System.Drawing.Point(742, 31);
+            this.lblCountDown.Name = "lblCountDown";
+            this.lblCountDown.Size = new System.Drawing.Size(0, 16);
+            this.lblCountDown.TabIndex = 7;
+            // 
+            // pbPineCone01
+            // 
+            this.pbPineCone01.Image = global::LeafCrunch.Properties.Resources.pinecone;
+            this.pbPineCone01.Location = new System.Drawing.Point(195, 253);
+            this.pbPineCone01.Name = "pbPineCone01";
+            this.pbPineCone01.Size = new System.Drawing.Size(49, 50);
+            this.pbPineCone01.TabIndex = 8;
+            this.pbPineCone01.TabStop = false;
             // 
             // pbYellowLeaf01
             // 
@@ -117,6 +137,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(843, 540);
+            this.Controls.Add(this.pbPineCone01);
+            this.Controls.Add(this.lblCountDown);
             this.Controls.Add(this.pbYellowLeaf01);
             this.Controls.Add(this.pbRedLeaf01);
             this.Controls.Add(this.pbOrangeLeaf01);
@@ -128,6 +150,7 @@
             this.Text = "Crunchy Leaves";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CrunchyLeavesMain_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CrunchyLeavesMain_KeyUp);
+            ((System.ComponentModel.ISupportInitialize)(this.pbPineCone01)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbYellowLeaf01)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbRedLeaf01)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbOrangeLeaf01)).EndInit();
@@ -149,6 +172,8 @@
         private System.Windows.Forms.PictureBox pbOrangeLeaf01;
         private System.Windows.Forms.PictureBox pbRedLeaf01;
         private System.Windows.Forms.PictureBox pbYellowLeaf01;
+        private System.Windows.Forms.Label lblCountDown;
+        private System.Windows.Forms.PictureBox pbPineCone01;
     }
 }
 

@@ -119,7 +119,7 @@ namespace LeafCrunch.GameObjects
                 {
                     results.Add( new Result()
                     {
-                        Value = ToExecute(Target, Params)
+                        Value = ToExecute(target, Params)
                     });
                 }
             }
@@ -152,7 +152,7 @@ namespace LeafCrunch.GameObjects
         {
             //oh when will we set it to active though
             if (!Active || Operation == null) return;
-
+            
             HandleResult(Operation.Execute());
         }
     }
@@ -161,14 +161,25 @@ namespace LeafCrunch.GameObjects
     //for a limited time
     public class TemporaryItem : GenericItem
     {
-        private int _ticks = 10000;
-        public int Ticks
+        private int _ticks = 100;
+        virtual public int Ticks //virtual in case we want to change the timing
         {
             get { return _ticks; }
             set { _ticks = value; }
         }
 
+        private bool _isApplied = false; //true once we've applied the item/turned on its effect so we don't do it additively
+        virtual public bool IsApplied
+        {
+            get { return _isApplied; }
+            set { _isApplied = value; }
+        }
+
         public TemporaryItem(Control control) : base(control)
+        {
+        }
+
+        public TemporaryItem(Control control, Operation operation) : base(control, operation)
         {
         }
 
@@ -188,7 +199,90 @@ namespace LeafCrunch.GameObjects
             //oh when will we set it to active though
             if (!Active || Ticks <= 0 || Operation == null) return;
 
-            HandleResult(Operation.Execute());
+            //first let's see if this is a multi target operation and handle accordingly
+            var multitarget = Operation as MultiTargetOperation;
+            if (multitarget != null) HandleResult(multitarget.Execute());
+            else HandleResult(Operation.Execute());
+
+            //HandleResult(Operation.Execute());
+
+            IsApplied = true; //one we set this we leave it alone
+        }
+
+        virtual public void ShowAsStat()
+        {
+            //draw the control next to its display/count down control
+            //whatever that means for this
+        }
+    }
+
+    //basically exists to apply a multiplier to point increases
+    //effectively multiplies PointIncrement of all the leaf targets
+    public class PineCone : TemporaryItem
+    { 
+        protected int _multiplier = 2;
+
+        public PineCone(Control control) : base(control)
+        {
+        }
+
+        //this can be an operation to be done on a single leaf
+        //or can be a multi target operation that's fed multiple leaves
+        public PineCone(Control control, Operation operation, Control displayControl) : base(control, operation)
+        {
+            Operation.Params = null;
+            DisplayControl = displayControl;
+            Operation.ToExecute = ApplyPointMultiplier;
+        }
+
+        public Control DisplayControl = null;
+        protected bool _displayingAsStat = false;
+
+        public override void ShowAsStat()
+        {
+            if (!_displayingAsStat)
+            {
+                //align the top
+                Control.Top = DisplayControl.Top;
+                //line up the right side of one with the left of the other
+                Control.Left = DisplayControl.Left - Control.Width;
+                _displayingAsStat = true;
+            }
+        }
+
+        public override void Update()
+        {
+            base.Update(); //do what the base does
+            //but we also want to update the count down
+
+            DisplayControl.Text = Ticks.ToString();
+            if (Ticks <= 0) DisplayControl.Visible = false;
+            DisplayControl.Refresh();
+        }
+
+        public Result ApplyPointMultiplier(GenericGameObject genericGameObject, object paramList)
+        {
+            //don't apply if we already applied it
+            if (IsApplied)
+            {
+                //but do check the ticks to see if it's time to unapply
+                if (Ticks <= 1) //we're going to hit 0 when we handle the result
+                {
+                    //ok we need to unapply the multiplier
+                    var target = genericGameObject as Leaf;
+                    if (target != null) target.PointIncrement /= _multiplier;
+                }
+            }
+            else
+            {
+                //ok we can apply it
+                var target = genericGameObject as Leaf;
+                if (target != null) target.PointIncrement *= _multiplier;
+            }
+            return new Result //we don't do anything with the result here right now. 
+            {
+                Value = null
+            };
         }
     }
 

@@ -28,6 +28,30 @@ namespace LeafCrunch.GameObjects
         }
 
         public List<GenericItem> Items = new List<GenericItem>();
+        protected List<TemporaryItem> TemporaryItems = new List<TemporaryItem>(); //items that can be applied
+
+        public void RegisterTemporaryItems()
+        {
+            if (Items == null) return;
+            foreach (var item in Items)
+            {
+                var tempItem = item as TemporaryItem;
+                if (tempItem != null) TemporaryItems.Add(tempItem);
+            }
+        }
+
+        protected List<TemporaryItem> ActiveItems = new List<TemporaryItem>();
+        public void UpdateTemporaryItems()
+        {
+            //take any that are active and put them into the active items
+            ActiveItems = TemporaryItems.Where(x => x != null && x.IsApplied).ToList();
+            
+            //make sure they're drawing in the right spot
+            foreach (var item in ActiveItems)
+            {
+                item.ShowAsStat();
+            }
+        }
 
         protected bool ItemActiveKeyPressed(GenericItem i) => i.ActivationKey == Keys.None || ActiveKeys.Contains(i.ActivationKey);
 
@@ -66,6 +90,8 @@ namespace LeafCrunch.GameObjects
                 i.Active = true;
                 i.Update();
             }
+
+            UpdateTemporaryItems();
         }
 
         private List<Keys> _activeKeys = new List<Keys>();

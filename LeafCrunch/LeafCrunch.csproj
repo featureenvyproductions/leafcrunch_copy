@@ -107,5 +107,8 @@
   <ItemGroup>
     <None Include="Images\PointItems\redleaf.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\PointItems\ModifierItems\pinecone.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
