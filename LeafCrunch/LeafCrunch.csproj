@@ -72,6 +72,7 @@
     <Compile Include="Menus\GenericInterrupt.cs" />
     <Compile Include="Menus\GenericMenu.cs" />
     <Compile Include="Menus\HelpMenu.cs" />
+    <Compile Include="Menus\InterruptController.cs" />
     <Compile Include="Menus\Pause.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

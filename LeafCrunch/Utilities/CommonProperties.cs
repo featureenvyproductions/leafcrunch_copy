@@ -20,4 +20,11 @@ namespace LeafCrunch.Utilities
         public int vx = 0;
         public int vy = 0;
     }
+
+    public enum ControllerState
+    {
+        RESUME = 0,
+        SUSPEND = 1,
+        NOTHING = 2
+    }
 }
