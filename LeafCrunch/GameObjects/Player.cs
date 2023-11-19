@@ -1,20 +1,86 @@
 ﻿using LeafCrunch.Utilities;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace LeafCrunch.GameObjects
 {
+    //draws the points somewhere when they change or whatever 
+    public class PointVisualizer
+    {
+        int displayTicks = 10;
+        Label Control { get; set; }
+        Control Parent { get; set; }
+        Timer Timer = new Timer();
+        int currentTicks = 0;
+
+        public bool Active
+        {
+            get
+            {
+                return Timer.Enabled;
+            }
+        }
+
+        public PointVisualizer(Control parent, int points)
+        {
+            Parent = parent;
+            Control = new Label();
+            Control.Text = $"+{points}";
+            Control.Parent = parent;
+            Parent.Controls.Add(Control);
+            Control.Visible = true;
+            Control.ForeColor = System.Drawing.Color.Black;
+            Control.BackColor = System.Drawing.Color.Transparent;
+
+            //uhg this all still makes it disappear when it goes off the person :<
+            //i'll have to figure that out....
+
+            Control.BringToFront();
+            //Control.Left = parent.Left;
+            //Control.Top = parent.Top - 32;
+            Timer.Tick += Timer_Tick;
+            Timer.Start();
+        }
+
+        private void Timer_Tick(object sender, System.EventArgs e)
+        {
+            if (++currentTicks == displayTicks)
+            {
+                Control.Visible = false;
+                Parent.Controls.Remove(Control);
+                Timer.Stop();
+            }
+            else
+            {
+                //animate it because that's neat
+                Control.Top--;
+                Control.Left--;
+            }
+        }
+    }
+
     public class Player : InteractiveGameObject
     {
+        private List<PointVisualizer> _pointVisualizer = new List<PointVisualizer>();
         private int _maxRainbowPoints = 100;
         private int _rainbowPoints = 0;
         public int RainbowPoints
         {
             get { return _rainbowPoints; }
             set {
+                //figure out the difference so we can display it just above the player's head
+                var current = _rainbowPoints;
                 if (value > _maxRainbowPoints) _rainbowPoints = _maxRainbowPoints;
-                else _rainbowPoints = value; 
+                else _rainbowPoints = value;
+                var diff = _rainbowPoints - current;
+                _pointVisualizer.Add(new PointVisualizer(Control, diff));
             }
+        }
+
+        private void CleanUpPointVisualizers()
+        {
+            _pointVisualizer.RemoveAll(x => !x.Active);
         }
 
         private bool _isSuspended = false;
@@ -42,6 +108,7 @@ namespace LeafCrunch.GameObjects
             if (_isSuspended) return;
             UpdateSpeed();
             UpdateLocation();
+            CleanUpPointVisualizers();
         }
 
         private List<Keys> _activeKeys = new List<Keys>();

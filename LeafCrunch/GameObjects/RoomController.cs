@@ -14,6 +14,8 @@ namespace LeafCrunch.GameObjects
     {
         public bool ActiveRoom = true; //always true right now, idk if we want more rooms in the future
 
+        //I should have a thing where we show +10 or whatever every time we get some points.
+
         public StatsDisplay StatsDisplay { get; set; }
 
         //eventually we're going to load control names from a file I think so I won't need this fucking list
