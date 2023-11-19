@@ -5,7 +5,7 @@ namespace LeafCrunch.GameObjects.ItemProperties
 
     public interface IReboundable
     {
-        void Rebound(Obstacle obstacle);
+        void Rebound(ICollidable obstacle);
     }
 
 }

@@ -8,6 +8,7 @@ using LeafCrunch.GameObjects.Items.ItemOperations;
 using LeafCrunch.GameObjects.Items.TemporaryItems;
 using LeafCrunch.GameObjects.Stats;
 using LeafCrunch.GameObjects.Items.Obstacles;
+using LeafCrunch.GameObjects.ItemProperties;
 
 //you know one thing i should do is when i actually implement the dynamic loading of the game board
 //i should make it so that i only place things exactly in tiles
@@ -33,7 +34,9 @@ namespace LeafCrunch.GameObjects
         //eventually we're going to load control names from a file I think so I won't need this fucking list
         //or we're gonna initialize the controls on the fly with a location and a type
         //like i'll have a prototype and initialize from the prototype
-        public RoomController(Control control, Control playerControl, Control statsControl, Control countDownControl, List<Control> itemControls, List<Control> obstacleControls) : base(control) //tbd we need a list of items maybe?
+        public RoomController(Control control, Control playerControl, Control statsControl, Control countDownControl, 
+            List<Control> itemControls, List<Control> obstacleControls,
+            List<Control> movingObstacleControls) : base(control) //tbd we need a list of items maybe?
         {
             GlobalVars.RoomWidth = control.Width;
             GlobalVars.RoomHeight = control.Height;
@@ -42,11 +45,15 @@ namespace LeafCrunch.GameObjects
 
             //eventually this will also be where we load custom rooms from some file
             //and there will be an arg here telling us what room file we want
-            Load(playerControl, statsControl, countDownControl, itemControls, obstacleControls);
+            Load(playerControl, statsControl, countDownControl, itemControls, obstacleControls, movingObstacleControls);
         }
 
         //for now this just loads the test level
-        protected void Load(Control playerControl, Control statsControl, Control countDownControl, List<Control> itemControls, List<Control> obstacleControls)
+        //oh yeah don't forget when we do real loading we need to have stuff that clears the board
+        //like removes the items from the list and the item controls
+        protected void Load(Control playerControl, Control statsControl, Control countDownControl, 
+            List<Control> itemControls, List<Control> obstacleControls,
+            List<Control> movingObstacleControls)
         {
             Player = new Player(playerControl);
             StatsDisplay = new StatsDisplay(statsControl, Player);
@@ -82,6 +89,11 @@ namespace LeafCrunch.GameObjects
             Obstacles = new List<Obstacle>()
             {
                 new Obstacle(obstacleControls.ElementAt(0))
+            };
+
+            MovingObstacles = new List<MovingObstacle>()
+            {
+                new MovingObstacle(movingObstacleControls.ElementAt(0), 10, 10)
             };
         }
 
@@ -125,12 +137,26 @@ namespace LeafCrunch.GameObjects
                 //or do it as we cycle through?
                 //idk if any solution is really perfect here
                 CleanUpItems();
-
-                CheckObstacleCollisions();
+                UpdateStationaryObstacles();
+                UpdateMovingObstacles();
             }
         }
-        public List<Obstacle> Obstacles = new List<Obstacle>();
 
+        protected void UpdateStationaryObstacles()
+        {
+            CheckObstacleCollisions();
+        }
+
+        protected void UpdateMovingObstacles()
+        {
+            foreach (var obstacle in MovingObstacles)
+            {
+                obstacle.Update();
+                //we'd check for player collisions here as well
+            }
+        }
+
+        public List<Obstacle> Obstacles = new List<Obstacle>();
         public List<GenericItem> Items = new List<GenericItem>();
         protected List<TemporaryItem> TemporaryItems = new List<TemporaryItem>(); //items that can be applied
 
@@ -163,28 +189,42 @@ namespace LeafCrunch.GameObjects
         {
             foreach (var obstacle in Obstacles)
             {
-                if (TileObjectCollision(obstacle))
+                if (TileObjectPlayerCollision(obstacle))
                 {
-                    ResolveCollision(obstacle);
+                    ResolvePlayerCollision(obstacle);
+                }
+
+                foreach (var movingObstacle in MovingObstacles)
+                {
+                    if (movingObstacle.TileIndex == obstacle.TileIndex)
+                    {
+                        ResolveCollision(obstacle, movingObstacle);
+                    }
                 }
             }
         }
 
-        //same idea can apply eventually to wall collisions.
-        //in fact i can literally just use this for collisions
-        protected bool TileObjectCollision(GenericItem i) => i.TileIndex == Player.TileIndex;
+        public List<MovingObstacle> MovingObstacles = new List<MovingObstacle>();
+
+        //check for a collision with the player
+        protected bool TileObjectPlayerCollision(GenericItem i) => i.TileIndex == Player.TileIndex;
 
         //probably need a version of this for things that aren't the player but that's a problem for future ej
         //should this go in the obstacle code actually? idk.
         //i probably should make this and the above more generic so you can use them besides with the player. 
-        protected void ResolveCollision(Obstacle obstacle)
+        protected void ResolvePlayerCollision(Obstacle obstacle)
         {
             Player.Rebound(obstacle);   
         }
 
+        protected void ResolveCollision(Obstacle obstacle, MovingObstacle movingObstacle)
+        {
+            movingObstacle.Rebound(obstacle);
+        }
+
         protected bool IsItemActive(GenericItem i)
         {
-            return i.Active || (TileObjectCollision(i) && ItemActiveKeyPressed(i));
+            return i.Active || (TileObjectPlayerCollision(i) && ItemActiveKeyPressed(i));
         }
 
         protected void CleanUpItems()

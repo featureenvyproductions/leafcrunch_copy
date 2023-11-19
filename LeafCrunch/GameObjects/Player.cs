@@ -117,16 +117,24 @@ namespace LeafCrunch.GameObjects
                     obstacle.TileIndex == TileIndex;
         }
 
+        public void Rebound(ICollidable collidable)
+        {
+            var obstacle = collidable as Obstacle;
+            if (obstacle != null) Rebound(obstacle);
+        }
+
         //for resolving collisions
         //I could probably also make this generic and have it as an interface I tack on
         //we'll see
         //to make the physics slightly less dumb this should also change depending on whether
         //the obstacle is also moving but we can deal with that later.
         //and i'm only gonna make the dumbest version of it
-        public void Rebound(Obstacle obstacle)
+        private void Rebound(Obstacle obstacle)
         {
             //if the obstacle also implements IReboundable (i.e. it's mobile) we'll handle things a little differently
             //but that's tbd
+            var reboundable = obstacle as IReboundable;
+            if (reboundable != null) reboundable.Rebound(this as ICollidable);
 
             //what direction were we heading in 
             var reboundSpeedx = -Speed.vx;

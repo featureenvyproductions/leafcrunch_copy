@@ -55,6 +55,7 @@
     <Compile Include="GameObjects\GenericGameObject.cs" />
     <Compile Include="GameObjects\InteractiveGameObject.cs" />
     <Compile Include="GameObjects\ItemProperties\IReboundable.cs" />
+    <Compile Include="GameObjects\ItemProperties\ICollidable.cs" />
     <Compile Include="GameObjects\ItemProperties\PointVisualizer.cs" />
     <Compile Include="GameObjects\Items\GenericItem.cs" />
     <Compile Include="GameObjects\Items\InstantItem.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="GameObjects\Items\ItemOperations\IOperation.cs" />
     <Compile Include="GameObjects\Items\ItemOperations\MultiTargetOperation.cs" />
     <Compile Include="GameObjects\Items\ItemOperations\Operation.cs" />
+    <Compile Include="GameObjects\Items\Obstacles\MovingObstacle.cs" />
     <Compile Include="GameObjects\Items\Obstacles\Obstacle.cs" />
     <Compile Include="GameObjects\Items\TemporaryItem.cs" />
     <Compile Include="GameObjects\Items\TemporaryItems\PineCone.cs" />
@@ -107,7 +109,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Images\Obstacles\" />
     <Folder Include="Images\Other\" />
   </ItemGroup>
   <ItemGroup>
@@ -130,6 +131,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Images\PointItems\ModifierItems\pinecone.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Obstacles\movingObstacle.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

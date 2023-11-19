@@ -25,7 +25,8 @@ namespace LeafCrunch
         {
             InitializeComponent();
 
-            RoomController = new RoomController(pbLevel1, pbPlayer, lblRainbowPoints, lblCountDown, new List<Control>() {
+            RoomController = new RoomController(pbLevel1, pbPlayer, lblRainbowPoints, lblCountDown, 
+            new List<Control>() {
                 pbGreenLeaf01,
                 pbYellowLeaf01,
                 pbOrangeLeaf01,
@@ -34,7 +35,11 @@ namespace LeafCrunch
             },
             new List<Control>()
             {
-                pbGenericObstacle //tomorrow let's try this out and see if we can do the collision thing right
+                pbGenericObstacle
+            },
+            new List<Control>()
+            { 
+                pbMovingObstacle
             });
 
             InterruptController = new InterruptController(new List<Control>() { pnHelpMenu });

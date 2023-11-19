@@ -1,11 +1,12 @@
-﻿using System.Windows.Forms;
+﻿using LeafCrunch.GameObjects.ItemProperties;
+using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects.Items.Obstacles
 {
     //an object where if the player tile = the obstacle tile
     //we won't allow the player to move in the direction of the obstacle.
     //i'm just gonna make this an item to make coding the collision easier
-    public class Obstacle : GenericItem
+    public class Obstacle : GenericItem, ICollidable
     {
         public Obstacle(Control control) : base(control)
         {
