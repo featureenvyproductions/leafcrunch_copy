@@ -37,13 +37,14 @@ namespace LeafCrunch
 
         private void CrunchyLeavesMain_KeyDown(object sender, KeyEventArgs e)
         {
+            //determine whether the interrupt controller is active
             switch (InterruptController.OnKeyDown(e))
             {
-                case ControllerState.SUSPEND:
-                    Room.Suspend();
-                    break;
-                case ControllerState.RESUME:
+                case ControllerState.SUSPEND: //it isn't
                     Room.Resume();
+                    break;
+                case ControllerState.ACTIVE: //it is
+                    Room.Suspend();
                     break;
                 default:
                     Room.OnKeyPress(e);
@@ -53,9 +54,10 @@ namespace LeafCrunch
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            //is controller active
             switch (InterruptController.Update())
             {
-                case ControllerState.SUSPEND:
+                case ControllerState.ACTIVE: //it is
                     break;
                 default:
                     Room.Update();
@@ -65,9 +67,10 @@ namespace LeafCrunch
 
         private void CrunchyLeavesMain_KeyUp(object sender, KeyEventArgs e)
         {
+            //is controller active
             switch (InterruptController.OnKeyUp(e))
             {
-                case ControllerState.SUSPEND:
+                case ControllerState.ACTIVE: //it is
                     break;
                 default:
                     Room.OnKeyUp(e);

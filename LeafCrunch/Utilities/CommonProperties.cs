@@ -23,8 +23,8 @@ namespace LeafCrunch.Utilities
 
     public enum ControllerState
     {
-        RESUME = 0,
+        ACTIVE = 0,
         SUSPEND = 1,
-        NOTHING = 2
+        UNCHANGED = 2
     }
 }

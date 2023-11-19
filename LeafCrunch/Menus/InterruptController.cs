@@ -66,7 +66,9 @@ namespace LeafCrunch.Menus
                         //pass event handling back to the room
                         //i mean really what we need to do is have a state machine with a Room state and a Menu state
                         //Room.Resume();
-                        return ControllerState.RESUME;
+
+                        //change this from resume...we want to SUSPEND the current state
+                        return ControllerState.SUSPEND;
                     }
                     //no, don't pass event handling back to the room
                     //return;
@@ -83,7 +85,10 @@ namespace LeafCrunch.Menus
                     interruptActive = false;
                     //Room.Resume();
                     //return;
-                    return ControllerState.RESUME;
+
+                    //we want to SUSPEND the current state of this controller and resume the room
+                    //return ControllerState.RESUME;
+                    return ControllerState.SUSPEND;
                 }
             }
 
@@ -107,9 +112,13 @@ namespace LeafCrunch.Menus
                     i.OnKeyPress(e);
                 }
                 //return;
-                return ControllerState.SUSPEND;
+                //we want to suspend the room but activate this
+                //return ControllerState.SUSPEND;
+                return ControllerState.ACTIVE;
             }
-            return ControllerState.NOTHING;
+
+            //idk what to do about this, we should come back to it
+            return ControllerState.UNCHANGED;
         }
 
         public ControllerState OnKeyUp(KeyEventArgs e)
@@ -123,9 +132,11 @@ namespace LeafCrunch.Menus
                 {
                     i.OnKeyUp(e);
                 }
-                return ControllerState.SUSPEND;
+                //return ControllerState.SUSPEND;
+                return ControllerState.ACTIVE;
             }
-            return ControllerState.NOTHING;
+
+            return ControllerState.UNCHANGED;
         }
 
         public ControllerState Update()
@@ -137,9 +148,10 @@ namespace LeafCrunch.Menus
                 {
                     i.Update();
                 }
-                return ControllerState.SUSPEND;
+                //return ControllerState.SUSPEND;
+                return ControllerState.ACTIVE;
             }
-            return ControllerState.NOTHING;
+            return ControllerState.UNCHANGED;
         }
     }
 }
