@@ -35,7 +35,8 @@ namespace LeafCrunch
             },
             new List<Control>()
             {
-                pbGenericObstacle
+                pbGenericObstacle,
+                pbStationaryHazard
             },
             new List<Control>()
             { 

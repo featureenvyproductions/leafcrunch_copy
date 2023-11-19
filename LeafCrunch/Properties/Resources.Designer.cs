@@ -153,6 +153,16 @@ namespace LeafCrunch.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap stationaryHazard {
+            get {
+                object obj = ResourceManager.GetObject("stationaryHazard", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap yellowleaf {
             get {
                 object obj = ResourceManager.GetObject("yellowleaf", resourceCulture);

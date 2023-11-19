@@ -235,6 +235,8 @@ namespace LeafCrunch.GameObjects
             UpdateVy();
         }
 
+        //you know i should probably do something like this for other item effects tbh but whatever
+        //to revisit
         public void ApplyDamage(object args)
         {
             var param = args as Dictionary<string, object>;

@@ -88,7 +88,15 @@ namespace LeafCrunch.GameObjects
 
             Obstacles = new List<Obstacle>()
             {
-                new Obstacle(obstacleControls.ElementAt(0))
+                new Obstacle(obstacleControls.ElementAt(0)),
+                new HazardousObstacle(obstacleControls.ElementAt(1), new Operation()
+                {
+                    Target = Player,
+                    Params = new Dictionary<string, object>()
+                    {
+                        { "RainbowPoints", -5 }
+                    }
+                })
             };
 
             MovingObstacles = new List<MovingObstacle>()
@@ -213,6 +221,9 @@ namespace LeafCrunch.GameObjects
                         ResolveCollision(obstacle, movingObstacle);
                     }
                 }
+
+                //this should probably go in the regular update code idk.
+                obstacle.Update();
             }
         }
 
@@ -226,7 +237,8 @@ namespace LeafCrunch.GameObjects
         //i probably should make this and the above more generic so you can use them besides with the player. 
         protected void ResolvePlayerCollision(Obstacle obstacle)
         {
-            Player.Rebound(obstacle);   
+            Player.Rebound(obstacle);
+            obstacle.Active = true;
         }
 
         protected void ResolveCollision(Obstacle obstacle, MovingObstacle movingObstacle)

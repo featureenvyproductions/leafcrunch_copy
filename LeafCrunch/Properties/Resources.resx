@@ -127,6 +127,9 @@
   <data name="genericObstacle" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\Obstacles\genericObstacle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="hazard" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Obstacles\hazard.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="yellowleaf" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\PointItems\yellowleaf.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -136,16 +139,16 @@
   <data name="pinecone" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\PointItems\ModifierItems\pinecone.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="greenleaf" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\PointItems\greenleaf.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="player_static" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\Player\player_static.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="level1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\Background\level1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="hazard" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\Obstacles\hazard.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="greenleaf" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\PointItems\greenleaf.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="stationaryHazard" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Obstacles\stationaryHazard.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
