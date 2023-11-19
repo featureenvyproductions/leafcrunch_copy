@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Linq;
 using LeafCrunch.GameObjects.Items;
+using LeafCrunch.GameObjects.Items.InstantItems;
+using LeafCrunch.GameObjects.Items.ItemOperations;
+using LeafCrunch.GameObjects.Items.TemporaryItems;
 
 namespace LeafCrunch.GameObjects
 {
@@ -10,12 +13,56 @@ namespace LeafCrunch.GameObjects
     {
         public bool ActiveRoom = true; //always true right now, idk if we want more rooms in the future
 
-        public Room(Control control) : base(control) //tbd we need a list of items maybe?
+        public StatsDisplay StatsDisplay { get; set; }
+
+        //eventually we're going to load control names from a file I think so I won't need this fucking list
+        //or we're gonna initialize the controls on the fly with a location and a type
+        //like i'll have a prototype and initialize from the prototype
+        public Room(Control control, Control playerControl, Control statsControl, Control countDownControl, List<Control> itemControls) : base(control) //tbd we need a list of items maybe?
         {
             GlobalVars.RoomWidth = control.Width;
             GlobalVars.RoomHeight = control.Height;
             GlobalVars.RoomTileSizeW = 32; //for now
             GlobalVars.RoomTileSizeH = 32;
+
+            //eventually this will also be where we load custom rooms from some file
+            //and there will be an arg here telling us what room file we want
+            Load(playerControl, statsControl, countDownControl, itemControls);
+        }
+
+        //for now this just loads the test level
+        protected void Load(Control playerControl, Control statsControl, Control countDownControl, List<Control> itemControls)
+        {
+            Player = new Player(playerControl);
+            StatsDisplay = new StatsDisplay(statsControl, Player);
+
+            //dumb intermittent hard coded solution till we finish the rest
+            Items = new List<GenericItem>()
+            {
+                new GreenLeaf(itemControls.ElementAt(0), new Operation()
+                {
+                    Target = Player
+                }),
+                new YellowLeaf(itemControls.ElementAt(1), new Operation()
+                {
+                    Target = Player,
+                }),
+                new OrangeLeaf(itemControls.ElementAt(2), new Operation()
+                {
+                    Target = Player
+                }),
+                new RedLeaf(itemControls.ElementAt(3), new Operation()
+                {
+                    Target = Player
+                })
+            };
+
+            Items.Add(new PineCone(itemControls.ElementAt(4), new MultiTargetOperation()
+            {
+                Targets = new List<GenericGameObject>(Items.Cast<GenericItem>())
+            }, countDownControl));
+
+            RegisterTemporaryItems();
         }
 
         //i guess we should know about the player
@@ -51,6 +98,8 @@ namespace LeafCrunch.GameObjects
         {
             if (!_isSuspended)
             {
+                Player.Update();
+                StatsDisplay.Update();
                 PerformItemOperations();
                 //should we check afterwards to make sure we didn't miss anything marked for deletion?
                 //or do it as we cycle through?
@@ -143,6 +192,8 @@ namespace LeafCrunch.GameObjects
         public override void OnKeyPress(KeyEventArgs e)
         {
             if (_isSuspended) return;
+            Player.OnKeyPress(e);
+            StatsDisplay.OnKeyPress(e);
             if (!ActiveKeys.Contains(e.KeyCode))
                 ActiveKeys.Add(e.KeyCode);
         }
@@ -150,6 +201,8 @@ namespace LeafCrunch.GameObjects
         public override void OnKeyUp(KeyEventArgs e)
         {
             if (_isSuspended) return;
+            Player.OnKeyUp(e);
+            StatsDisplay.OnKeyUp(e);
             ActiveKeys.Remove(e.KeyCode);
         }
 
