@@ -13,16 +13,19 @@ namespace LeafCrunch
     //and barriers
     //sounds also
     //do we want some kind of mystery box thing? 
+    //i need to make the tiles bigger ugh
+    //like have a 10 px margin or something so you don't have to get RIGHT UP EXACTLY WITH THE THING
     public partial class CrunchyLeavesMain : Form
     {
-        private Room Room { get; set; }
+        private RoomController RoomController { get; set; }
 
         private InterruptController InterruptController { get; set; }
 
         public CrunchyLeavesMain()
         {
             InitializeComponent();
-            Room = new Room(pbLevel1, pbPlayer, lblRainbowPoints, lblCountDown, new List<Control>() {
+
+            RoomController = new RoomController(pbLevel1, pbPlayer, lblRainbowPoints, lblCountDown, new List<Control>() {
                 pbGreenLeaf01,
                 pbYellowLeaf01,
                 pbOrangeLeaf01,
@@ -41,13 +44,13 @@ namespace LeafCrunch
             switch (InterruptController.OnKeyDown(e))
             {
                 case ControllerState.SUSPEND: //it isn't
-                    Room.Resume();
+                    RoomController.Resume();
                     break;
                 case ControllerState.ACTIVE: //it is
-                    Room.Suspend();
+                    RoomController.Suspend();
                     break;
                 default:
-                    Room.OnKeyPress(e);
+                    RoomController.OnKeyPress(e);
                     break;
             }
         }
@@ -60,7 +63,7 @@ namespace LeafCrunch
                 case ControllerState.ACTIVE: //it is
                     break;
                 default:
-                    Room.Update();
+                    RoomController.Update();
                     break;
             }
         }
@@ -73,7 +76,7 @@ namespace LeafCrunch
                 case ControllerState.ACTIVE: //it is
                     break;
                 default:
-                    Room.OnKeyUp(e);
+                    RoomController.OnKeyUp(e);
                     break;
             }
         }

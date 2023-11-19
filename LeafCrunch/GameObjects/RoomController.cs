@@ -10,7 +10,7 @@ using LeafCrunch.GameObjects.Stats;
 
 namespace LeafCrunch.GameObjects
 {
-    public class Room : GenericGameObject
+    public class RoomController : GenericGameObject
     {
         public bool ActiveRoom = true; //always true right now, idk if we want more rooms in the future
 
@@ -19,7 +19,7 @@ namespace LeafCrunch.GameObjects
         //eventually we're going to load control names from a file I think so I won't need this fucking list
         //or we're gonna initialize the controls on the fly with a location and a type
         //like i'll have a prototype and initialize from the prototype
-        public Room(Control control, Control playerControl, Control statsControl, Control countDownControl, List<Control> itemControls) : base(control) //tbd we need a list of items maybe?
+        public RoomController(Control control, Control playerControl, Control statsControl, Control countDownControl, List<Control> itemControls) : base(control) //tbd we need a list of items maybe?
         {
             GlobalVars.RoomWidth = control.Width;
             GlobalVars.RoomHeight = control.Height;
