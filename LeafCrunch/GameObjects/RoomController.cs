@@ -153,6 +153,10 @@ namespace LeafCrunch.GameObjects
             {
                 obstacle.Update();
                 //we'd check for player collisions here as well
+                if (obstacle.TileIndex == Player.TileIndex)
+                {
+                    Player.Rebound(obstacle);
+                }
             }
         }
 

@@ -4,10 +4,11 @@ using System.Windows.Forms;
 using System.Linq;
 using LeafCrunch.GameObjects.Items.Obstacles;
 using LeafCrunch.GameObjects.ItemProperties;
+using System;
 
 namespace LeafCrunch.GameObjects
 {
-    public class Player : InteractiveGameObject, IReboundable
+    public class Player : InteractiveGameObject, IReboundable, ICollidable
     {
         private List<PointVisualizer> _pointVisualizer = new List<PointVisualizer>();
         private int _maxRainbowPoints = 100;
@@ -131,14 +132,17 @@ namespace LeafCrunch.GameObjects
         //and i'm only gonna make the dumbest version of it
         private void Rebound(Obstacle obstacle)
         {
-            //if the obstacle also implements IReboundable (i.e. it's mobile) we'll handle things a little differently
-            //but that's tbd
-            var reboundable = obstacle as IReboundable;
-            if (reboundable != null) reboundable.Rebound(this as ICollidable);
-
             //what direction were we heading in 
             var reboundSpeedx = -Speed.vx;
             var reboundSpeedy = -Speed.vy;
+
+            var reboundable = obstacle as IReboundable;
+            if (reboundable != null)
+            {
+                reboundSpeedx = obstacle.Speed.vx;
+                reboundSpeedy = obstacle.Speed.vy;
+                reboundable.Rebound(this as ICollidable);
+            }
 
             //go the opposite way until the locations are different
             //was gonna use tile indexes but that might make corners suck

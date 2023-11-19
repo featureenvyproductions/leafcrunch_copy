@@ -49,15 +49,39 @@ namespace LeafCrunch.GameObjects.Items.Obstacles
             if (player != null) Rebound(player);
         }
 
-        //could be modified to move in response to the player colliding with it but I think for now this'll just be a placeholder
+        private void ResolveCollision(Control control)
+        {
+            if (Speed.vx != 0) //if we aren't moving in this direction, there's nothing to resolve
+            {
+                while (CollisionX(control.Left))
+                {
+                    Control.Left += Speed.vx;
+                }
+            }
+            if (Speed.vy != 0)
+            {
+                while (CollisionY(control.Top))
+                {
+                    Control.Top += Speed.vy;
+                }
+            }
+        }
+
         private void Rebound(Player player)
         {
-            //come back and deal with this later
+            //if the player isn't moving in a direction, just bounce off them
+            Speed.vy = player.Speed.vy > 0 ? player.Speed.vy : Speed.vy * -1;
+            Speed.vx = player.Speed.vx > 0 ? player.Speed.vx : Speed.vx * -1;
+
+            ResolveCollision(player.Control);
         }
 
         private void Rebound (Obstacle obstacle)
         {
-            //bounce off a wall or a rock or whatever and go the other direction
+            Speed.vy *= -1;
+            Speed.vx *= -1;
+
+            ResolveCollision(obstacle.Control);
         }
 
         private bool _isSuspended = false;
