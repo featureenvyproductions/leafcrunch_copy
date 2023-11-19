@@ -8,7 +8,7 @@ using System;
 
 namespace LeafCrunch.GameObjects
 {
-    public class Player : InteractiveGameObject, IReboundable, ICollidable, IDamageReceptor
+    public class Player : InteractiveGameObject, IReboundable, ICollidable, IDamageReceptor, IItemUser
     {
         private List<PointVisualizer> _pointVisualizer = new List<PointVisualizer>();
         private int _maxRainbowPoints = 100;
@@ -240,17 +240,25 @@ namespace LeafCrunch.GameObjects
         public void ApplyDamage(object args)
         {
             var param = args as Dictionary<string, object>;
-            if (param != null && param.Count > 0)
+            if (param != null && param.Count > 0) ApplyPointChanges(param);
+            //we might do other things here later
+        }
+
+        public void ApplyItem(object args)
+        {
+            var param = args as Dictionary<string, object>;
+            if (param != null && param.Count > 0) ApplyPointChanges(param);
+            //might do other things here later
+        }
+
+        protected void ApplyPointChanges(Dictionary<string, object> param)
+        {
+            if (param.ContainsKey("RainbowPoints"))
             {
-                //right now we handle point decrements
-                //but this could be expanded to handle other stuff.
-                if (param.ContainsKey("RainbowPoints"))
+                int points;
+                if (int.TryParse(param["RainbowPoints"].ToString(), out points))
                 {
-                    int points;
-                    if (int.TryParse(param["RainbowPoints"].ToString(), out points))
-                    {
-                        RainbowPoints += points;
-                    }
+                    RainbowPoints += points;
                 }
             }
         }

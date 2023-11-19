@@ -1,4 +1,6 @@
-﻿using LeafCrunch.GameObjects.Items.ItemOperations;
+﻿using LeafCrunch.GameObjects.ItemProperties;
+using LeafCrunch.GameObjects.Items.ItemOperations;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects.Items.InstantItems
@@ -25,10 +27,13 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
             : base(control, operation)
         {
             ActivationKey = Keys.Enter;
-            Operation.ToExecute = PointChange;
-            Operation.Params = null;
+            Operation.ToExecute = Apply;
+            Operation.Params = new Dictionary<string, object> {
+                { "RainbowPoints", PointIncrement }
+            };
         }
 
+        /*
         //what we'll ultimately use as the operation
         protected Result PointChange(GenericGameObject genericGameObject, object paramList)
         {
@@ -36,6 +41,13 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
             if (player == null) return new Result() { Value = false }; //who knows what happened...we should only be operating on the player.
 
             player.RainbowPoints += PointIncrement;
+            return new Result() { Value = true };
+        }*/
+
+        virtual protected Result Apply(GenericGameObject genericGameObject, object paramList)
+        {
+            var victim = genericGameObject as IItemUser;
+            if (victim != null) victim.ApplyItem(paramList);
             return new Result() { Value = true };
         }
     }
