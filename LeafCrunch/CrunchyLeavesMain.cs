@@ -39,7 +39,8 @@ namespace LeafCrunch
             },
             new List<Control>()
             { 
-                pbMovingObstacle
+                pbMovingObstacle,
+                pbHazard
             });
 
             InterruptController = new InterruptController(new List<Control>() { pnHelpMenu });

@@ -34,6 +34,7 @@
             this.lblCountDown = new System.Windows.Forms.Label();
             this.pnHelpMenu = new System.Windows.Forms.Panel();
             this.lblHelpText = new System.Windows.Forms.Label();
+            this.pbHazard = new System.Windows.Forms.PictureBox();
             this.pbMovingObstacle = new System.Windows.Forms.PictureBox();
             this.pbGenericObstacle = new System.Windows.Forms.PictureBox();
             this.pbPineCone01 = new System.Windows.Forms.PictureBox();
@@ -44,6 +45,7 @@
             this.pbPlayer = new System.Windows.Forms.PictureBox();
             this.pbLevel1 = new System.Windows.Forms.PictureBox();
             this.pnHelpMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbHazard)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbMovingObstacle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbGenericObstacle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbPineCone01)).BeginInit();
@@ -92,6 +94,15 @@
             this.lblHelpText.Size = new System.Drawing.Size(129, 16);
             this.lblHelpText.TabIndex = 0;
             this.lblHelpText.Text = "this is some help text";
+            // 
+            // pbHazard
+            // 
+            this.pbHazard.Image = global::LeafCrunch.Properties.Resources.hazard;
+            this.pbHazard.Location = new System.Drawing.Point(258, 466);
+            this.pbHazard.Name = "pbHazard";
+            this.pbHazard.Size = new System.Drawing.Size(49, 50);
+            this.pbHazard.TabIndex = 12;
+            this.pbHazard.TabStop = false;
             // 
             // pbMovingObstacle
             // 
@@ -180,6 +191,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(843, 540);
+            this.Controls.Add(this.pbHazard);
             this.Controls.Add(this.pbMovingObstacle);
             this.Controls.Add(this.pbGenericObstacle);
             this.Controls.Add(this.pbPineCone01);
@@ -198,6 +210,7 @@
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CrunchyLeavesMain_KeyUp);
             this.pnHelpMenu.ResumeLayout(false);
             this.pnHelpMenu.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbHazard)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbMovingObstacle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbGenericObstacle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbPineCone01)).EndInit();
@@ -228,6 +241,7 @@
         private System.Windows.Forms.Label lblHelpText;
         private System.Windows.Forms.PictureBox pbGenericObstacle;
         private System.Windows.Forms.PictureBox pbMovingObstacle;
+        private System.Windows.Forms.PictureBox pbHazard;
     }
 }
 

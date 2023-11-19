@@ -93,7 +93,15 @@ namespace LeafCrunch.GameObjects
 
             MovingObstacles = new List<MovingObstacle>()
             {
-                new MovingObstacle(movingObstacleControls.ElementAt(0), 10, 10)
+                new MovingObstacle(movingObstacleControls.ElementAt(0), 10, 10),
+                new HazardousMovingObstacle(movingObstacleControls.ElementAt(1), 5, 5, new Operation()
+                {
+                    Target = Player,
+                    Params = new Dictionary<string, object>()
+                    {
+                        { "RainbowPoints", -10 }
+                    }
+                })
             };
         }
 

@@ -23,7 +23,8 @@ namespace LeafCrunch.GameObjects.ItemProperties
         {
             _parent = parent;
             _control = new Label();
-            _control.Text = $"+{points}";
+            var sign = points > 0 ? "+" : string.Empty;
+            _control.Text = $"{sign}{points}";
             _control.Parent = parent;
             _parent.Controls.Add(_control);
             _control.Visible = true;

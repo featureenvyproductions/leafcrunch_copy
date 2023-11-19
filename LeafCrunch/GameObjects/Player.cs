@@ -8,7 +8,7 @@ using System;
 
 namespace LeafCrunch.GameObjects
 {
-    public class Player : InteractiveGameObject, IReboundable, ICollidable
+    public class Player : InteractiveGameObject, IReboundable, ICollidable, IDamageReceptor
     {
         private List<PointVisualizer> _pointVisualizer = new List<PointVisualizer>();
         private int _maxRainbowPoints = 100;
@@ -139,9 +139,11 @@ namespace LeafCrunch.GameObjects
             var reboundable = obstacle as IReboundable;
             if (reboundable != null)
             {
+                //this won't conserve momentum in every case, i do not care i am tired
+                //placeholder code to fix later
                 reboundSpeedx = obstacle.Speed.vx;
                 reboundSpeedy = obstacle.Speed.vy;
-                reboundable.Rebound(this as ICollidable);
+                reboundable.Rebound(this);
             }
 
             //go the opposite way until the locations are different
@@ -231,6 +233,24 @@ namespace LeafCrunch.GameObjects
         {
             UpdateVx();
             UpdateVy();
+        }
+
+        public void ApplyDamage(object args)
+        {
+            var param = args as Dictionary<string, object>;
+            if (param != null && param.Count > 0)
+            {
+                //right now we handle point decrements
+                //but this could be expanded to handle other stuff.
+                if (param.ContainsKey("RainbowPoints"))
+                {
+                    int points;
+                    if (int.TryParse(param["RainbowPoints"].ToString(), out points))
+                    {
+                        RainbowPoints += points;
+                    }
+                }
+            }
         }
     }
 }

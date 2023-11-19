@@ -1,4 +1,5 @@
 ﻿using LeafCrunch.GameObjects.ItemProperties;
+using LeafCrunch.GameObjects.Items.ItemOperations;
 using LeafCrunch.Utilities;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,54 @@ using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects.Items.Obstacles
 {
+    //something that can take damage
+    public interface IDamageReceptor
+    {
+        //for the player, damage is point decrements
+        //but for anything else if we expand this functionality
+        //it might effect speed or maybe destroy something altogether?
+        void ApplyDamage(object args);
+    }
+
+    //something that can inflict damage
+    public interface IHazard
+    {
+
+    }
+
+    //moves but can also inflict damage - so like reverse of items
+    public class HazardousMovingObstacle : MovingObstacle, IHazard
+    {
+        public HazardousMovingObstacle(Control control) : base(control)
+        {
+        }
+
+        public HazardousMovingObstacle(Control control, int speedx, int speedy, Operation operation) : base(control, speedx, speedy)
+        {
+            Operation = operation;
+            Operation.ToExecute = InflictDamage;
+        }
+
+        //rebounds, but also inflicts damage if colliding with target
+        override public void Rebound(ICollidable collidable)
+        {
+            base.Rebound(collidable);
+
+            var obj = collidable as GenericGameObject;
+            if (obj != null && Operation.Target.Equals(obj))
+            {
+                Operation.Execute();
+            }
+        }
+
+        virtual protected Result InflictDamage(GenericGameObject genericGameObject, object paramList)
+        {
+            var victim = genericGameObject as IDamageReceptor;
+            if (victim != null) victim.ApplyDamage(paramList);
+            return new Result() { Value = true };
+        }
+    }
+
     public class MovingObstacle : Obstacle, IReboundable, ICollidable
     {
         //simple and dumb
@@ -34,7 +83,7 @@ namespace LeafCrunch.GameObjects.Items.Obstacles
             };
         }
 
-        public void Rebound(ICollidable collidable)
+        virtual public void Rebound(ICollidable collidable)
         {
             //can collide with other obstacles or the player
             //with obstacles (like walls) we actually will bounce it off of those
