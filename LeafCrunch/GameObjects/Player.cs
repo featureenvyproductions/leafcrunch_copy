@@ -138,6 +138,23 @@ namespace LeafCrunch.GameObjects
             ActiveKeys.Remove(e.KeyCode);
         }
 
+        public void ForceStop(bool upDown)
+        {
+            //stop the player moving a direction and do the equivalent of forcing a key release
+            if (upDown)
+            {
+                ActiveKeys.Remove(Keys.Up);
+                ActiveKeys.Remove(Keys.Down);
+                Speed.vy = 0;
+            }
+            else
+            {
+                ActiveKeys.Remove(Keys.Left);
+                ActiveKeys.Remove(Keys.Right);
+                Speed.vx = 0;
+            }
+        }
+
         protected void UpdateLocation()
         {
             if (Control == null) return;

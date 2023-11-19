@@ -31,6 +31,10 @@ namespace LeafCrunch
                 pbOrangeLeaf01,
                 pbRedLeaf01,
                 pbPineCone01
+            },
+            new List<Control>()
+            {
+                pbGenericObstacle //tomorrow let's try this out and see if we can do the collision thing right
             });
 
             InterruptController = new InterruptController(new List<Control>() { pnHelpMenu });

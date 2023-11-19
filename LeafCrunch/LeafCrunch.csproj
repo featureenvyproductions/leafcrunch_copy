@@ -64,6 +64,7 @@
     <Compile Include="GameObjects\Items\ItemOperations\IOperation.cs" />
     <Compile Include="GameObjects\Items\ItemOperations\MultiTargetOperation.cs" />
     <Compile Include="GameObjects\Items\ItemOperations\Operation.cs" />
+    <Compile Include="GameObjects\Items\Obstacles\Obstacle.cs" />
     <Compile Include="GameObjects\Items\TemporaryItem.cs" />
     <Compile Include="GameObjects\Items\TemporaryItems\PineCone.cs" />
     <Compile Include="GameObjects\Player.cs" />
@@ -76,20 +77,20 @@
     <Compile Include="Menus\Pause.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\CommonProperties.cs" />
     <EmbeddedResource Include="CrunchyLeavesMain.resx">
       <DependentUpon>CrunchyLeavesMain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -104,6 +105,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Images\Obstacles\" />
     <Folder Include="Images\Other\" />
   </ItemGroup>
   <ItemGroup>

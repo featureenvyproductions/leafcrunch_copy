@@ -7,6 +7,7 @@ using LeafCrunch.GameObjects.Items.InstantItems;
 using LeafCrunch.GameObjects.Items.ItemOperations;
 using LeafCrunch.GameObjects.Items.TemporaryItems;
 using LeafCrunch.GameObjects.Stats;
+using LeafCrunch.GameObjects.Items.Obstacles;
 
 namespace LeafCrunch.GameObjects
 {
@@ -21,20 +22,20 @@ namespace LeafCrunch.GameObjects
         //eventually we're going to load control names from a file I think so I won't need this fucking list
         //or we're gonna initialize the controls on the fly with a location and a type
         //like i'll have a prototype and initialize from the prototype
-        public RoomController(Control control, Control playerControl, Control statsControl, Control countDownControl, List<Control> itemControls) : base(control) //tbd we need a list of items maybe?
+        public RoomController(Control control, Control playerControl, Control statsControl, Control countDownControl, List<Control> itemControls, List<Control> obstacleControls) : base(control) //tbd we need a list of items maybe?
         {
             GlobalVars.RoomWidth = control.Width;
             GlobalVars.RoomHeight = control.Height;
-            GlobalVars.RoomTileSizeW = 32; //for now
-            GlobalVars.RoomTileSizeH = 32;
+            GlobalVars.RoomTileSizeW = 64; //for now
+            GlobalVars.RoomTileSizeH = 64;
 
             //eventually this will also be where we load custom rooms from some file
             //and there will be an arg here telling us what room file we want
-            Load(playerControl, statsControl, countDownControl, itemControls);
+            Load(playerControl, statsControl, countDownControl, itemControls, obstacleControls);
         }
 
         //for now this just loads the test level
-        protected void Load(Control playerControl, Control statsControl, Control countDownControl, List<Control> itemControls)
+        protected void Load(Control playerControl, Control statsControl, Control countDownControl, List<Control> itemControls, List<Control> obstacleControls)
         {
             Player = new Player(playerControl);
             StatsDisplay = new StatsDisplay(statsControl, Player);
@@ -66,6 +67,11 @@ namespace LeafCrunch.GameObjects
             }, countDownControl));
 
             RegisterTemporaryItems();
+
+            Obstacles = new List<Obstacle>()
+            {
+                new Obstacle(obstacleControls.ElementAt(0))
+            };
         }
 
         //i guess we should know about the player
@@ -108,8 +114,11 @@ namespace LeafCrunch.GameObjects
                 //or do it as we cycle through?
                 //idk if any solution is really perfect here
                 CleanUpItems();
+
+                CheckObstacleCollisions();
             }
         }
+        public List<Obstacle> Obstacles = new List<Obstacle>();
 
         public List<GenericItem> Items = new List<GenericItem>();
         protected List<TemporaryItem> TemporaryItems = new List<TemporaryItem>(); //items that can be applied
@@ -139,12 +148,55 @@ namespace LeafCrunch.GameObjects
 
         protected bool ItemActiveKeyPressed(GenericItem i) => i.ActivationKey == Keys.None || ActiveKeys.Contains(i.ActivationKey);
 
+        protected void CheckObstacleCollisions()
+        {
+            foreach (var obstacle in Obstacles)
+            {
+                if (TileObjectCollision(obstacle))
+                {
+                    ResolveCollision(obstacle);
+                }
+            }
+        }
+
         //same idea can apply eventually to wall collisions.
-        protected bool ItemTileActive(GenericItem i) => i.TileIndex == Player.TileIndex;
+        //in fact i can literally just use this for collisions
+        protected bool TileObjectCollision(GenericItem i) => i.TileIndex == Player.TileIndex;
+
+        //probably need a version of this for things that aren't the player but that's a problem for future ej
+        //should this go in the obstacle code actually? idk.
+        //i probably should make this and the above more generic so you can use them besides with the player. 
+        protected void ResolveCollision(Obstacle obstacle)
+        {
+            //what direction were we heading in 
+            var reboundSpeedx = -Player.Speed.vx;
+            var reboundSpeedy = -Player.Speed.vy;
+
+            //go the opposite way until the locations are different
+            //was gonna use tile indexes but that might make corners suck
+            if (reboundSpeedx != 0) //if we aren't moving in this direction, there's nothing to resolve
+            {
+                while (obstacle.CollisionX(Player.Control.Left) || obstacle.CollisionX(Player.Control.Right) || TileObjectCollision(obstacle))
+                {
+                    Player.Control.Left += reboundSpeedx;
+                    Player.Speed.vx = 0;
+                    Player.ForceStop(false);
+                }
+            }
+            if (reboundSpeedy != 0)
+            {
+                while (obstacle.CollisionY(Player.Control.Top) || obstacle.CollisionY(Player.Control.Bottom) || TileObjectCollision(obstacle))
+                {
+                    Player.Control.Top += reboundSpeedy;
+                    Player.Speed.vy = 0;
+                    Player.ForceStop(true);
+                }
+            }
+        }
 
         protected bool IsItemActive(GenericItem i)
         {
-            return i.Active || (ItemTileActive(i) && ItemActiveKeyPressed(i));
+            return i.Active || (TileObjectCollision(i) && ItemActiveKeyPressed(i));
         }
 
         protected void CleanUpItems()
