@@ -15,6 +15,21 @@ namespace LeafCrunch.Utilities
         public static int RoomTileSizeH { get; set; }
     }
 
+    public enum Direction
+    {
+        None,
+        North,
+        South,
+        West,
+        East
+    }
+
+    public enum Axis
+    {
+        Horizontal,
+        Vertical
+    }
+
     public class Speed
     {
         public int vx = 0;

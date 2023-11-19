@@ -2,65 +2,12 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Linq;
+using LeafCrunch.GameObjects.Items.Obstacles;
+using LeafCrunch.GameObjects.ItemProperties;
 
 namespace LeafCrunch.GameObjects
 {
-    //draws the points somewhere when they change or whatever 
-    public class PointVisualizer
-    {
-        private int _displayTicks = 10;
-        private Label _control { get; set; }
-        private Control _parent { get; set; }
-        private Timer _timer = new Timer();
-        private int _currentTicks = 0;
-
-        public bool Active
-        {
-            get
-            {
-                return _timer.Enabled;
-            }
-        }
-
-        public PointVisualizer(Control parent, int points)
-        {
-            _parent = parent;
-            _control = new Label();
-            _control.Text = $"+{points}";
-            _control.Parent = parent;
-            _parent.Controls.Add(_control);
-            _control.Visible = true;
-            _control.ForeColor = System.Drawing.Color.Black;
-            _control.BackColor = System.Drawing.Color.Transparent;
-
-            //uhg this all still makes it disappear when it goes off the person :<
-            //i'll have to figure that out....
-
-            _control.BringToFront();
-            //Control.Left = parent.Left;
-            //Control.Top = parent.Top - 32;
-            _timer.Tick += Timer_Tick;
-            _timer.Start();
-        }
-
-        private void Timer_Tick(object sender, System.EventArgs e)
-        {
-            if (++_currentTicks == _displayTicks)
-            {
-                _control.Visible = false;
-                _parent.Controls.Remove(_control);
-                _timer.Stop();
-            }
-            else
-            {
-                //animate it because that's neat
-                _control.Top--;
-                _control.Left--;
-            }
-        }
-    }
-
-    public class Player : InteractiveGameObject
+    public class Player : InteractiveGameObject, IReboundable
     {
         private List<PointVisualizer> _pointVisualizer = new List<PointVisualizer>();
         private int _maxRainbowPoints = 100;
@@ -138,20 +85,70 @@ namespace LeafCrunch.GameObjects
             ActiveKeys.Remove(e.KeyCode);
         }
 
-        public void ForceStop(bool upDown)
+        public void ForceStop(Axis axisOfMotion)
         {
             //stop the player moving a direction and do the equivalent of forcing a key release
-            if (upDown)
+            switch (axisOfMotion)
             {
-                ActiveKeys.Remove(Keys.Up);
-                ActiveKeys.Remove(Keys.Down);
-                Speed.vy = 0;
+                case Axis.Vertical:
+                    ActiveKeys.Remove(Keys.Up);
+                    ActiveKeys.Remove(Keys.Down);
+                    Speed.vy = 0;
+                    break;
+                case Axis.Horizontal:
+                    ActiveKeys.Remove(Keys.Left);
+                    ActiveKeys.Remove(Keys.Right);
+                    Speed.vx = 0;
+                    break;
             }
-            else
+        }
+
+        private bool CollisionX(Obstacle obstacle)
+        {
+            return (obstacle.CollisionX(Control.Left) ||
+                    obstacle.CollisionX(Control.Right) ||
+                    obstacle.TileIndex == TileIndex);
+        }
+
+        private bool CollisionY(Obstacle obstacle)
+        {
+            return obstacle.CollisionY(Control.Top) ||
+                    obstacle.CollisionY(Control.Bottom) ||
+                    obstacle.TileIndex == TileIndex;
+        }
+
+        //for resolving collisions
+        //I could probably also make this generic and have it as an interface I tack on
+        //we'll see
+        //to make the physics slightly less dumb this should also change depending on whether
+        //the obstacle is also moving but we can deal with that later.
+        //and i'm only gonna make the dumbest version of it
+        public void Rebound(Obstacle obstacle)
+        {
+            //if the obstacle also implements IReboundable (i.e. it's mobile) we'll handle things a little differently
+            //but that's tbd
+
+            //what direction were we heading in 
+            var reboundSpeedx = -Speed.vx;
+            var reboundSpeedy = -Speed.vy;
+
+            //go the opposite way until the locations are different
+            //was gonna use tile indexes but that might make corners suck
+            if (reboundSpeedx != 0) //if we aren't moving in this direction, there's nothing to resolve
             {
-                ActiveKeys.Remove(Keys.Left);
-                ActiveKeys.Remove(Keys.Right);
-                Speed.vx = 0;
+                while (CollisionX(obstacle))
+                {
+                    Control.Left += reboundSpeedx;
+                }
+                ForceStop(Axis.Horizontal);
+            }
+            if (reboundSpeedy != 0)
+            {
+                while (CollisionY(obstacle))
+                {
+                    Control.Top += reboundSpeedy;
+                }
+                ForceStop(Axis.Vertical);
             }
         }
 

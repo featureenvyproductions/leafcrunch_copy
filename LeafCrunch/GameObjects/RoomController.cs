@@ -9,6 +9,17 @@ using LeafCrunch.GameObjects.Items.TemporaryItems;
 using LeafCrunch.GameObjects.Stats;
 using LeafCrunch.GameObjects.Items.Obstacles;
 
+//you know one thing i should do is when i actually implement the dynamic loading of the game board
+//i should make it so that i only place things exactly in tiles
+//because right now dropping them on the board in the form designer
+//i'm not like getting them exact, so it makes the collisions a little funny
+//if i had a virtual grid and loaded things into it, the collision code would be a lot less fucking stupid
+//i also didn't consider how i want to handle things that are like more than one tile big but tbh, that's
+//not REALLY going to be a thing. I think what I would probably do is just have an overlay and bring it to the front after
+//initializing all the underlying obstacle tiles. that's fine probably idk.
+//i probably don't need to get that complex for this....most of the obstacles are going to be rocks or fences or like
+//cats
+
 namespace LeafCrunch.GameObjects
 {
     public class RoomController : GenericGameObject
@@ -168,30 +179,7 @@ namespace LeafCrunch.GameObjects
         //i probably should make this and the above more generic so you can use them besides with the player. 
         protected void ResolveCollision(Obstacle obstacle)
         {
-            //what direction were we heading in 
-            var reboundSpeedx = -Player.Speed.vx;
-            var reboundSpeedy = -Player.Speed.vy;
-
-            //go the opposite way until the locations are different
-            //was gonna use tile indexes but that might make corners suck
-            if (reboundSpeedx != 0) //if we aren't moving in this direction, there's nothing to resolve
-            {
-                while (obstacle.CollisionX(Player.Control.Left) || obstacle.CollisionX(Player.Control.Right) || TileObjectCollision(obstacle))
-                {
-                    Player.Control.Left += reboundSpeedx;
-                    Player.Speed.vx = 0;
-                    Player.ForceStop(false);
-                }
-            }
-            if (reboundSpeedy != 0)
-            {
-                while (obstacle.CollisionY(Player.Control.Top) || obstacle.CollisionY(Player.Control.Bottom) || TileObjectCollision(obstacle))
-                {
-                    Player.Control.Top += reboundSpeedy;
-                    Player.Speed.vy = 0;
-                    Player.ForceStop(true);
-                }
-            }
+            Player.Rebound(obstacle);   
         }
 
         protected bool IsItemActive(GenericItem i)

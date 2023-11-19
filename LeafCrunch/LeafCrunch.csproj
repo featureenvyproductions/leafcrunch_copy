@@ -54,6 +54,8 @@
     </Compile>
     <Compile Include="GameObjects\GenericGameObject.cs" />
     <Compile Include="GameObjects\InteractiveGameObject.cs" />
+    <Compile Include="GameObjects\ItemProperties\IReboundable.cs" />
+    <Compile Include="GameObjects\ItemProperties\PointVisualizer.cs" />
     <Compile Include="GameObjects\Items\GenericItem.cs" />
     <Compile Include="GameObjects\Items\InstantItem.cs" />
     <Compile Include="GameObjects\Items\InstantItems\GreenLeaf.cs" />
