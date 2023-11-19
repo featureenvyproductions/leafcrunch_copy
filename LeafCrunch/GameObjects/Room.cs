@@ -6,6 +6,7 @@ using LeafCrunch.GameObjects.Items;
 using LeafCrunch.GameObjects.Items.InstantItems;
 using LeafCrunch.GameObjects.Items.ItemOperations;
 using LeafCrunch.GameObjects.Items.TemporaryItems;
+using LeafCrunch.GameObjects.Stats;
 
 namespace LeafCrunch.GameObjects
 {

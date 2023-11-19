@@ -68,6 +68,7 @@
     <Compile Include="GameObjects\Items\TemporaryItems\PineCone.cs" />
     <Compile Include="GameObjects\Player.cs" />
     <Compile Include="GameObjects\Room.cs" />
+    <Compile Include="GameObjects\Stats\StatsDisplay.cs" />
     <Compile Include="Menus\GenericInterrupt.cs" />
     <Compile Include="Menus\GenericMenu.cs" />
     <Compile Include="Menus\HelpMenu.cs" />
