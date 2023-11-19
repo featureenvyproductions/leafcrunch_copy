@@ -14,7 +14,7 @@ namespace LeafCrunch.GameObjects.Items
         {
         }
 
-        public override void HandleResult(Result result)
+        protected override void HandleResult(Result result)
         {
             //regardless of the outcome, the item is used so we delete it
             MarkedForDeletion = true;
@@ -24,7 +24,7 @@ namespace LeafCrunch.GameObjects.Items
         public override void Update()
         {
             //oh when will we set it to active though
-            if (!Active || Operation == null) return;
+            if (IsSuspended || !Active || Operation == null) return;
 
             HandleResult(Operation.Execute());
         }

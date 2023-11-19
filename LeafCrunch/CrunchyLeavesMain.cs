@@ -116,14 +116,8 @@ namespace LeafCrunch
 
         private bool interruptActive = false; //so we don't have to loop through all the interrupts for 3 different event handlers seeing if something is active
 
-        private List<Keys> activeKeys = new List<Keys>();
-        private List<Keys> storedActiveKeys = new List<Keys>();
-        private List<Keys> delayedDeactivationKeys = new List<Keys>();
-
         private void CrunchyLeavesMain_KeyDown(object sender, KeyEventArgs e)
         {
-            if (!activeKeys.Contains(e.KeyCode)) activeKeys.Add(e.KeyCode);
-
             //the first thing we do is check to see if we're leaving a menu
             if (interruptActive)
             {
@@ -137,20 +131,17 @@ namespace LeafCrunch
                     var remaining = Interrupts.Where(i => i != null && i.IsActive);
                     if (remaining == null || remaining.Count() == 0)
                     {
-                        //do all of the cleanup and key ups
                         interruptActive = false;
+                        //pass event handling back to the room
+                        //i mean really what we need to do is have a state machine with a Room state and a Menu state
 
-                        //check any keys that were pressed before we opened the menu
-                        //see if they're still pressed
-                        //and if not, fire any key up events
-                        foreach (var key in storedActiveKeys)
+                        //right now we only have one room but that might not always be true so I've got an active room thing
+                        //there's probably a better way to check this
+                        foreach(var obj in Objects)
                         {
-                            if (!activeKeys.Contains(key))
-                            {
-                                delayedDeactivationKeys.Add(key);
-                            }
+                            Room room = obj as Room;
+                            if (room != null && room.ActiveRoom) room.Resume();
                         }
-                        storedActiveKeys.Clear();
                     }
                     return;
                 }
@@ -164,21 +155,16 @@ namespace LeafCrunch
                         i.Deactivate();
                     }
                     interruptActive = false;
-
-                    //check any keys that were pressed before we opened the menu
-                    //see if they're still pressed
-                    //and if not, fire any key up events
-                    foreach (var key in storedActiveKeys)
+                    //pass event handling back to the room
+                    foreach (var obj in Objects)
                     {
-                        if (!activeKeys.Contains(key))
-                        {
-                            delayedDeactivationKeys.Add(key);
-                        }
+                        Room room = obj as Room;
+                        if (room != null && room.ActiveRoom) room.Resume();
                     }
-                    storedActiveKeys.Clear();
                     return;
                 }
             }
+
             //if we're not then see if we're entering one
             var relevantInterrupts = Interrupts.Where(i => i != null && i.ActivationKey == e.KeyCode);
 
@@ -189,18 +175,15 @@ namespace LeafCrunch
             //or reserved keys like left/right/up/down/enter
             if (relevantInterrupts.Any())
             {
-                //i should do a thing to make sure we can't activate more than one menu
-                //unless it's a specific kind of menu
-                //or if we press the same key again it'll hide the menu
-                interruptActive = true; 
+                interruptActive = true;
+                //before we do anything else, we need to suspend the room so that the menus take over event handling
+                foreach (var obj in Objects)
+                {
+                    Room room = obj as Room;
+                    if (room != null && room.ActiveRoom) room.Suspend();
+                }
                 foreach (var i in relevantInterrupts)
                 {
-                    //if we're entering a menu for the first time, we need to store the active keys.
-                    //not the one for the current menu of course
-                    if (!i.IsActive)
-                    {
-                        storedActiveKeys.AddRange(activeKeys.Where(k => k != e.KeyCode));
-                    }
                     i.Activate();
                     //call their update functions
                     i.OnKeyPress(e);
@@ -238,30 +221,6 @@ namespace LeafCrunch
 
         private void CrunchyLeavesMain_KeyUp(object sender, KeyEventArgs e)
         {
-            if (activeKeys.Contains(e.KeyCode)) activeKeys.Remove(e.KeyCode);
-
-            //if there are any delayed key up events (i.e. we went into a menu with a key pressed and released the key before
-            //leaving the menu
-            //like say we were walking and hit the menu button
-            //but stopped walking
-            //idk maybe this is overkill
-            //but it's whatever
-            //i think i'm trying to prevent a thing where we never see the key up event so you leave the menu
-            //and like KEEP WALKING WHEN YOURE NOT PUSHING ANYTHING you know
-            //this doesn't quite work but eh. we can fix it later
-
-            if (delayedDeactivationKeys != null)
-            {
-                foreach (var key in delayedDeactivationKeys)
-                {
-                    foreach (var obj in Objects)
-                    {
-                        obj.OnKeyUp(e);
-                    }
-                }
-                delayedDeactivationKeys.Clear();
-            }
-
             //see if we have any menus active
             if (interruptActive)
             {

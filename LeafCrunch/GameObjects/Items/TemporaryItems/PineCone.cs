@@ -40,6 +40,7 @@ namespace LeafCrunch.GameObjects.Items.TemporaryItems
 
         public override void Update()
         {
+            if (IsSuspended) return;
             base.Update(); //do what the base does
             //but we also want to update the count down
 
@@ -48,7 +49,7 @@ namespace LeafCrunch.GameObjects.Items.TemporaryItems
             DisplayControl.Refresh();
         }
 
-        public Result ApplyPointMultiplier(GenericGameObject genericGameObject, object paramList)
+        private Result ApplyPointMultiplier(GenericGameObject genericGameObject, object paramList)
         {
             //don't apply if we already applied it
             if (IsApplied)

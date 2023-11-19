@@ -8,6 +8,8 @@ namespace LeafCrunch.GameObjects
 {
     public class Room : GenericGameObject
     {
+        public bool ActiveRoom = true; //always true right now, idk if we want more rooms in the future
+
         public Room(Control control) : base(control) //tbd we need a list of items maybe?
         {
             GlobalVars.RoomWidth = control.Width;
@@ -19,13 +21,42 @@ namespace LeafCrunch.GameObjects
         //i guess we should know about the player
         public Player Player { get; set; }
 
+        private bool _isSuspended = false; //says whether or not the room is active (as opposed to a menu)
+
+        //call child suspend methods, remove all active keys.
+        //oh yeah you know we want to have that still at the room level i think
+        //because I don't want to ignore them completely.
+        public void Suspend()
+        {
+            _isSuspended = true;
+            ActiveKeys.Clear();
+            Player.Suspend();
+            foreach (var item in Items)
+            {
+                item.IsSuspended = true;
+            }
+        }
+
+        public void Resume()
+        {
+            _isSuspended = false;
+            Player.Resume();
+            foreach (var item in Items)
+            {
+                item.IsSuspended = false;
+            }
+        }
+
         public override void Update()
         {
-            PerformItemOperations();
-            //should we check afterwards to make sure we didn't miss anything marked for deletion?
-            //or do it as we cycle through?
-            //idk if any solution is really perfect here
-            CleanUpItems();
+            if (!_isSuspended)
+            {
+                PerformItemOperations();
+                //should we check afterwards to make sure we didn't miss anything marked for deletion?
+                //or do it as we cycle through?
+                //idk if any solution is really perfect here
+                CleanUpItems();
+            }
         }
 
         public List<GenericItem> Items = new List<GenericItem>();
@@ -111,12 +142,14 @@ namespace LeafCrunch.GameObjects
 
         public override void OnKeyPress(KeyEventArgs e)
         {
+            if (_isSuspended) return;
             if (!ActiveKeys.Contains(e.KeyCode))
                 ActiveKeys.Add(e.KeyCode);
         }
 
         public override void OnKeyUp(KeyEventArgs e)
         {
+            if (_isSuspended) return;
             ActiveKeys.Remove(e.KeyCode);
         }
 

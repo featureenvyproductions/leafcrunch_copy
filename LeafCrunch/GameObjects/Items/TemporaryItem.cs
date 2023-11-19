@@ -34,7 +34,7 @@ namespace LeafCrunch.GameObjects.Items
         {
         }
 
-        public override void HandleResult(Result result)
+        protected override void HandleResult(Result result)
         {
             Ticks--;
             //we don't mark for deletion until we've gone through the ticks.
@@ -48,7 +48,7 @@ namespace LeafCrunch.GameObjects.Items
         public override void Update()
         {
             //oh when will we set it to active though
-            if (!Active || Ticks <= 0 || Operation == null) return;
+            if (IsSuspended || !Active || Ticks <= 0 || Operation == null) return;
 
             //first let's see if this is a multi target operation and handle accordingly
             var multitarget = Operation as MultiTargetOperation;

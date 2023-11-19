@@ -30,7 +30,7 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
         }
 
         //what we'll ultimately use as the operation
-        public Result PointChange(GenericGameObject genericGameObject, object paramList)
+        protected Result PointChange(GenericGameObject genericGameObject, object paramList)
         {
             var player = genericGameObject as Player;
             if (player == null) return new Result() { Value = false }; //who knows what happened...we should only be operating on the player.

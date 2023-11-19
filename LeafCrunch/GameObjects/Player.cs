@@ -17,12 +17,29 @@ namespace LeafCrunch.GameObjects
             }
         }
 
+        private bool _isSuspended = false;
+
+        public void Suspend()
+        {
+            _isSuspended = true;
+            ActiveKeys.Clear();
+            Speed.vy = 0;
+            Speed.vx = 0;
+        }
+
+        public void Resume()
+        {
+            _isSuspended = false;
+            //do we need to do anything else here?
+        }
+
         public Player(Control control) : base(control)
         {
         }
 
         public override void Update()
         {
+            if (_isSuspended) return;
             UpdateSpeed();
             UpdateLocation();
         }
@@ -43,14 +60,14 @@ namespace LeafCrunch.GameObjects
 
         public override void OnKeyPress(KeyEventArgs e)
         {
-            //ChangeSpeed(e);
+            if (_isSuspended) return;
             if (!ActiveKeys.Contains(e.KeyCode))
                 ActiveKeys.Add(e.KeyCode);
         }
 
         public override void OnKeyUp(KeyEventArgs e)
         {
-            //ChangeSpeed(e, true);
+            if (_isSuspended) return;
             ActiveKeys.Remove(e.KeyCode);
         }
 
