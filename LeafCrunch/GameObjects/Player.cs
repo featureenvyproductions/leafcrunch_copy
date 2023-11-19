@@ -8,54 +8,54 @@ namespace LeafCrunch.GameObjects
     //draws the points somewhere when they change or whatever 
     public class PointVisualizer
     {
-        int displayTicks = 10;
-        Label Control { get; set; }
-        Control Parent { get; set; }
-        Timer Timer = new Timer();
-        int currentTicks = 0;
+        private int _displayTicks = 10;
+        private Label _control { get; set; }
+        private Control _parent { get; set; }
+        private Timer _timer = new Timer();
+        private int _currentTicks = 0;
 
         public bool Active
         {
             get
             {
-                return Timer.Enabled;
+                return _timer.Enabled;
             }
         }
 
         public PointVisualizer(Control parent, int points)
         {
-            Parent = parent;
-            Control = new Label();
-            Control.Text = $"+{points}";
-            Control.Parent = parent;
-            Parent.Controls.Add(Control);
-            Control.Visible = true;
-            Control.ForeColor = System.Drawing.Color.Black;
-            Control.BackColor = System.Drawing.Color.Transparent;
+            _parent = parent;
+            _control = new Label();
+            _control.Text = $"+{points}";
+            _control.Parent = parent;
+            _parent.Controls.Add(_control);
+            _control.Visible = true;
+            _control.ForeColor = System.Drawing.Color.Black;
+            _control.BackColor = System.Drawing.Color.Transparent;
 
             //uhg this all still makes it disappear when it goes off the person :<
             //i'll have to figure that out....
 
-            Control.BringToFront();
+            _control.BringToFront();
             //Control.Left = parent.Left;
             //Control.Top = parent.Top - 32;
-            Timer.Tick += Timer_Tick;
-            Timer.Start();
+            _timer.Tick += Timer_Tick;
+            _timer.Start();
         }
 
         private void Timer_Tick(object sender, System.EventArgs e)
         {
-            if (++currentTicks == displayTicks)
+            if (++_currentTicks == _displayTicks)
             {
-                Control.Visible = false;
-                Parent.Controls.Remove(Control);
-                Timer.Stop();
+                _control.Visible = false;
+                _parent.Controls.Remove(_control);
+                _timer.Stop();
             }
             else
             {
                 //animate it because that's neat
-                Control.Top--;
-                Control.Left--;
+                _control.Top--;
+                _control.Left--;
             }
         }
     }
