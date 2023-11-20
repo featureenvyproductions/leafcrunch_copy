@@ -97,7 +97,7 @@ namespace LeafCrunch.GameObjects
             set { _isInitialized = value; }
         }
 
-        private const string _configFile = "player.json"; //how do i get the right one though
+        private const string _configFile = "player.json";
         override public string ConfigFile
         {
             get { return _configFile; }
@@ -110,21 +110,34 @@ namespace LeafCrunch.GameObjects
             if (string.IsNullOrEmpty(jsonString)) return; //maybe even throw an exception here
 
             //load up all the stuff
-            //var spriteLoader = new SpriteLoader();
             var loader = new PlayerLoader();
             var playerData = loader.Load(jsonString);
 
             if (playerData == null || playerData.Sprite == null || playerData.Stats == null) return;
 
             _maxRainbowPoints = playerData.Stats.MaxPoints;
-            Control.Top = playerData.Stats.InitialY;
-            Control.Left = playerData.Stats.InitialX;
             Speed = new Speed()
             {
                 vx = playerData.Stats.InitialSpeedX,
                 vy = playerData.Stats.InitialSpeedY
             };
-            Sprite = playerData.Sprite;
+            Sprite = playerData.Sprite; //of course things could have gone wrong when initializing this but i don't have
+            //emotional energy to check all that.
+            //I'll make some friggin validator code later or some shit but right now
+            //the game should just stop working anyway if the stuff isn't there that needs to be there
+
+            //it looks like everything is initializing to show an image right away BUT I'M JUST CHECKING
+            Sprite.UpdateSequence(Direction.South, true);
+
+            //double check that adding this to the child controls of the room will set the parent of this to the room
+            Control = new PictureBox()
+            {
+                Image = Sprite.CurrentImage,
+                Width = Sprite.CurrentImage.Width,
+                Height = Sprite.CurrentImage.Height,
+                Top = playerData.Stats.InitialY,
+                Left = playerData.Stats.InitialX
+            };
 
             //eventually we'll probably need to have special sprites as well but we'll come back to that
             //like the stomp animation
@@ -133,7 +146,7 @@ namespace LeafCrunch.GameObjects
         #endregion
 
         #region Constructors
-        public Player(Control control) : base(control)
+        public Player() : base()
         {
             Initialize();
         }

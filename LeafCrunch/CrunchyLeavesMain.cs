@@ -28,7 +28,7 @@ namespace LeafCrunch
 
             GlobalVars.CalculateFrameRate(timer1.Interval);
 
-            RoomController = new RoomController(pbLevel1, pbPlayer, lblRainbowPoints, lblCountDown, 
+            RoomController = new RoomController(pbLevel1, lblRainbowPoints, lblCountDown, 
             new List<Control>() {
                 pbGreenLeaf01,
                 pbYellowLeaf01,

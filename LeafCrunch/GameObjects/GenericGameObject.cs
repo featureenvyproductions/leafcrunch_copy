@@ -13,6 +13,11 @@ namespace LeafCrunch.GameObjects
 
         virtual public string ConfigFile { get; set; }
 
+        public GenericGameObject()
+        {
+            Control = new Control();
+        }
+
         public GenericGameObject(Control control)
         {
             Control = control;

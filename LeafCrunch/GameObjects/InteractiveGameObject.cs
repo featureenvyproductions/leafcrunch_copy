@@ -7,6 +7,11 @@ namespace LeafCrunch.GameObjects
     {
         public Speed Speed { get; set; }
 
+        public InteractiveGameObject(): base()
+        {
+            Speed = new Speed() { vx = 0, vy = 0 };
+        }
+
         public InteractiveGameObject(Control control) : base(control)
         {
             Speed = new Speed() { vx = 0, vy = 0 };
