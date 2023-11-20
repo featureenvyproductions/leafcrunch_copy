@@ -2,6 +2,7 @@
 using LeafCrunch.Menus;
 using LeafCrunch.Utilities;
 using LeafCrunch.Utilities.Animation;
+using LeafCrunch.Utilities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -26,6 +27,35 @@ namespace LeafCrunch
             InitializeComponent();
 
             GlobalVars.CalculateFrameRate(timer1.Interval);
+            string jsonString =
+@"{
+  ""ImagePaths"": [
+    ""Images/Player/player_static_south.png""
+  ]
+}
+";
+            string jsonStringN =
+@"{
+  ""ImagePaths"": [
+    ""Images/Player/player_static_north.png""
+  ]
+}
+";
+            string jsonStringE =
+@"{
+  ""ImagePaths"": [
+    ""Images/Player/player_static_east.png""
+  ]
+}
+";
+            string jsonStringW =
+@"{
+  ""ImagePaths"": [
+    ""Images/Player/player_static_west.png""
+  ]
+}
+";
+            var imageloader = new ImageSequenceLoader();
 
             RoomController = new RoomController(pbLevel1, pbPlayer, lblRainbowPoints, lblCountDown, 
             new List<Control>() {
@@ -51,34 +81,19 @@ namespace LeafCrunch
                 //the only quirk is it immediately switches back to the none image....like
                 //it's fine it's just weird
                 {
-                    Direction.None, new ImageSequence(new List<Image>()
-                    {
-                        UtilityMethods.ImageFromPath("Images/Player/player_static_south.png")
-                    })
+                    Direction.None, new ImageSequence(imageloader.Load(jsonString))
                 },
                 {
-                    Direction.South, new ImageSequence(new List<Image>()
-                    {
-                        UtilityMethods.ImageFromPath("Images/Player/player_static_south.png")
-                    })
+                    Direction.South, new ImageSequence(imageloader.Load(jsonString))
                 },
                 {
-                    Direction.East, new ImageSequence(new List<Image>()
-                    {
-                        UtilityMethods.ImageFromPath("Images/Player/player_static_east.png")
-                    })
+                    Direction.East, new ImageSequence(imageloader.Load(jsonStringE))
                 },
                 {
-                    Direction.West, new ImageSequence(new List<Image>()
-                    {
-                        UtilityMethods.ImageFromPath("Images/Player/player_static_west.png")
-                    })
+                    Direction.West, new ImageSequence(imageloader.Load(jsonStringW))
                 },
                 {
-                    Direction.North, new ImageSequence(new List<Image>()
-                    {
-                        UtilityMethods.ImageFromPath("Images/Player/player_static_north.png")
-                    })
+                    Direction.North, new ImageSequence(imageloader.Load(jsonStringN))
                 }
             },
             new Dictionary<Direction, ImageSequence>()
