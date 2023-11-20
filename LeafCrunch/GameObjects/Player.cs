@@ -87,72 +87,6 @@ namespace LeafCrunch.GameObjects
             Initialize();
         }
 
-        string jsonString =
-@"{
-    ""Static"":
-        {
-            ""Default"" :{
-              ""ImagePaths"": [
-                ""Images/Player/player_static_south.png""
-              ]
-            },
-            ""South"" :{
-              ""ImagePaths"": [
-                ""Images/Player/player_static_south.png""
-              ]
-            },
-            ""North"" :{
-              ""ImagePaths"": [
-                ""Images/Player/player_static_north.png""
-              ]
-            },
-            ""East"" :{
-              ""ImagePaths"": [
-                ""Images/Player/player_static_east.png""
-              ]
-            },
-            ""West"":{
-              ""ImagePaths"": [
-                ""Images/Player/player_static_west.png""
-              ]
-            }
-        },
-    ""Moving"" : 
-        {
-            ""Default"" :{
-              ""ImagePaths"": [
-                ""Images/Player/player_static.png""
-              ]
-            },
-            ""South"" :{
-              ""ImagePaths"": [
-                ""Images/Player/Animation/player_south_00.png"",
-                ""Images/Player/Animation/player_south_01.png""
-              ]
-            },
-            ""North"" :{
-              ""ImagePaths"": [
-                ""Images/Player/Animation/player_north_00.png"",
-                ""Images/Player/Animation/player_north_01.png""
-              ]
-            },
-            ""East"" :{
-              ""ImagePaths"": [
-                ""Images/Player/Animation/player_east_00.png"",
-                ""Images/Player/Animation/player_east_01.png""
-              ]
-            },
-            ""West"":{
-              ""ImagePaths"": [
-                ""Images/Player/Animation/player_west_00.png"",
-                ""Images/Player/Animation/player_west_01.png""
-              ]
-            }
-        }
-}
-";
-
-
         //how should we do the data
         //i guess let's have a file for each entity maybe
         //so like player, objects, items, etc
@@ -166,9 +100,19 @@ namespace LeafCrunch.GameObjects
         {   get { return _isInitialized; }
             set { _isInitialized = value; } }
 
+        private const string _configFile = "player.json"; //how do i get the right one though
+        override public string ConfigFile
+        {
+            get { return _configFile; }
+        }
+
         public override void Initialize()
         {
-            //load up all the stuff basically
+            //get the file data
+            var jsonString = Load();
+            if (string.IsNullOrEmpty(jsonString)) return; //maybe even throw an exception here
+
+            //load up all the stuff
             var spriteLoader = new SpriteLoader();
             Sprite = spriteLoader.Load(jsonString);
 
