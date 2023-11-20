@@ -54,16 +54,18 @@ namespace LeafCrunch
             new Dictionary<Direction, Player.ImageSequence>()
             {
                 //static images
+                //the only quirk is it immediately switches back to the none image....like
+                //it's fine it's just weird
                 {
                     Direction.None, new Player.ImageSequence(new List<Image>()
                     {
-                        ImageFromPath("Images/Player/player_static.png")
+                        ImageFromPath("Images/Player/player_static_south.png")
                     })
                 },
                 {
                     Direction.South, new Player.ImageSequence(new List<Image>()
                     {
-                        ImageFromPath("Images/Player/player_static.png")
+                        ImageFromPath("Images/Player/player_static_south.png")
                     })
                 },
                 {

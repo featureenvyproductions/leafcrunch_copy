@@ -52,6 +52,8 @@ namespace LeafCrunch.GameObjects
         public override void Update()
         {
             if (_isSuspended) return;
+
+            
             UpdateSpeed();
             UpdateLocation();
             UpdateAnimation();
@@ -68,6 +70,16 @@ namespace LeafCrunch.GameObjects
         public override void OnKeyUp(KeyEventArgs e)
         {
             if (_isSuspended) return;
+
+            //stupid as hell but this isn't saving correctly in the update method
+            Direction makeMeAFuckingCopy;
+            Direction.TryParse(Direction.ToString(), out makeMeAFuckingCopy); //is it just referencing the fucking direction
+            PreviousDirection = makeMeAFuckingCopy;
+            //maybe if we're already stationary don't set this
+            if (PreviousSpeed == null) PreviousSpeed = new Speed();
+            PreviousSpeed.vx = Speed.vx; //for whatever reason this doesn't fucking work
+            PreviousSpeed.vy = Speed.vy;
+
             ActiveKeys.Remove(e.KeyCode);
         }
 
@@ -131,6 +143,17 @@ namespace LeafCrunch.GameObjects
         //and i'm only gonna make the dumbest version of it
         private void Rebound(Obstacle obstacle)
         {
+            //need to save this stuff before a rebound for the animation to work 
+            //still stupid but better
+            Direction makeMeAFuckingCopy;
+            Direction.TryParse(Direction.ToString(), out makeMeAFuckingCopy); //is it just referencing the fucking direction
+            PreviousDirection = makeMeAFuckingCopy;
+            //maybe if we're already stationary don't set this
+            if (PreviousSpeed == null) PreviousSpeed = new Speed();
+            PreviousSpeed.vx = Speed.vx; //for whatever reason this doesn't fucking work
+            PreviousSpeed.vy = Speed.vy;
+
+
             //what direction were we heading in 
             var reboundSpeedx = -Speed.vx;
             var reboundSpeedy = -Speed.vy;
@@ -228,8 +251,6 @@ namespace LeafCrunch.GameObjects
 
         protected void UpdateSpeed()
         {
-            PreviousDirection = Direction;
-            PreviousSpeed = Speed;
             UpdateVx();
             UpdateVy();
         }
@@ -381,18 +402,21 @@ namespace LeafCrunch.GameObjects
 
                 //are we moving
                 //if not, get the previous direction and display it
+                //for whatever reason this just sometimes straight up decides not to work
+                //maybe i need to save the previous values in my key up event
                 if (Speed.vx == 0 && Speed.vy == 0)
                 {
                     //did we just stop
-                    if (Speed != PreviousSpeed)
+                    if (PreviousSpeed != null && (Speed.vx != PreviousSpeed.vx || Speed.vy != PreviousSpeed.vy))
                     {
                         //we need to pass the previous direction so the sprite faces the right way
                         Sprite.UpdateSequence(PreviousDirection, true);
                     }
-                    else
-                    {
-                        Sprite.UpdateSequence(Direction, true);
-                    }
+                    //else just leave whatever sprite is there
+                   // else
+                    //{
+                      //  Sprite.UpdateSequence(Direction, true);
+                    //}
                 }
                 else
                 {
