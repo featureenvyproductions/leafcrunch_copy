@@ -8,7 +8,6 @@ using LeafCrunch.GameObjects.Items.ItemOperations;
 using LeafCrunch.GameObjects.Items.TemporaryItems;
 using LeafCrunch.GameObjects.Stats;
 using LeafCrunch.GameObjects.Items.Obstacles;
-using LeafCrunch.GameObjects.ItemProperties;
 
 //you know one thing i should do is when i actually implement the dynamic loading of the game board
 //i should make it so that i only place things exactly in tiles
@@ -25,18 +24,42 @@ namespace LeafCrunch.GameObjects
 {
     public class RoomController : GenericGameObject
     {
+        private bool _isSuspended = false; //says whether or not the room is active (as opposed to a menu)
+        private List<Obstacle> _obstacles = new List<Obstacle>();
+        private List<GenericItem> _items = new List<GenericItem>();
+        private List<TemporaryItem> _temporaryItems = new List<TemporaryItem>();
+        private List<TemporaryItem> _activeItems = new List<TemporaryItem>();
+        private List<MovingObstacle> _movingObstacles = new List<MovingObstacle>();
+
         public bool ActiveRoom = true; //always true right now, idk if we want more rooms in the future
 
-        //I should have a thing where we show +10 or whatever every time we get some points.
+        //i guess we should know about the player
+        protected Player Player { get; set; }
 
         public StatsDisplay StatsDisplay { get; set; }
 
+        private List<Keys> _activeKeys = new List<Keys>();
+        List<Keys> ActiveKeys
+        {
+            get
+            {
+                return _activeKeys;
+            }
+
+            set
+            {
+                _activeKeys = value;
+            }
+        }
+
+        protected bool ItemActiveKeyPressed(GenericItem i) => i.ActivationKey == Keys.None || ActiveKeys.Contains(i.ActivationKey);
+        protected bool TileObjectPlayerCollision(GenericItem i) => i.TileIndex == Player.TileIndex;
         //eventually we're going to load control names from a file I think so I won't need this fucking list
         //or we're gonna initialize the controls on the fly with a location and a type
         //like i'll have a prototype and initialize from the prototype
         public RoomController(Control control, Control playerControl, Control statsControl, Control countDownControl, 
             List<Control> itemControls, List<Control> obstacleControls,
-            List<Control> movingObstacleControls) : base(control) //tbd we need a list of items maybe?
+            List<Control> movingObstacleControls) : base(control)
         {
             GlobalVars.RoomWidth = control.Width;
             GlobalVars.RoomHeight = control.Height;
@@ -59,7 +82,7 @@ namespace LeafCrunch.GameObjects
             StatsDisplay = new StatsDisplay(statsControl, Player);
 
             //dumb intermittent hard coded solution till we finish the rest
-            Items = new List<GenericItem>()
+            _items = new List<GenericItem>()
             {
                 new GreenLeaf(itemControls.ElementAt(0), new Operation()
                 {
@@ -79,14 +102,14 @@ namespace LeafCrunch.GameObjects
                 })
             };
 
-            Items.Add(new PineCone(itemControls.ElementAt(4), new MultiTargetOperation()
+            _items.Add(new PineCone(itemControls.ElementAt(4), new MultiTargetOperation()
             {
-                Targets = new List<GenericGameObject>(Items.Cast<GenericItem>())
+                Targets = new List<GenericGameObject>(_items.Cast<GenericItem>())
             }, countDownControl));
 
             RegisterTemporaryItems();
 
-            Obstacles = new List<Obstacle>()
+            _obstacles = new List<Obstacle>()
             {
                 new Obstacle(obstacleControls.ElementAt(0)),
                 new HazardousObstacle(obstacleControls.ElementAt(1), new Operation()
@@ -99,7 +122,7 @@ namespace LeafCrunch.GameObjects
                 })
             };
 
-            MovingObstacles = new List<MovingObstacle>()
+            _movingObstacles = new List<MovingObstacle>()
             {
                 new MovingObstacle(movingObstacleControls.ElementAt(0), 10, 10),
                 new HazardousMovingObstacle(movingObstacleControls.ElementAt(1), 5, 5, new Operation()
@@ -113,11 +136,6 @@ namespace LeafCrunch.GameObjects
             };
         }
 
-        //i guess we should know about the player
-        public Player Player { get; set; }
-
-        private bool _isSuspended = false; //says whether or not the room is active (as opposed to a menu)
-
         //call child suspend methods, remove all active keys.
         //oh yeah you know we want to have that still at the room level i think
         //because I don't want to ignore them completely.
@@ -126,7 +144,7 @@ namespace LeafCrunch.GameObjects
             _isSuspended = true;
             ActiveKeys.Clear();
             Player.Suspend();
-            foreach (var item in Items)
+            foreach (var item in _items)
             {
                 item.IsSuspended = true;
             }
@@ -136,7 +154,7 @@ namespace LeafCrunch.GameObjects
         {
             _isSuspended = false;
             Player.Resume();
-            foreach (var item in Items)
+            foreach (var item in _items)
             {
                 item.IsSuspended = false;
             }
@@ -158,6 +176,23 @@ namespace LeafCrunch.GameObjects
             }
         }
 
+        public override void OnKeyPress(KeyEventArgs e)
+        {
+            if (_isSuspended) return;
+            Player.OnKeyPress(e);
+            StatsDisplay.OnKeyPress(e);
+            if (!ActiveKeys.Contains(e.KeyCode))
+                ActiveKeys.Add(e.KeyCode);
+        }
+
+        public override void OnKeyUp(KeyEventArgs e)
+        {
+            if (_isSuspended) return;
+            Player.OnKeyUp(e);
+            StatsDisplay.OnKeyUp(e);
+            ActiveKeys.Remove(e.KeyCode);
+        }
+
         protected void UpdateStationaryObstacles()
         {
             CheckObstacleCollisions();
@@ -165,10 +200,9 @@ namespace LeafCrunch.GameObjects
 
         protected void UpdateMovingObstacles()
         {
-            foreach (var obstacle in MovingObstacles)
+            foreach (var obstacle in _movingObstacles)
             {
                 obstacle.Update();
-                //we'd check for player collisions here as well
                 if (obstacle.TileIndex == Player.TileIndex)
                 {
                     Player.Rebound(obstacle);
@@ -176,45 +210,38 @@ namespace LeafCrunch.GameObjects
             }
         }
 
-        public List<Obstacle> Obstacles = new List<Obstacle>();
-        public List<GenericItem> Items = new List<GenericItem>();
-        protected List<TemporaryItem> TemporaryItems = new List<TemporaryItem>(); //items that can be applied
-
-        public void RegisterTemporaryItems()
+        protected void RegisterTemporaryItems()
         {
-            if (Items == null) return;
-            foreach (var item in Items)
+            if (_items == null) return;
+            foreach (var item in _items)
             {
                 var tempItem = item as TemporaryItem;
-                if (tempItem != null) TemporaryItems.Add(tempItem);
+                if (tempItem != null) _temporaryItems.Add(tempItem);
             }
         }
 
-        protected List<TemporaryItem> ActiveItems = new List<TemporaryItem>();
-        public void UpdateTemporaryItems()
+        protected void UpdateTemporaryItems()
         {
             //take any that are active and put them into the active items
-            ActiveItems = TemporaryItems.Where(x => x != null && x.IsApplied).ToList();
+            _activeItems = _temporaryItems.Where(x => x != null && x.IsApplied).ToList();
             
             //make sure they're drawing in the right spot
-            foreach (var item in ActiveItems)
+            foreach (var item in _activeItems)
             {
                 item.ShowAsStat();
             }
         }
 
-        protected bool ItemActiveKeyPressed(GenericItem i) => i.ActivationKey == Keys.None || ActiveKeys.Contains(i.ActivationKey);
-
         protected void CheckObstacleCollisions()
         {
-            foreach (var obstacle in Obstacles)
+            foreach (var obstacle in _obstacles)
             {
                 if (TileObjectPlayerCollision(obstacle))
                 {
                     ResolvePlayerCollision(obstacle);
                 }
 
-                foreach (var movingObstacle in MovingObstacles)
+                foreach (var movingObstacle in _movingObstacles)
                 {
                     if (movingObstacle.TileIndex == obstacle.TileIndex)
                     {
@@ -226,11 +253,6 @@ namespace LeafCrunch.GameObjects
                 obstacle.Update();
             }
         }
-
-        public List<MovingObstacle> MovingObstacles = new List<MovingObstacle>();
-
-        //check for a collision with the player
-        protected bool TileObjectPlayerCollision(GenericItem i) => i.TileIndex == Player.TileIndex;
 
         //probably need a version of this for things that aren't the player but that's a problem for future ej
         //should this go in the obstacle code actually? idk.
@@ -253,23 +275,23 @@ namespace LeafCrunch.GameObjects
 
         protected void CleanUpItems()
         {
-            var items = Items.Where(i => i.MarkedForDeletion);
+            var items = _items.Where(i => i.MarkedForDeletion);
             foreach (var item in items)
             {
                 item.Active = false;
                 item.Cleanup();
             }
-            Items.RemoveAll(i => i.MarkedForDeletion);
+            _items.RemoveAll(i => i.MarkedForDeletion);
         }
 
         //the room SHOULD know about the player right
-        public void PerformItemOperations()
+        protected void PerformItemOperations()
         {
             //look at the items in the room
             //note, we may want to rewrite this to stop as soon as we find an active item
             //we we want to make use of the fact that an obstacle and an item won't be in the same tile,
             //so if we find an item, we can short circuit and not check for a wall/obstacle.
-            var activeItems = Items.Where(i => i != null && IsItemActive(i));
+            var activeItems = _items.Where(i => i != null && IsItemActive(i));
             //then execute the operation
 
             foreach (var i in activeItems)
@@ -281,37 +303,5 @@ namespace LeafCrunch.GameObjects
 
             UpdateTemporaryItems();
         }
-
-        private List<Keys> _activeKeys = new List<Keys>();
-        List<Keys> ActiveKeys
-        {
-            get
-            {
-                return _activeKeys;
-            }
-
-            set
-            {
-                _activeKeys = value;
-            }
-        }
-
-        public override void OnKeyPress(KeyEventArgs e)
-        {
-            if (_isSuspended) return;
-            Player.OnKeyPress(e);
-            StatsDisplay.OnKeyPress(e);
-            if (!ActiveKeys.Contains(e.KeyCode))
-                ActiveKeys.Add(e.KeyCode);
-        }
-
-        public override void OnKeyUp(KeyEventArgs e)
-        {
-            if (_isSuspended) return;
-            Player.OnKeyUp(e);
-            StatsDisplay.OnKeyUp(e);
-            ActiveKeys.Remove(e.KeyCode);
-        }
-
     }
 }

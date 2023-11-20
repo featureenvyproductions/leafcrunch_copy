@@ -1,16 +1,16 @@
 ﻿using LeafCrunch.Utilities;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using System.Linq;
 using LeafCrunch.GameObjects.Items.Obstacles;
 using LeafCrunch.GameObjects.ItemProperties;
-using System;
 
 namespace LeafCrunch.GameObjects
 {
     public class Player : InteractiveGameObject, IReboundable, ICollidable, IDamageReceptor, IItemUser
     {
         private List<PointVisualizer> _pointVisualizer = new List<PointVisualizer>();
+        private bool _isSuspended = false;
+
         private int _maxRainbowPoints = 100;
         private int _rainbowPoints = 0;
         public int RainbowPoints
@@ -24,39 +24,6 @@ namespace LeafCrunch.GameObjects
                 var diff = _rainbowPoints - current;
                 _pointVisualizer.Add(new PointVisualizer(Control, diff));
             }
-        }
-
-        private void CleanUpPointVisualizers()
-        {
-            _pointVisualizer.RemoveAll(x => !x.Active);
-        }
-
-        private bool _isSuspended = false;
-
-        public void Suspend()
-        {
-            _isSuspended = true;
-            ActiveKeys.Clear();
-            Speed.vy = 0;
-            Speed.vx = 0;
-        }
-
-        public void Resume()
-        {
-            _isSuspended = false;
-            //do we need to do anything else here?
-        }
-
-        public Player(Control control) : base(control)
-        {
-        }
-
-        public override void Update()
-        {
-            if (_isSuspended) return;
-            UpdateSpeed();
-            UpdateLocation();
-            CleanUpPointVisualizers();
         }
 
         private List<Keys> _activeKeys = new List<Keys>();
@@ -73,6 +40,18 @@ namespace LeafCrunch.GameObjects
             }
         }
 
+        public Player(Control control) : base(control)
+        {
+        }
+
+        public override void Update()
+        {
+            if (_isSuspended) return;
+            UpdateSpeed();
+            UpdateLocation();
+            CleanUpPointVisualizers();
+        }
+
         public override void OnKeyPress(KeyEventArgs e)
         {
             if (_isSuspended) return;
@@ -84,6 +63,20 @@ namespace LeafCrunch.GameObjects
         {
             if (_isSuspended) return;
             ActiveKeys.Remove(e.KeyCode);
+        }
+
+        public void Suspend()
+        {
+            _isSuspended = true;
+            ActiveKeys.Clear();
+            Speed.vy = 0;
+            Speed.vx = 0;
+        }
+
+        public void Resume()
+        {
+            _isSuspended = false;
+            //do we need to do anything else here?
         }
 
         public void ForceStop(Axis axisOfMotion)
@@ -147,7 +140,6 @@ namespace LeafCrunch.GameObjects
             }
 
             //go the opposite way until the locations are different
-            //was gonna use tile indexes but that might make corners suck
             if (reboundSpeedx != 0) //if we aren't moving in this direction, there's nothing to resolve
             {
                 while (CollisionX(obstacle))
@@ -182,7 +174,6 @@ namespace LeafCrunch.GameObjects
                 while (Control.Top <= 0) Control.Top++;
             }
 
-            //this should probably be moved to collision checking code but right now let's just do it like this.
             if ((Control.Left + Control.Width) >= GlobalVars.RoomWidth)
             {
                 while ((Control.Left + Control.Width) >= GlobalVars.RoomWidth) Control.Left--;
@@ -261,6 +252,11 @@ namespace LeafCrunch.GameObjects
                     RainbowPoints += points;
                 }
             }
+        }
+
+        private void CleanUpPointVisualizers()
+        {
+            _pointVisualizer.RemoveAll(x => !x.Active);
         }
     }
 }

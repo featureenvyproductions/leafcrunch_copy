@@ -13,7 +13,6 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
             set { _pointIncrement = value; }
         }
 
-        //god it's annoying that have to have this constructor everywhere why did i do this
         public OrangeLeaf(Control control) : base(control)
         {
         }

@@ -35,8 +35,6 @@ namespace LeafCrunch.GameObjects.ItemProperties
             //i'll have to figure that out....
 
             _control.BringToFront();
-            //Control.Left = parent.Left;
-            //Control.Top = parent.Top - 32;
             _timer.Tick += Timer_Tick;
             _timer.Start();
         }

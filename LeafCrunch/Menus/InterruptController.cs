@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
+//i'm sure I can probably refactor this....to do
 namespace LeafCrunch.Menus
 {
     //handles pauses and menus and other stuff that's not interactive or interactive but in a different way than the gameplay
     public class InterruptController
     {
-        private bool interruptActive = false;
+        private List<GenericInterrupt> _interrupts { get; set; }
+
+        private bool _interruptActive = false;
         public bool InterruptActive
         {
-            get { return interruptActive; }
-            set { interruptActive = value; }
+            get { return _interruptActive; }
+            set { _interruptActive = value; }
         }
 
         //like the room we'll eventually have a real loading system and not this hacked together ordered control list
@@ -21,7 +24,7 @@ namespace LeafCrunch.Menus
             Load(menuControls);
 
             //before we start, hide all the menus
-            foreach (var interrupt in Interrupts)
+            foreach (var interrupt in _interrupts)
             {
                 interrupt.Hide();
             }
@@ -29,12 +32,12 @@ namespace LeafCrunch.Menus
 
         protected void Load(List<Control> menuControls)
         {
-            Interrupts = new List<GenericInterrupt>()
+            _interrupts = new List<GenericInterrupt>()
                 {
                     new HelpMenu()
                     {
                         IsActive = false,
-                        Control = menuControls.ElementAt(0)
+                        Control = menuControls.ElementAt(0) // un-hard-code this when we implement the real loading code
                     },
                     new Pause()
                     {
@@ -43,57 +46,41 @@ namespace LeafCrunch.Menus
                 };
         }
 
-        private List<GenericInterrupt> Interrupts { get; set; }
-
         public ControllerState OnKeyDown(KeyEventArgs e)
         {
             //the first thing we do is check to see if we're leaving a menu
             //this returns true as long as the menu is still active
-            if (interruptActive)
+            if (_interruptActive)
             {
                 //are we leaving a specific menu?
-                var activeInterrupt = Interrupts.Where(i => i != null && i.IsActive && i.ActivationKey == e.KeyCode).FirstOrDefault();
+                var activeInterrupt = _interrupts.Where(i => i != null && i.IsActive && i.ActivationKey == e.KeyCode).FirstOrDefault();
                 if (activeInterrupt != null)
                 {
                     //just leave this menu
                     activeInterrupt.Deactivate();
                     //was that the last one?
-                    var remaining = Interrupts.Where(i => i != null && i.IsActive);
+                    var remaining = _interrupts.Where(i => i != null && i.IsActive);
                     if (remaining == null || remaining.Count() == 0)
                     {
-                        interruptActive = false;
-                        //yes so
-                        //pass event handling back to the room
-                        //i mean really what we need to do is have a state machine with a Room state and a Menu state
-                        //Room.Resume();
-
-                        //change this from resume...we want to SUSPEND the current state
+                        _interruptActive = false;
                         return ControllerState.SUSPEND;
                     }
-                    //no, don't pass event handling back to the room
-                    //return;
-                    //   return RoomState.NOTHING;
                 }
                 //brute force close of all menus
                 else if (e.KeyCode == Keys.Escape)
                 {
-                    var activeInterrupts = Interrupts.Where(i => i != null && i.IsActive);
+                    var activeInterrupts = _interrupts.Where(i => i != null && i.IsActive);
                     foreach (var i in activeInterrupts)
                     {
                         i.Deactivate();
                     }
-                    interruptActive = false;
-                    //Room.Resume();
-                    //return;
-
-                    //we want to SUSPEND the current state of this controller and resume the room
-                    //return ControllerState.RESUME;
+                    _interruptActive = false;
                     return ControllerState.SUSPEND;
                 }
             }
 
             //if we're not then see if we're entering one
-            var relevantInterrupts = Interrupts.Where(i => i != null && i.ActivationKey == e.KeyCode);
+            var relevantInterrupts = _interrupts.Where(i => i != null && i.ActivationKey == e.KeyCode);
 
             //don't waste time looping through objects if we're in a menu or paused
             //note: we'll have to do more here later on as we flesh out the menus of course
@@ -102,18 +89,12 @@ namespace LeafCrunch.Menus
             //or reserved keys like left/right/up/down/enter
             if (relevantInterrupts.Any())
             {
-                interruptActive = true;
-                //before we do anything else, we need to suspend the room so that the menus take over event handling
-                //Room.Suspend();
+                _interruptActive = true;
                 foreach (var i in relevantInterrupts)
                 {
                     i.Activate();
-                    //call their update functions
                     i.OnKeyPress(e);
                 }
-                //return;
-                //we want to suspend the room but activate this
-                //return ControllerState.SUSPEND;
                 return ControllerState.ACTIVE;
             }
 
@@ -124,15 +105,14 @@ namespace LeafCrunch.Menus
         public ControllerState OnKeyUp(KeyEventArgs e)
         {
             //see if we have any menus active
-            if (interruptActive)
+            if (_interruptActive)
             {
                 //fire off the menu key up events instead.
-                var activeInterrupts = Interrupts.Where(i => i != null && i.IsActive);
+                var activeInterrupts = _interrupts.Where(i => i != null && i.IsActive);
                 foreach (var i in activeInterrupts)
                 {
                     i.OnKeyUp(e);
                 }
-                //return ControllerState.SUSPEND;
                 return ControllerState.ACTIVE;
             }
 
@@ -141,14 +121,13 @@ namespace LeafCrunch.Menus
 
         public ControllerState Update()
         {
-            if (interruptActive)
+            if (_interruptActive)
             {
-                var activeInterrupts = Interrupts.Where(i => i != null && i.IsActive);
+                var activeInterrupts = _interrupts.Where(i => i != null && i.IsActive);
                 foreach (var i in activeInterrupts)
                 {
                     i.Update();
                 }
-                //return ControllerState.SUSPEND;
                 return ControllerState.ACTIVE;
             }
             return ControllerState.UNCHANGED;

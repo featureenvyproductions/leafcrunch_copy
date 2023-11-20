@@ -6,6 +6,8 @@ namespace LeafCrunch.GameObjects.Items.Obstacles
 {
     public class MovingObstacle : Obstacle, IReboundable, ICollidable
     {
+        private bool _isSuspended = false; //I don't think I need this because the room handles it but eh
+
         //simple and dumb
         //we have a speed and we go that speed until we hit a thing
         //then we go the opposite way at the same speed until we hit a thing, etc
@@ -44,6 +46,45 @@ namespace LeafCrunch.GameObjects.Items.Obstacles
             if (player != null) Rebound(player);
         }
 
+        override public void Update()
+        {
+            if (_isSuspended) return;
+            UpdateLocation();
+        }
+
+        //revisit
+        protected void UpdateLocation()
+        {
+            if (Control == null) return;
+
+            Control.Left += Speed.vx;
+            if (Control.Left <= 0)
+            {
+                while (Control.Left <= 0) Control.Left++;
+                Speed.vx *= -1;
+            }
+
+            Control.Top += Speed.vy;
+            if (Control.Top <= 0)
+            {
+                while (Control.Top <= 0) Control.Top++;
+                Speed.vy *= -1;
+            }
+
+            if ((Control.Left + Control.Width) >= GlobalVars.RoomWidth)
+            {
+                while ((Control.Left + Control.Width) >= GlobalVars.RoomWidth) Control.Left--;
+                //bounce
+                Speed.vx *= -1;
+            }
+            if ((Control.Top + Control.Height) >= GlobalVars.RoomHeight)
+            {
+                while ((Control.Top + Control.Height) >= GlobalVars.RoomHeight) Control.Top--;
+                //bounce
+                Speed.vy *= -1;
+            }
+        }
+
         private void ResolveCollision(Control control)
         {
             if (Speed.vx != 0) //if we aren't moving in this direction, there's nothing to resolve
@@ -77,45 +118,6 @@ namespace LeafCrunch.GameObjects.Items.Obstacles
             Speed.vx *= -1;
 
             ResolveCollision(obstacle.Control);
-        }
-
-        private bool _isSuspended = false;
-        override public void Update()
-        {
-            if (_isSuspended) return;
-            UpdateLocation();
-        }
-
-        protected void UpdateLocation()
-        {
-            if (Control == null) return;
-
-            Control.Left += Speed.vx;
-            if (Control.Left <= 0)
-            {
-                while (Control.Left <= 0) Control.Left++;
-                Speed.vx *= -1;
-            }
-
-            Control.Top += Speed.vy;
-            if (Control.Top <= 0)
-            {
-                while (Control.Top <= 0) Control.Top++;
-                Speed.vy *= -1;
-            }
-
-            if ((Control.Left + Control.Width) >= GlobalVars.RoomWidth)
-            {
-                while ((Control.Left + Control.Width) >= GlobalVars.RoomWidth) Control.Left--;
-                //bounce
-                Speed.vx *= -1;
-            }
-            if ((Control.Top + Control.Height) >= GlobalVars.RoomHeight)
-            {
-                while ((Control.Top + Control.Height) >= GlobalVars.RoomHeight) Control.Top--;
-                //bounce
-                Speed.vy *= -1;
-            }
         }
     }
 }

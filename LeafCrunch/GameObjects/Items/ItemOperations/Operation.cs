@@ -3,7 +3,6 @@
     public class Result
     {
         //can be whatever result we need it to be
-        //but for now it'll probably just be a bool to say whether or not we're marked for deletion
         public object Value;
     }
 

@@ -2,6 +2,7 @@
 
 namespace LeafCrunch.GameObjects
 {
+    //the base thing all the useful things inherit from
     public abstract class GenericGameObject
     {
         public Control Control { get; set; } //the associated forms control

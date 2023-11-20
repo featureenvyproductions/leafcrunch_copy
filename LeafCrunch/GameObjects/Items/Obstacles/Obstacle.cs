@@ -3,9 +3,9 @@ using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects.Items.Obstacles
 {
-    //an object where if the player tile = the obstacle tile
-    //we won't allow the player to move in the direction of the obstacle.
-    //i'm just gonna make this an item to make coding the collision easier
+    //tile system doesn't work great but it's fast for seeing if we're like on top of the control
+    //this can do more precise checking
+    //for a future improvement we can also check a small group of tiles or like a bigger tile/region
     public class Obstacle : GenericItem, ICollidable
     {
         public Obstacle(Control control) : base(control)

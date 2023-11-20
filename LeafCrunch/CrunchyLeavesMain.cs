@@ -13,8 +13,6 @@ namespace LeafCrunch
     //and barriers
     //sounds also
     //do we want some kind of mystery box thing? 
-    //i need to make the tiles bigger ugh
-    //like have a 10 px margin or something so you don't have to get RIGHT UP EXACTLY WITH THE THING
     public partial class CrunchyLeavesMain : Form
     {
         private RoomController RoomController { get; set; }

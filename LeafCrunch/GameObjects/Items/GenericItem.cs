@@ -3,20 +3,20 @@ using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects.Items
 {
-    //stuff the player can use
-    //i think there will be instant, temporary and permanent items (maybe not permanent right now - equippable...that can be for another time)
-    //don't know if i need different classes for them yet
-    //trying to also decide if we want everything to operate on the player
-    //or to be able to operate on other things like rooms or leaves or an eventual game object
-    //better make it generic I guess
-    //also there can be multiple targets
-    //and we'll have a class that defines the operation and says what's getting operated on and how
-    //maybe we have a handy callback in there somewhere
-    //instant - executes the operation on the target as soon as the player interacts with it and the effect is permanent
-    //temporary - executes the operation on the target immediately but the effect changes with each tick (or it just lasts for a certain number of ticks)
     public class GenericItem : InteractiveGameObject
     {
         private Keys _activationKey = Keys.None; //if we keep this as none, it means just being on the same tile will activate it
+        private bool _isSuspended = false; //different from active...this is just for pausing
+
+        public Operation Operation { get; set; }
+        public bool Active { get; set; }
+        public bool MarkedForDeletion { get; set; }
+
+        public bool IsSuspended
+        { 
+            get { return _isSuspended; } 
+            set { _isSuspended = value; } 
+        }
 
         public Keys ActivationKey
         {
@@ -26,6 +26,7 @@ namespace LeafCrunch.GameObjects.Items
 
         public GenericItem(Control control) : base(control)
         {
+            //idk man I got myself into constructor hell IDK if we want this to be a case or not
             Active = false;
             // Operation = null;
             MarkedForDeletion = false;
@@ -39,14 +40,11 @@ namespace LeafCrunch.GameObjects.Items
             MarkedForDeletion = false;
         }
 
-        public bool Active { get; set; }
-        public bool MarkedForDeletion { get; set; }
-
-        private bool _isSuspended = false; //different from active...this is just for pausing
-        public bool IsSuspended
-        { get { return _isSuspended; } set { _isSuspended = value; } }
-
-        public Operation Operation { get; set; }
+        public void Cleanup()
+        {
+            var parent = Control.Parent;
+            parent.Controls.Remove(Control); //this is dumb I should figure out a better way to do this
+        }
 
         new virtual public void Update()
         {
@@ -56,15 +54,6 @@ namespace LeafCrunch.GameObjects.Items
             HandleResult(Operation.Execute());
         }
 
-        virtual protected void HandleResult(Result result)
-        {
-
-        }
-
-        public void Cleanup()
-        {
-            var parent = Control.Parent;
-            parent.Controls.Remove(Control); //this is dumb I should figure out a better way to do this
-        }
+        virtual protected void HandleResult(Result result) { }
     }
 }

@@ -8,7 +8,9 @@ namespace LeafCrunch.GameObjects.Items.TemporaryItems
     //effectively multiplies PointIncrement of all the leaf targets
     public class PineCone : TemporaryItem
     {
-        protected int _multiplier = 2;
+        private int _multiplier = 2;
+        private bool _displayingAsStat = false;
+        public Control DisplayControl { get; set; }
 
         public PineCone(Control control) : base(control)
         {
@@ -23,11 +25,10 @@ namespace LeafCrunch.GameObjects.Items.TemporaryItems
             Operation.ToExecute = ApplyPointMultiplier;
         }
 
-        public Control DisplayControl = null;
-        protected bool _displayingAsStat = false;
-
+        //I feel like this doesn't belong here but eh we'll come back to it
         public override void ShowAsStat()
         {
+            if (DisplayControl == null) return;
             if (!_displayingAsStat)
             {
                 //align the top
@@ -43,7 +44,7 @@ namespace LeafCrunch.GameObjects.Items.TemporaryItems
             if (IsSuspended) return;
             base.Update(); //do what the base does
             //but we also want to update the count down
-
+            if (DisplayControl == null) return;
             DisplayControl.Text = Ticks.ToString();
             if (Ticks <= 0) DisplayControl.Visible = false;
             DisplayControl.Refresh();

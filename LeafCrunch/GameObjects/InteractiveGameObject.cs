@@ -12,6 +12,15 @@ namespace LeafCrunch.GameObjects
             Speed = new Speed() { vx = 0, vy = 0 };
         }
 
+        //i don't love this because it's so imprecise but it does speed things up
+        //to improve
+        //to be done...index everything during loading
+        //add references to an obstacle index hash table
+        //calculate tile of destination pixel
+        //look up destination tile in obstacle hash table
+        //revisit moving things because they can be tricky...
+        //have them do their own collision checking with stationary objects and the player
+        //after calculating the index of their own destination pixels
         public int TileIndex
         {
             get

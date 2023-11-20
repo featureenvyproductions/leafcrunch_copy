@@ -1,9 +1,4 @@
 ﻿using LeafCrunch.GameObjects.Items.ItemOperations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects.Items
@@ -13,7 +8,7 @@ namespace LeafCrunch.GameObjects.Items
     public class TemporaryItem : GenericItem
     {
         private int _ticks = 100;
-        virtual public int Ticks //virtual in case we want to change the timing
+        virtual public int Ticks
         {
             get { return _ticks; }
             set { _ticks = value; }
@@ -55,15 +50,9 @@ namespace LeafCrunch.GameObjects.Items
             if (multitarget != null) HandleResult(multitarget.Execute());
             else HandleResult(Operation.Execute());
 
-            //HandleResult(Operation.Execute());
-
             IsApplied = true; //one we set this we leave it alone
         }
 
-        virtual public void ShowAsStat()
-        {
-            //draw the control next to its display/count down control
-            //whatever that means for this
-        }
+        virtual public void ShowAsStat() { }
     }
 }

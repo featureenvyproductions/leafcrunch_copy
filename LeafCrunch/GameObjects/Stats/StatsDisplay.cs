@@ -2,7 +2,6 @@
 
 namespace LeafCrunch.GameObjects.Stats
 {
-
     //show the player's stats i guess....updates the status display controls based on the player's info
     public class StatsDisplay : GenericGameObject
     {
