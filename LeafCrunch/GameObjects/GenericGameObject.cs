@@ -1,4 +1,6 @@
-﻿using System.Windows.Forms;
+﻿using LeafCrunch.Utilities;
+using System.IO;
+using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects
 {
@@ -8,6 +10,13 @@ namespace LeafCrunch.GameObjects
         public Control Control { get; set; } //the associated forms control
 
         public GenericGameObject Parent { get; set; }
+
+        virtual public string ConfigFile { get; set; }
+
+        public GenericGameObject()
+        {
+            Control = new Control();
+        }
 
         public GenericGameObject(Control control)
         {
@@ -19,7 +28,17 @@ namespace LeafCrunch.GameObjects
             Control = control;
             Parent = parent;
         }
+        protected virtual string Load()
+        {
+            //for a bigger more involved game
+            //we'd probably want to load config data into some kind of indexed cache
+            //or grab it as needed from a database
+            //but for this tiny game it's ok to just load things into memory
+            if (ConfigFile == null) return string.Empty;
+            return File.ReadAllText(UtilityMethods.GetConfigPath(ConfigFile));
+        }
 
+        public virtual void Initialize() { }
         public virtual void Update() { }
         public virtual void OnKeyPress(KeyEventArgs e) { }
         public virtual void OnKeyUp(KeyEventArgs e) { }

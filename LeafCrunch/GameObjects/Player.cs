@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using LeafCrunch.GameObjects.Items.Obstacles;
 using LeafCrunch.GameObjects.ItemProperties;
 using LeafCrunch.Utilities.Animation;
+using LeafCrunch.Utilities.Entities;
 
 namespace LeafCrunch.GameObjects
 {
@@ -80,19 +81,81 @@ namespace LeafCrunch.GameObjects
         public AnimatedSprite Sprite { get; set; }
         #endregion
 
-        #region Constructors
-        public Player(Control control, 
-            Dictionary<Direction, ImageSequence> staticImages,
-            Dictionary<Direction, ImageSequence> animations) : base(control)
+        #region Loading and Initialization
+        //how should we do the data
+        //i guess let's have a file for each entity maybe
+        //so like player, objects, items, etc
+
+        //i should probably set some kind of boolean to make sure initialization finishes and then
+        //check it on update
+        //maybe put it in the generic class and check it for every object.
+
+        private bool _isInitialized = false;
+        public bool IsInitialized
         {
-            Sprite = new AnimatedSprite(staticImages, animations);
+            get { return _isInitialized; }
+            set { _isInitialized = value; }
+        }
+
+        private const string _configFile = "player.json";
+        override public string ConfigFile
+        {
+            get { return _configFile; }
+        }
+
+        public override void Initialize()
+        {
+            //get the file data
+            var jsonString = Load();
+            if (string.IsNullOrEmpty(jsonString)) return; //maybe even throw an exception here
+
+            //load up all the stuff
+            var loader = new PlayerLoader();
+            var playerData = loader.Load(jsonString);
+
+            if (playerData == null || playerData.Sprite == null || playerData.Stats == null) return;
+
+            _maxRainbowPoints = playerData.Stats.MaxPoints;
+            Speed = new Speed()
+            {
+                vx = playerData.Stats.InitialSpeedX,
+                vy = playerData.Stats.InitialSpeedY
+            };
+            Sprite = playerData.Sprite; //of course things could have gone wrong when initializing this but i don't have
+            //emotional energy to check all that.
+            //I'll make some friggin validator code later or some shit but right now
+            //the game should just stop working anyway if the stuff isn't there that needs to be there
+
+            //it looks like everything is initializing to show an image right away BUT I'M JUST CHECKING
+            Sprite.UpdateSequence(Direction.South, true);
+
+            //double check that adding this to the child controls of the room will set the parent of this to the room
+            Control = new PictureBox()
+            {
+                Image = Sprite.CurrentImage,
+                Width = Sprite.CurrentImage.Width,
+                Height = Sprite.CurrentImage.Height,
+                Top = playerData.Stats.InitialY,
+                Left = playerData.Stats.InitialX
+            };
+
+            //eventually we'll probably need to have special sprites as well but we'll come back to that
+            //like the stomp animation
+            IsInitialized = true;
+        }
+        #endregion
+
+        #region Constructors
+        public Player() : base()
+        {
+            Initialize();
         }
         #endregion
 
         #region Event Handling
         public override void Update()
         {
-            if (_isSuspended) return;
+            if (_isSuspended || !IsInitialized) return;
 
             UpdateSpeed();
             UpdateLocation();
@@ -102,14 +165,14 @@ namespace LeafCrunch.GameObjects
 
         public override void OnKeyPress(KeyEventArgs e)
         {
-            if (_isSuspended) return;
+            if (_isSuspended || !IsInitialized) return;
             if (!ActiveKeys.Contains(e.KeyCode))
                 ActiveKeys.Add(e.KeyCode);
         }
 
         public override void OnKeyUp(KeyEventArgs e)
         {
-            if (_isSuspended) return;
+            if (_isSuspended || !IsInitialized) return;
 
             //stupid as hell but this isn't saving correctly in the update method
             Direction makeMeAFuckingCopy;
@@ -352,6 +415,7 @@ namespace LeafCrunch.GameObjects
 
         public void UpdateAnimation()
         {
+            if (!IsInitialized) return;
             //basically if enough ticks have gone by
             //we update the animation to be the next frame in the current one
             //and the frame we show depends on the direction

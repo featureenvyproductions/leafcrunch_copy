@@ -13,5 +13,12 @@ namespace LeafCrunch.Utilities
                                 Assembly.GetExecutingAssembly().Location)
                             , relPath));
         }
+
+        public static string GetConfigPath(string fileName)
+        {
+            return Path.Combine(Path.GetDirectoryName(
+                                Assembly.GetExecutingAssembly().Location)
+                            , $"Configs/{fileName}");
+        }
     }
 }

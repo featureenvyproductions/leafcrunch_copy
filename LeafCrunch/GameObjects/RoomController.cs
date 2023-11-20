@@ -75,10 +75,9 @@ namespace LeafCrunch.GameObjects
         //eventually we're going to load control names from a file I think so I won't need this fucking list
         //or we're gonna initialize the controls on the fly with a location and a type
         //like i'll have a prototype and initialize from the prototype
-        public RoomController(Control control, Control playerControl, Control statsControl, Control countDownControl, 
+        public RoomController(Control control, Control statsControl, Control countDownControl, 
             List<Control> itemControls, List<Control> obstacleControls,
-            List<Control> movingObstacleControls,
-            Dictionary<Direction, ImageSequence> staticImages, Dictionary<Direction, ImageSequence> animations) : base(control)
+            List<Control> movingObstacleControls) : base(control)
         {
             GlobalVars.RoomWidth = control.Width;
             GlobalVars.RoomHeight = control.Height;
@@ -87,10 +86,9 @@ namespace LeafCrunch.GameObjects
 
             //eventually this will also be where we load custom rooms from some file
             //and there will be an arg here telling us what room file we want
-            Load(playerControl, statsControl, 
+            Load(statsControl, 
                 countDownControl, itemControls, 
-                obstacleControls, movingObstacleControls,
-                staticImages, animations);
+                obstacleControls, movingObstacleControls);
         }
 
         #endregion
@@ -99,12 +97,12 @@ namespace LeafCrunch.GameObjects
         //for now this just loads the test level
         //oh yeah don't forget when we do real loading we need to have stuff that clears the board
         //like removes the items from the list and the item controls
-        protected void Load(Control playerControl, 
-            Control statsControl, Control countDownControl, 
+        protected void Load(Control statsControl, Control countDownControl, 
             List<Control> itemControls, List<Control> obstacleControls,
-            List<Control> movingObstacleControls, Dictionary<Direction, ImageSequence> staticImages, Dictionary<Direction, ImageSequence> animations)
+            List<Control> movingObstacleControls)
         {
-            Player = new Player(playerControl, staticImages, animations);
+            Player = new Player();
+            if (Player.IsInitialized) Control.Controls.Add(Player.Control);
             StatsDisplay = new StatsDisplay(statsControl, Player);
 
             //dumb intermittent hard coded solution till we finish the rest
