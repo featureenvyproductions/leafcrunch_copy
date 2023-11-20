@@ -52,20 +52,54 @@
     <Compile Include="CrunchyLeavesMain.Designer.cs">
       <DependentUpon>CrunchyLeavesMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="GameObjects\GenericGameObject.cs" />
+    <Compile Include="GameObjects\InteractiveGameObject.cs" />
+    <Compile Include="GameObjects\ItemProperties\IDamageReceptor.cs" />
+    <Compile Include="GameObjects\ItemProperties\IHazard.cs" />
+    <Compile Include="GameObjects\ItemProperties\IItemUser.cs" />
+    <Compile Include="GameObjects\ItemProperties\IReboundable.cs" />
+    <Compile Include="GameObjects\ItemProperties\ICollidable.cs" />
+    <Compile Include="GameObjects\ItemProperties\PointVisualizer.cs" />
+    <Compile Include="GameObjects\Items\GenericItem.cs" />
+    <Compile Include="GameObjects\Items\InstantItem.cs" />
+    <Compile Include="GameObjects\Items\InstantItems\GreenLeaf.cs" />
+    <Compile Include="GameObjects\Items\InstantItems\Leaf.cs" />
+    <Compile Include="GameObjects\Items\InstantItems\OrangeLeaf.cs" />
+    <Compile Include="GameObjects\Items\InstantItems\RedLeaf.cs" />
+    <Compile Include="GameObjects\Items\InstantItems\YellowLeaf.cs" />
+    <Compile Include="GameObjects\Items\ItemOperations\IOperation.cs" />
+    <Compile Include="GameObjects\Items\ItemOperations\MultiTargetOperation.cs" />
+    <Compile Include="GameObjects\Items\ItemOperations\Operation.cs" />
+    <Compile Include="GameObjects\Items\Obstacles\HazardousMovingObstacle.cs" />
+    <Compile Include="GameObjects\Items\Obstacles\HazardousObstacle.cs" />
+    <Compile Include="GameObjects\Items\Obstacles\MovingObstacle.cs" />
+    <Compile Include="GameObjects\Items\Obstacles\Obstacle.cs" />
+    <Compile Include="GameObjects\Items\TemporaryItem.cs" />
+    <Compile Include="GameObjects\Items\TemporaryItems\PineCone.cs" />
+    <Compile Include="GameObjects\Player.cs" />
+    <Compile Include="GameObjects\RoomController.cs" />
+    <Compile Include="GameObjects\Stats\StatsDisplay.cs" />
+    <Compile Include="Menus\GenericInterrupt.cs" />
+    <Compile Include="Menus\GenericMenu.cs" />
+    <Compile Include="Menus\HelpMenu.cs" />
+    <Compile Include="Menus\InterruptController.cs" />
+    <Compile Include="Menus\Pause.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\CommonProperties.cs" />
     <EmbeddedResource Include="CrunchyLeavesMain.resx">
       <DependentUpon>CrunchyLeavesMain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -81,8 +115,36 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Images\Other\" />
-    <Folder Include="Images\Player\" />
-    <Folder Include="Images\PointItems\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Player\player_static.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Background\level1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\PointItems\greenleaf.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\PointItems\yellowleaf.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\PointItems\orangeleaf.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\PointItems\redleaf.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\PointItems\ModifierItems\pinecone.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Obstacles\movingObstacle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Obstacles\hazard.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Obstacles\stationaryHazard.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
