@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using LeafCrunch.GameObjects.Items.Obstacles;
 using LeafCrunch.GameObjects.ItemProperties;
+using System.Drawing;
+using System.Linq;
 
 namespace LeafCrunch.GameObjects
 {
@@ -40,8 +42,11 @@ namespace LeafCrunch.GameObjects
             }
         }
 
-        public Player(Control control) : base(control)
+        public Player(Control control, 
+            Dictionary<Direction, ImageSequence> staticImages,
+            Dictionary<Direction, ImageSequence> animations) : base(control)
         {
+            Sprite = new AnimatedSprite(staticImages, animations);
         }
 
         public override void Update()
@@ -49,6 +54,7 @@ namespace LeafCrunch.GameObjects
             if (_isSuspended) return;
             UpdateSpeed();
             UpdateLocation();
+            UpdateAnimation();
             CleanUpPointVisualizers();
         }
 
@@ -79,7 +85,7 @@ namespace LeafCrunch.GameObjects
             //do we need to do anything else here?
         }
 
-        public void ForceStop(Axis axisOfMotion)
+        private void ForceStop(Axis axisOfMotion)
         {
             //stop the player moving a direction and do the equivalent of forcing a key release
             switch (axisOfMotion)
@@ -222,9 +228,192 @@ namespace LeafCrunch.GameObjects
 
         protected void UpdateSpeed()
         {
+            PreviousDirection = Direction;
+            PreviousSpeed = Speed;
             UpdateVx();
             UpdateVy();
         }
+
+        #region Animation
+
+        //we're only doing the basic 4 directions
+        //could expand to more in the future
+        
+        //so we can face the player the right direction when they're not moving.
+        protected Direction PreviousDirection { get; set; }
+
+     //   private Direction _direction = Direction.None;
+
+        private Direction GetCurrentDirection()
+        {
+            if (Speed.vx < 0) return Direction.West;
+            if (Speed.vx > 0) return Direction.East;
+            if (Speed.vy < 0) return Direction.North;
+            if (Speed.vy > 0) return Direction.South;
+            return Direction.None;
+        }
+
+        protected Direction Direction
+        {
+            get
+            {
+                //PreviousDirection = _direction;
+                // _direction = GetCurrentDirection();
+                return GetCurrentDirection();// _direction;
+            }
+        }
+
+        public class ImageSequence
+        {
+            //treat as static if we only have one image in list...this is more for consolidating code
+            public List<Image> Images = new List<Image>();
+            private int _currentIndex = 0;
+            private int _frameCount = 0; //so we don't have to count the animation frames every single time
+
+            //the image that's currently visible
+            public Image CurrentImage { get; set; }
+
+            public ImageSequence(List<Image> images)
+            {
+                Images = images;
+                CurrentImage = Images.FirstOrDefault();
+                _frameCount = Images.Count;
+            }
+
+            public void ResetAnimation()
+            {
+                _currentIndex = 0;
+                CurrentImage = Images.ElementAt(0);
+            }
+
+            public void UpdateFrame()
+            {
+                if (_frameCount > 1)
+                {
+                    if (_currentIndex + 1 == _frameCount) _currentIndex = 0;
+                    else ++_currentIndex;
+                    CurrentImage = Images.ElementAt(_currentIndex);
+                }
+                //if it is static we don't do anything bc the displayed image never changes
+            }
+        }
+
+        protected AnimatedSprite Sprite { get; set; }
+
+        public class AnimatedSprite
+        {
+            public Dictionary<Direction, ImageSequence> StaticImage { get; set; }
+            public Dictionary<Direction, ImageSequence> Animation { get; set; }
+
+            private ImageSequence _currentAnimation = null;
+
+            public Image CurrentImage { 
+                get
+                {
+                    return _currentAnimation.CurrentImage;
+                }
+            }
+
+            public AnimatedSprite(Dictionary<Direction, ImageSequence> staticImages,
+                Dictionary<Direction, ImageSequence> animations)
+            {
+                StaticImage = staticImages;
+                Animation = animations;
+                //we could check these to make sure they're valid and whatever
+                //but like if you're implementing the animation interface it's bc you have an image
+                //so why wouldn't you have at least the absolute bare minimum default image
+                _currentAnimation = StaticImage[Direction.None];
+            }
+
+            //right now i'll just mostly have walking/standing animations but i could make special ones eventually
+
+            //whoever calls this should have calculated which animation we need to display
+            //and whether it's static/we're moving
+            //this should just check whether things changed and reset the frame count and index if so.
+            public void UpdateSequence(Direction direction, bool staticImage)
+            {
+                ImageSequence targetAnimation;
+                if (staticImage)
+                {
+                    targetAnimation = StaticImage[direction];
+                }
+                else
+                {
+                    targetAnimation = Animation[direction];
+                }
+
+                if (_currentAnimation.Equals(targetAnimation))
+                {
+                    //no changes are needed
+                    //update the frame
+                    _currentAnimation.UpdateFrame();
+                }
+                else
+                {
+                    //replace the current animation
+                    _currentAnimation = targetAnimation;
+                    _currentAnimation.ResetAnimation();
+                }
+            }
+        }
+
+        //how many ticks have gone by since the last frame change
+        protected int AnimationTicks = 0;
+
+        //this should really be calculated since it depends on how fast the main timer that controls the game updates ticks
+        protected int FrameTickCount = 1;
+
+        //I think I will put this stuff in an interface
+        //so other objects can use it
+        protected void UpdateAnimation()
+        {
+            //basically if enough ticks have gone by
+            //we update the animation to be the next frame in the current one
+            //and the frame we show depends on the direction
+            //and if we're stopped, the previous direction.
+            
+            //check the tick count
+            if (AnimationTicks == FrameTickCount)
+            {
+                //time to update
+                //reset the count
+                AnimationTicks = 0;
+
+                //are we moving
+                //if not, get the previous direction and display it
+                if (Speed.vx == 0 && Speed.vy == 0)
+                {
+                    //did we just stop
+                    if (Speed != PreviousSpeed)
+                    {
+                        //we need to pass the previous direction so the sprite faces the right way
+                        Sprite.UpdateSequence(PreviousDirection, true);
+                    }
+                    else
+                    {
+                        Sprite.UpdateSequence(Direction, true);
+                    }
+                }
+                else
+                {
+                    //we are moving
+                    //use the right animation for the direction headed
+                    Sprite.UpdateSequence(Direction, false);
+                }
+            }
+            else
+            {
+                //not ready to update the image yet
+                AnimationTicks++;
+            }
+
+            //whatever happens, make sure we're displaying the right image in the control
+            //this had better be a picture box or we have bigger problems
+            (Control as PictureBox).Image = Sprite.CurrentImage;
+        }
+
+        public Speed PreviousSpeed { get; set; }
+        #endregion
 
         //you know i should probably do something like this for other item effects tbh but whatever
         //to revisit

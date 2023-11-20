@@ -59,7 +59,8 @@ namespace LeafCrunch.GameObjects
         //like i'll have a prototype and initialize from the prototype
         public RoomController(Control control, Control playerControl, Control statsControl, Control countDownControl, 
             List<Control> itemControls, List<Control> obstacleControls,
-            List<Control> movingObstacleControls) : base(control)
+            List<Control> movingObstacleControls,
+            Dictionary<Direction, Player.ImageSequence> staticImages, Dictionary<Direction, Player.ImageSequence> animations) : base(control)
         {
             GlobalVars.RoomWidth = control.Width;
             GlobalVars.RoomHeight = control.Height;
@@ -68,17 +69,21 @@ namespace LeafCrunch.GameObjects
 
             //eventually this will also be where we load custom rooms from some file
             //and there will be an arg here telling us what room file we want
-            Load(playerControl, statsControl, countDownControl, itemControls, obstacleControls, movingObstacleControls);
+            Load(playerControl, statsControl, 
+                countDownControl, itemControls, 
+                obstacleControls, movingObstacleControls,
+                staticImages, animations);
         }
 
         //for now this just loads the test level
         //oh yeah don't forget when we do real loading we need to have stuff that clears the board
         //like removes the items from the list and the item controls
-        protected void Load(Control playerControl, Control statsControl, Control countDownControl, 
+        protected void Load(Control playerControl, 
+            Control statsControl, Control countDownControl, 
             List<Control> itemControls, List<Control> obstacleControls,
-            List<Control> movingObstacleControls)
+            List<Control> movingObstacleControls, Dictionary<Direction, Player.ImageSequence> staticImages, Dictionary<Direction, Player.ImageSequence> animations)
         {
-            Player = new Player(playerControl);
+            Player = new Player(playerControl, staticImages, animations);
             StatsDisplay = new StatsDisplay(statsControl, Player);
 
             //dumb intermittent hard coded solution till we finish the rest

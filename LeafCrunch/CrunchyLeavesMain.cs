@@ -3,6 +3,9 @@ using LeafCrunch.Menus;
 using LeafCrunch.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace LeafCrunch
@@ -19,6 +22,13 @@ namespace LeafCrunch
 
         private InterruptController InterruptController { get; set; }
 
+        public Image ImageFromPath(string relPath)
+        {
+            return Image.FromFile(Path.Combine(
+                            Path.GetDirectoryName(
+                                Assembly.GetExecutingAssembly().Location)
+                            , relPath ));
+        }
         public CrunchyLeavesMain()
         {
             InitializeComponent();
@@ -40,7 +50,80 @@ namespace LeafCrunch
             { 
                 pbMovingObstacle,
                 pbHazard
-            });
+            },
+            new Dictionary<Direction, Player.ImageSequence>()
+            {
+                //static images
+                {
+                    Direction.None, new Player.ImageSequence(new List<Image>()
+                    {
+                        ImageFromPath("Images/Player/player_static.png")
+                    })
+                },
+                {
+                    Direction.South, new Player.ImageSequence(new List<Image>()
+                    {
+                        ImageFromPath("Images/Player/player_static.png")
+                    })
+                },
+                {
+                    Direction.East, new Player.ImageSequence(new List<Image>()
+                    {
+                        ImageFromPath("Images/Player/player_static_east.png")
+                    })
+                },
+                {
+                    Direction.West, new Player.ImageSequence(new List<Image>()
+                    {
+                        ImageFromPath("Images/Player/player_static_west.png")
+                    })
+                },
+                {
+                    Direction.North, new Player.ImageSequence(new List<Image>()
+                    {
+                        ImageFromPath("Images/Player/player_static_north.png")
+                    })
+                }
+            },
+            new Dictionary<Direction, Player.ImageSequence>()
+            {
+                //animation sequences
+                {
+                    Direction.None, new Player.ImageSequence(new List<Image>()
+                    {
+                        ImageFromPath("Images/Player/player_static.png")
+                    })
+                },
+                {
+                    Direction.South, new Player.ImageSequence(new List<Image>()
+                    {
+                        ImageFromPath("Images/Player/Animation/player_south_00.png"),
+                        ImageFromPath("Images/Player/Animation/player_south_01.png")
+                    })
+                },
+                {
+                    Direction.East, new Player.ImageSequence(new List<Image>()
+                    {
+                        ImageFromPath("Images/Player/Animation/player_east_00.png"),
+                        ImageFromPath("Images/Player/Animation/player_east_01.png")
+                    })
+                },
+                {
+                    Direction.West, new Player.ImageSequence(new List<Image>()
+                    {
+                        ImageFromPath("Images/Player/Animation/player_west_00.png"),
+                        ImageFromPath("Images/Player/Animation/player_west_01.png")
+                    })
+                },
+                {
+                    Direction.North, new Player.ImageSequence(new List<Image>()
+                    {
+                        ImageFromPath("Images/Player/Animation/player_north_00.png"),
+                        ImageFromPath("Images/Player/Animation/player_north_01.png")
+                    })
+                }
+            }
+            );
 
             InterruptController = new InterruptController(new List<Control>() { pnHelpMenu });
             
