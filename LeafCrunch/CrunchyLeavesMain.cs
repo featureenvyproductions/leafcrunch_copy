@@ -1,8 +1,10 @@
 ﻿using LeafCrunch.GameObjects;
 using LeafCrunch.Menus;
 using LeafCrunch.Utilities;
+using LeafCrunch.Utilities.Animation;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace LeafCrunch
@@ -23,6 +25,8 @@ namespace LeafCrunch
         {
             InitializeComponent();
 
+            GlobalVars.CalculateFrameRate(timer1.Interval);
+
             RoomController = new RoomController(pbLevel1, pbPlayer, lblRainbowPoints, lblCountDown, 
             new List<Control>() {
                 pbGreenLeaf01,
@@ -40,7 +44,82 @@ namespace LeafCrunch
             { 
                 pbMovingObstacle,
                 pbHazard
-            });
+            },
+            new Dictionary<Direction, ImageSequence>()
+            {
+                //static images
+                //the only quirk is it immediately switches back to the none image....like
+                //it's fine it's just weird
+                {
+                    Direction.None, new ImageSequence(new List<Image>()
+                    {
+                        UtilityMethods.ImageFromPath("Images/Player/player_static_south.png")
+                    })
+                },
+                {
+                    Direction.South, new ImageSequence(new List<Image>()
+                    {
+                        UtilityMethods.ImageFromPath("Images/Player/player_static_south.png")
+                    })
+                },
+                {
+                    Direction.East, new ImageSequence(new List<Image>()
+                    {
+                        UtilityMethods.ImageFromPath("Images/Player/player_static_east.png")
+                    })
+                },
+                {
+                    Direction.West, new ImageSequence(new List<Image>()
+                    {
+                        UtilityMethods.ImageFromPath("Images/Player/player_static_west.png")
+                    })
+                },
+                {
+                    Direction.North, new ImageSequence(new List<Image>()
+                    {
+                        UtilityMethods.ImageFromPath("Images/Player/player_static_north.png")
+                    })
+                }
+            },
+            new Dictionary<Direction, ImageSequence>()
+            {
+                //animation sequences
+                {
+                    Direction.None, new ImageSequence(new List<Image>()
+                    {
+                        UtilityMethods.ImageFromPath("Images/Player/player_static.png")
+                    })
+                },
+                {
+                    Direction.South, new ImageSequence(new List<Image>()
+                    {
+                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_south_00.png"),
+                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_south_01.png")
+                    })
+                },
+                {
+                    Direction.East, new ImageSequence(new List<Image>()
+                    {
+                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_east_00.png"),
+                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_east_01.png")
+                    })
+                },
+                {
+                    Direction.West, new ImageSequence(new List<Image>()
+                    {
+                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_west_00.png"),
+                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_west_01.png")
+                    })
+                },
+                {
+                    Direction.North, new ImageSequence(new List<Image>()
+                    {
+                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_north_00.png"),
+                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_north_01.png")
+                    })
+                }
+            }
+            );
 
             InterruptController = new InterruptController(new List<Control>() { pnHelpMenu });
             

@@ -8,6 +8,7 @@ using LeafCrunch.GameObjects.Items.ItemOperations;
 using LeafCrunch.GameObjects.Items.TemporaryItems;
 using LeafCrunch.GameObjects.Stats;
 using LeafCrunch.GameObjects.Items.Obstacles;
+using LeafCrunch.Utilities.Animation;
 
 //you know one thing i should do is when i actually implement the dynamic loading of the game board
 //i should make it so that i only place things exactly in tiles
@@ -24,20 +25,30 @@ namespace LeafCrunch.GameObjects
 {
     public class RoomController : GenericGameObject
     {
+        public bool ActiveRoom = true; //always true right now, idk if we want more rooms in the future
+
+        #region Pause Handling
         private bool _isSuspended = false; //says whether or not the room is active (as opposed to a menu)
+        #endregion
+
+        #region Room Objects
         private List<Obstacle> _obstacles = new List<Obstacle>();
         private List<GenericItem> _items = new List<GenericItem>();
         private List<TemporaryItem> _temporaryItems = new List<TemporaryItem>();
         private List<TemporaryItem> _activeItems = new List<TemporaryItem>();
         private List<MovingObstacle> _movingObstacles = new List<MovingObstacle>();
+        #endregion
 
-        public bool ActiveRoom = true; //always true right now, idk if we want more rooms in the future
-
+        #region Player Properties
         //i guess we should know about the player
         protected Player Player { get; set; }
+        #endregion
 
+        #region Stats Properties
         public StatsDisplay StatsDisplay { get; set; }
+        #endregion
 
+        #region Key Handling Properties
         private List<Keys> _activeKeys = new List<Keys>();
         List<Keys> ActiveKeys
         {
@@ -53,13 +64,21 @@ namespace LeafCrunch.GameObjects
         }
 
         protected bool ItemActiveKeyPressed(GenericItem i) => i.ActivationKey == Keys.None || ActiveKeys.Contains(i.ActivationKey);
+
+        #endregion
+
+        #region Collision Handler Related
         protected bool TileObjectPlayerCollision(GenericItem i) => i.TileIndex == Player.TileIndex;
+        #endregion
+
+        #region Constructors
         //eventually we're going to load control names from a file I think so I won't need this fucking list
         //or we're gonna initialize the controls on the fly with a location and a type
         //like i'll have a prototype and initialize from the prototype
         public RoomController(Control control, Control playerControl, Control statsControl, Control countDownControl, 
             List<Control> itemControls, List<Control> obstacleControls,
-            List<Control> movingObstacleControls) : base(control)
+            List<Control> movingObstacleControls,
+            Dictionary<Direction, ImageSequence> staticImages, Dictionary<Direction, ImageSequence> animations) : base(control)
         {
             GlobalVars.RoomWidth = control.Width;
             GlobalVars.RoomHeight = control.Height;
@@ -68,17 +87,24 @@ namespace LeafCrunch.GameObjects
 
             //eventually this will also be where we load custom rooms from some file
             //and there will be an arg here telling us what room file we want
-            Load(playerControl, statsControl, countDownControl, itemControls, obstacleControls, movingObstacleControls);
+            Load(playerControl, statsControl, 
+                countDownControl, itemControls, 
+                obstacleControls, movingObstacleControls,
+                staticImages, animations);
         }
 
+        #endregion
+
+        #region Loading and Initialization
         //for now this just loads the test level
         //oh yeah don't forget when we do real loading we need to have stuff that clears the board
         //like removes the items from the list and the item controls
-        protected void Load(Control playerControl, Control statsControl, Control countDownControl, 
+        protected void Load(Control playerControl, 
+            Control statsControl, Control countDownControl, 
             List<Control> itemControls, List<Control> obstacleControls,
-            List<Control> movingObstacleControls)
+            List<Control> movingObstacleControls, Dictionary<Direction, ImageSequence> staticImages, Dictionary<Direction, ImageSequence> animations)
         {
-            Player = new Player(playerControl);
+            Player = new Player(playerControl, staticImages, animations);
             StatsDisplay = new StatsDisplay(statsControl, Player);
 
             //dumb intermittent hard coded solution till we finish the rest
@@ -136,6 +162,19 @@ namespace LeafCrunch.GameObjects
             };
         }
 
+        protected void RegisterTemporaryItems()
+        {
+            if (_items == null) return;
+            foreach (var item in _items)
+            {
+                var tempItem = item as TemporaryItem;
+                if (tempItem != null) _temporaryItems.Add(tempItem);
+            }
+        }
+
+        #endregion
+
+        #region Pause Handling
         //call child suspend methods, remove all active keys.
         //oh yeah you know we want to have that still at the room level i think
         //because I don't want to ignore them completely.
@@ -159,7 +198,9 @@ namespace LeafCrunch.GameObjects
                 item.IsSuspended = false;
             }
         }
+        #endregion
 
+        #region Event Handling
         public override void Update()
         {
             if (!_isSuspended)
@@ -192,7 +233,9 @@ namespace LeafCrunch.GameObjects
             StatsDisplay.OnKeyUp(e);
             ActiveKeys.Remove(e.KeyCode);
         }
+        #endregion
 
+        #region Motion And Collision Handling
         protected void UpdateStationaryObstacles()
         {
             CheckObstacleCollisions();
@@ -207,28 +250,6 @@ namespace LeafCrunch.GameObjects
                 {
                     Player.Rebound(obstacle);
                 }
-            }
-        }
-
-        protected void RegisterTemporaryItems()
-        {
-            if (_items == null) return;
-            foreach (var item in _items)
-            {
-                var tempItem = item as TemporaryItem;
-                if (tempItem != null) _temporaryItems.Add(tempItem);
-            }
-        }
-
-        protected void UpdateTemporaryItems()
-        {
-            //take any that are active and put them into the active items
-            _activeItems = _temporaryItems.Where(x => x != null && x.IsApplied).ToList();
-            
-            //make sure they're drawing in the right spot
-            foreach (var item in _activeItems)
-            {
-                item.ShowAsStat();
             }
         }
 
@@ -267,6 +288,20 @@ namespace LeafCrunch.GameObjects
         {
             movingObstacle.Rebound(obstacle);
         }
+        #endregion
+
+        #region Item Handling
+        protected void UpdateTemporaryItems()
+        {
+            //take any that are active and put them into the active items
+            _activeItems = _temporaryItems.Where(x => x != null && x.IsApplied).ToList();
+
+            //make sure they're drawing in the right spot
+            foreach (var item in _activeItems)
+            {
+                item.ShowAsStat();
+            }
+        }
 
         protected bool IsItemActive(GenericItem i)
         {
@@ -303,5 +338,6 @@ namespace LeafCrunch.GameObjects
 
             UpdateTemporaryItems();
         }
+        #endregion
     }
 }
