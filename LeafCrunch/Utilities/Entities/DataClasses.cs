@@ -10,7 +10,7 @@ namespace LeafCrunch.Utilities.Entities
 {
     //let's try some basic stuff
     public class ImageSequenceData
-    { 
+    {
         public List<string> ImagePaths { get; set; }
     }
 
@@ -27,6 +27,26 @@ namespace LeafCrunch.Utilities.Entities
     {
         public DirectionalSpriteData Static { get; set; }
         public DirectionalSpriteData Moving { get; set; }
+    }
+
+    public class StatsData
+    {
+        public int InitialSpeedX { get; set; }
+        public int InitialSpeedY { get; set; }
+
+        public int InitialX { get; set; }
+        public int InitialY { get; set; }
+
+        public int MaxPoints { get; set; } //not everything needs this...we can always make it 0
+    }
+
+    public class PlayerData
+    {
+        public StatsData Stats {get; set;}
+        public SpriteData SpriteData {get; set;}
+
+        //it should just ignore this right?
+        public AnimatedSprite Sprite { get; set;}
     }
 
     //load stuff from a json file into an entity
@@ -106,6 +126,20 @@ namespace LeafCrunch.Utilities.Entities
             return new AnimatedSprite(
                 loader.LoadFromData(spriteData.Static),
                 loader.LoadFromData(spriteData.Moving));
+        }
+    }
+
+    public class PlayerLoader: JsonLoader
+    {
+        public PlayerData Load(string jsonString)
+        {
+            var playerData = LoadFromJson<PlayerData>(jsonString);
+            var spriteData = playerData.SpriteData;
+            var loader = new DirectionalSpriteLoader();
+            playerData.Sprite = new AnimatedSprite(
+                loader.LoadFromData(spriteData.Static),
+                loader.LoadFromData(spriteData.Moving));
+            return playerData;
         }
     }
 }

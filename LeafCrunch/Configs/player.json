@@ -1,60 +1,69 @@
 {
-  "Static": {
-    "Default": {
-      "ImagePaths": [
-        "Images/Player/player_static_south.png"
-      ]
-    },
-    "South": {
-      "ImagePaths": [
-        "Images/Player/player_static_south.png"
-      ]
-    },
-    "North": {
-      "ImagePaths": [
-        "Images/Player/player_static_north.png"
-      ]
-    },
-    "East": {
-      "ImagePaths": [
-        "Images/Player/player_static_east.png"
-      ]
-    },
-    "West": {
-      "ImagePaths": [
-        "Images/Player/player_static_west.png"
-      ]
-    }
+  "Stats": {
+    "InitialSpeedX": 0,
+    "InitialSpeedY": 0,
+    "InitialX": 50,
+    "InitialY": 50,
+    "MaxPoints": 100
   },
-  "Moving": {
-    "Default": {
-      "ImagePaths": [
-        "Images/Player/player_static.png"
-      ]
+  "SpriteData": {
+    "Static": {
+      "Default": {
+        "ImagePaths": [
+          "Images/Player/player_static_south.png"
+        ]
+      },
+      "South": {
+        "ImagePaths": [
+          "Images/Player/player_static_south.png"
+        ]
+      },
+      "North": {
+        "ImagePaths": [
+          "Images/Player/player_static_north.png"
+        ]
+      },
+      "East": {
+        "ImagePaths": [
+          "Images/Player/player_static_east.png"
+        ]
+      },
+      "West": {
+        "ImagePaths": [
+          "Images/Player/player_static_west.png"
+        ]
+      }
     },
-    "South": {
-      "ImagePaths": [
-        "Images/Player/Animation/player_south_00.png",
-        "Images/Player/Animation/player_south_01.png"
-      ]
-    },
-    "North": {
-      "ImagePaths": [
-        "Images/Player/Animation/player_north_00.png",
-        "Images/Player/Animation/player_north_01.png"
-      ]
-    },
-    "East": {
-      "ImagePaths": [
-        "Images/Player/Animation/player_east_00.png",
-        "Images/Player/Animation/player_east_01.png"
-      ]
-    },
-    "West": {
-      "ImagePaths": [
-        "Images/Player/Animation/player_west_00.png",
-        "Images/Player/Animation/player_west_01.png"
-      ]
+    "Moving": {
+      "Default": {
+        "ImagePaths": [
+          "Images/Player/player_static.png"
+        ]
+      },
+      "South": {
+        "ImagePaths": [
+          "Images/Player/Animation/player_south_00.png",
+          "Images/Player/Animation/player_south_01.png"
+        ]
+      },
+      "North": {
+        "ImagePaths": [
+          "Images/Player/Animation/player_north_00.png",
+          "Images/Player/Animation/player_north_01.png"
+        ]
+      },
+      "East": {
+        "ImagePaths": [
+          "Images/Player/Animation/player_east_00.png",
+          "Images/Player/Animation/player_east_01.png"
+        ]
+      },
+      "West": {
+        "ImagePaths": [
+          "Images/Player/Animation/player_west_00.png",
+          "Images/Player/Animation/player_west_01.png"
+        ]
+      }
     }
   }
 }

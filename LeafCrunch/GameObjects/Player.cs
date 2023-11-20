@@ -81,12 +81,7 @@ namespace LeafCrunch.GameObjects
         public AnimatedSprite Sprite { get; set; }
         #endregion
 
-        #region Constructors
-        public Player(Control control) : base(control)
-        {
-            Initialize();
-        }
-
+        #region Loading and Initialization
         //how should we do the data
         //i guess let's have a file for each entity maybe
         //so like player, objects, items, etc
@@ -97,8 +92,10 @@ namespace LeafCrunch.GameObjects
 
         private bool _isInitialized = false;
         public bool IsInitialized
-        {   get { return _isInitialized; }
-            set { _isInitialized = value; } }
+        {
+            get { return _isInitialized; }
+            set { _isInitialized = value; }
+        }
 
         private const string _configFile = "player.json"; //how do i get the right one though
         override public string ConfigFile
@@ -113,12 +110,32 @@ namespace LeafCrunch.GameObjects
             if (string.IsNullOrEmpty(jsonString)) return; //maybe even throw an exception here
 
             //load up all the stuff
-            var spriteLoader = new SpriteLoader();
-            Sprite = spriteLoader.Load(jsonString);
+            //var spriteLoader = new SpriteLoader();
+            var loader = new PlayerLoader();
+            var playerData = loader.Load(jsonString);
+
+            if (playerData == null || playerData.Sprite == null || playerData.Stats == null) return;
+
+            _maxRainbowPoints = playerData.Stats.MaxPoints;
+            Control.Top = playerData.Stats.InitialY;
+            Control.Left = playerData.Stats.InitialX;
+            Speed = new Speed()
+            {
+                vx = playerData.Stats.InitialSpeedX,
+                vy = playerData.Stats.InitialSpeedY
+            };
+            Sprite = playerData.Sprite;
 
             //eventually we'll probably need to have special sprites as well but we'll come back to that
             //like the stomp animation
             IsInitialized = true;
+        }
+        #endregion
+
+        #region Constructors
+        public Player(Control control) : base(control)
+        {
+            Initialize();
         }
         #endregion
 
