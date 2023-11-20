@@ -20,6 +20,7 @@ namespace LeafCrunch.GameObjects
             Parent = parent;
         }
 
+        public virtual void Initialize() { }
         public virtual void Update() { }
         public virtual void OnKeyPress(KeyEventArgs e) { }
         public virtual void OnKeyUp(KeyEventArgs e) { }

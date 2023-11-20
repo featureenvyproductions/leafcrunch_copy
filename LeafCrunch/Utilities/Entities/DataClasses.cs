@@ -88,7 +88,7 @@ namespace LeafCrunch.Utilities.Entities
 
     public class SpriteLoader : JsonLoader
     {
-        public Dictionary<string, Dictionary<Direction, ImageSequence>> Load(string jsonString)
+        public Dictionary<string, Dictionary<Direction, ImageSequence>> LoadToDictionary(string jsonString)
         {
             var spriteData = LoadFromJson<SpriteData>(jsonString);
             var loader = new DirectionalSpriteLoader();
@@ -97,6 +97,15 @@ namespace LeafCrunch.Utilities.Entities
                 { "Static", loader.LoadFromData(spriteData.Static) },
                 { "Moving", loader.LoadFromData(spriteData.Moving) }
             };
+        }
+
+        public AnimatedSprite Load(string jsonString)
+        {
+            var spriteData = LoadFromJson<SpriteData>(jsonString);
+            var loader = new DirectionalSpriteLoader();
+            return new AnimatedSprite(
+                loader.LoadFromData(spriteData.Static),
+                loader.LoadFromData(spriteData.Moving));
         }
     }
 }

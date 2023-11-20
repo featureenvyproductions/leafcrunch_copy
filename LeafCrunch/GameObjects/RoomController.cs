@@ -77,8 +77,7 @@ namespace LeafCrunch.GameObjects
         //like i'll have a prototype and initialize from the prototype
         public RoomController(Control control, Control playerControl, Control statsControl, Control countDownControl, 
             List<Control> itemControls, List<Control> obstacleControls,
-            List<Control> movingObstacleControls,
-            Dictionary<Direction, ImageSequence> staticImages, Dictionary<Direction, ImageSequence> animations) : base(control)
+            List<Control> movingObstacleControls) : base(control)
         {
             GlobalVars.RoomWidth = control.Width;
             GlobalVars.RoomHeight = control.Height;
@@ -89,8 +88,7 @@ namespace LeafCrunch.GameObjects
             //and there will be an arg here telling us what room file we want
             Load(playerControl, statsControl, 
                 countDownControl, itemControls, 
-                obstacleControls, movingObstacleControls,
-                staticImages, animations);
+                obstacleControls, movingObstacleControls);
         }
 
         #endregion
@@ -102,9 +100,9 @@ namespace LeafCrunch.GameObjects
         protected void Load(Control playerControl, 
             Control statsControl, Control countDownControl, 
             List<Control> itemControls, List<Control> obstacleControls,
-            List<Control> movingObstacleControls, Dictionary<Direction, ImageSequence> staticImages, Dictionary<Direction, ImageSequence> animations)
+            List<Control> movingObstacleControls)
         {
-            Player = new Player(playerControl, staticImages, animations);
+            Player = new Player(playerControl);
             StatsDisplay = new StatsDisplay(statsControl, Player);
 
             //dumb intermittent hard coded solution till we finish the rest

@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using LeafCrunch.GameObjects.Items.Obstacles;
 using LeafCrunch.GameObjects.ItemProperties;
 using LeafCrunch.Utilities.Animation;
+using LeafCrunch.Utilities.Entities;
 
 namespace LeafCrunch.GameObjects
 {
@@ -81,18 +82,106 @@ namespace LeafCrunch.GameObjects
         #endregion
 
         #region Constructors
-        public Player(Control control, 
-            Dictionary<Direction, ImageSequence> staticImages,
-            Dictionary<Direction, ImageSequence> animations) : base(control)
+        public Player(Control control) : base(control)
         {
-            Sprite = new AnimatedSprite(staticImages, animations);
+            Initialize();
+        }
+
+        string jsonString =
+@"{
+    ""Static"":
+        {
+            ""Default"" :{
+              ""ImagePaths"": [
+                ""Images/Player/player_static_south.png""
+              ]
+            },
+            ""South"" :{
+              ""ImagePaths"": [
+                ""Images/Player/player_static_south.png""
+              ]
+            },
+            ""North"" :{
+              ""ImagePaths"": [
+                ""Images/Player/player_static_north.png""
+              ]
+            },
+            ""East"" :{
+              ""ImagePaths"": [
+                ""Images/Player/player_static_east.png""
+              ]
+            },
+            ""West"":{
+              ""ImagePaths"": [
+                ""Images/Player/player_static_west.png""
+              ]
+            }
+        },
+    ""Moving"" : 
+        {
+            ""Default"" :{
+              ""ImagePaths"": [
+                ""Images/Player/player_static.png""
+              ]
+            },
+            ""South"" :{
+              ""ImagePaths"": [
+                ""Images/Player/Animation/player_south_00.png"",
+                ""Images/Player/Animation/player_south_01.png""
+              ]
+            },
+            ""North"" :{
+              ""ImagePaths"": [
+                ""Images/Player/Animation/player_north_00.png"",
+                ""Images/Player/Animation/player_north_01.png""
+              ]
+            },
+            ""East"" :{
+              ""ImagePaths"": [
+                ""Images/Player/Animation/player_east_00.png"",
+                ""Images/Player/Animation/player_east_01.png""
+              ]
+            },
+            ""West"":{
+              ""ImagePaths"": [
+                ""Images/Player/Animation/player_west_00.png"",
+                ""Images/Player/Animation/player_west_01.png""
+              ]
+            }
+        }
+}
+";
+
+
+        //how should we do the data
+        //i guess let's have a file for each entity maybe
+        //so like player, objects, items, etc
+
+        //i should probably set some kind of boolean to make sure initialization finishes and then
+        //check it on update
+        //maybe put it in the generic class and check it for every object.
+
+        private bool _isInitialized = false;
+        public bool IsInitialized
+        {   get { return _isInitialized; }
+            set { _isInitialized = value; } }
+
+        public override void Initialize()
+        {
+            //load up all the stuff basically
+            var spriteLoader = new SpriteLoader();
+            Sprite = spriteLoader.Load(jsonString);
+
+            //eventually we'll probably need to have special sprites as well but we'll come back to that
+            //like the stomp animation
+            IsInitialized = true;
         }
         #endregion
 
         #region Event Handling
         public override void Update()
         {
-            if (_isSuspended) return;
+            if (_isSuspended || !IsInitialized) return;
 
             UpdateSpeed();
             UpdateLocation();
@@ -102,14 +191,14 @@ namespace LeafCrunch.GameObjects
 
         public override void OnKeyPress(KeyEventArgs e)
         {
-            if (_isSuspended) return;
+            if (_isSuspended || !IsInitialized) return;
             if (!ActiveKeys.Contains(e.KeyCode))
                 ActiveKeys.Add(e.KeyCode);
         }
 
         public override void OnKeyUp(KeyEventArgs e)
         {
-            if (_isSuspended) return;
+            if (_isSuspended || !IsInitialized) return;
 
             //stupid as hell but this isn't saving correctly in the update method
             Direction makeMeAFuckingCopy;
@@ -352,6 +441,7 @@ namespace LeafCrunch.GameObjects
 
         public void UpdateAnimation()
         {
+            if (!IsInitialized) return;
             //basically if enough ticks have gone by
             //we update the animation to be the next frame in the current one
             //and the frame we show depends on the direction
