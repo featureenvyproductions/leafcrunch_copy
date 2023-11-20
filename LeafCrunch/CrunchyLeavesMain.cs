@@ -27,35 +27,76 @@ namespace LeafCrunch
             InitializeComponent();
 
             GlobalVars.CalculateFrameRate(timer1.Interval);
+
+
             string jsonString =
 @"{
-  ""ImagePaths"": [
-    ""Images/Player/player_static_south.png""
-  ]
+    ""Static"":
+        {
+            ""Default"" :{
+              ""ImagePaths"": [
+                ""Images/Player/player_static_south.png""
+              ]
+            },
+            ""South"" :{
+              ""ImagePaths"": [
+                ""Images/Player/player_static_south.png""
+              ]
+            },
+            ""North"" :{
+              ""ImagePaths"": [
+                ""Images/Player/player_static_north.png""
+              ]
+            },
+            ""East"" :{
+              ""ImagePaths"": [
+                ""Images/Player/player_static_east.png""
+              ]
+            },
+            ""West"":{
+              ""ImagePaths"": [
+                ""Images/Player/player_static_west.png""
+              ]
+            }
+        },
+    ""Moving"" : 
+        {
+            ""Default"" :{
+              ""ImagePaths"": [
+                ""Images/Player/player_static.png""
+              ]
+            },
+            ""South"" :{
+              ""ImagePaths"": [
+                ""Images/Player/Animation/player_south_00.png"",
+                ""Images/Player/Animation/player_south_01.png""
+              ]
+            },
+            ""North"" :{
+              ""ImagePaths"": [
+                ""Images/Player/Animation/player_north_00.png"",
+                ""Images/Player/Animation/player_north_01.png""
+              ]
+            },
+            ""East"" :{
+              ""ImagePaths"": [
+                ""Images/Player/Animation/player_east_00.png"",
+                ""Images/Player/Animation/player_east_01.png""
+              ]
+            },
+            ""West"":{
+              ""ImagePaths"": [
+                ""Images/Player/Animation/player_west_00.png"",
+                ""Images/Player/Animation/player_west_01.png""
+              ]
+            }
+        }
 }
 ";
-            string jsonStringN =
-@"{
-  ""ImagePaths"": [
-    ""Images/Player/player_static_north.png""
-  ]
-}
-";
-            string jsonStringE =
-@"{
-  ""ImagePaths"": [
-    ""Images/Player/player_static_east.png""
-  ]
-}
-";
-            string jsonStringW =
-@"{
-  ""ImagePaths"": [
-    ""Images/Player/player_static_west.png""
-  ]
-}
-";
-            var imageloader = new ImageSequenceLoader();
+            var spriteloader = new SpriteLoader();
+            var spriteData = spriteloader.Load(jsonString);
+            var staticsprite = spriteData["Static"];
+            var movingsprite = spriteData["Moving"];
 
             RoomController = new RoomController(pbLevel1, pbPlayer, lblRainbowPoints, lblCountDown, 
             new List<Control>() {
@@ -75,65 +116,8 @@ namespace LeafCrunch
                 pbMovingObstacle,
                 pbHazard
             },
-            new Dictionary<Direction, ImageSequence>()
-            {
-                //static images
-                //the only quirk is it immediately switches back to the none image....like
-                //it's fine it's just weird
-                {
-                    Direction.None, new ImageSequence(imageloader.Load(jsonString))
-                },
-                {
-                    Direction.South, new ImageSequence(imageloader.Load(jsonString))
-                },
-                {
-                    Direction.East, new ImageSequence(imageloader.Load(jsonStringE))
-                },
-                {
-                    Direction.West, new ImageSequence(imageloader.Load(jsonStringW))
-                },
-                {
-                    Direction.North, new ImageSequence(imageloader.Load(jsonStringN))
-                }
-            },
-            new Dictionary<Direction, ImageSequence>()
-            {
-                //animation sequences
-                {
-                    Direction.None, new ImageSequence(new List<Image>()
-                    {
-                        UtilityMethods.ImageFromPath("Images/Player/player_static.png")
-                    })
-                },
-                {
-                    Direction.South, new ImageSequence(new List<Image>()
-                    {
-                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_south_00.png"),
-                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_south_01.png")
-                    })
-                },
-                {
-                    Direction.East, new ImageSequence(new List<Image>()
-                    {
-                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_east_00.png"),
-                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_east_01.png")
-                    })
-                },
-                {
-                    Direction.West, new ImageSequence(new List<Image>()
-                    {
-                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_west_00.png"),
-                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_west_01.png")
-                    })
-                },
-                {
-                    Direction.North, new ImageSequence(new List<Image>()
-                    {
-                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_north_00.png"),
-                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_north_01.png")
-                    })
-                }
-            }
+            staticsprite,
+            movingsprite
             );
 
             InterruptController = new InterruptController(new List<Control>() { pnHelpMenu });

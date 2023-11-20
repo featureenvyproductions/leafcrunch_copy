@@ -94,8 +94,8 @@ namespace LeafCrunch.Utilities.Entities
             var loader = new DirectionalSpriteLoader();
             return new Dictionary<string, Dictionary<Direction, ImageSequence>>()
             {
-                { "static", loader.LoadFromData(spriteData.Static) },
-                { "moving", loader.LoadFromData(spriteData.Moving) }
+                { "Static", loader.LoadFromData(spriteData.Static) },
+                { "Moving", loader.LoadFromData(spriteData.Moving) }
             };
         }
     }
