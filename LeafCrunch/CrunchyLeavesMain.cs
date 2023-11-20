@@ -1,11 +1,10 @@
 ﻿using LeafCrunch.GameObjects;
 using LeafCrunch.Menus;
 using LeafCrunch.Utilities;
+using LeafCrunch.Utilities.Animation;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.Reflection;
 using System.Windows.Forms;
 
 namespace LeafCrunch
@@ -22,16 +21,11 @@ namespace LeafCrunch
 
         private InterruptController InterruptController { get; set; }
 
-        public Image ImageFromPath(string relPath)
-        {
-            return Image.FromFile(Path.Combine(
-                            Path.GetDirectoryName(
-                                Assembly.GetExecutingAssembly().Location)
-                            , relPath ));
-        }
         public CrunchyLeavesMain()
         {
             InitializeComponent();
+
+            GlobalVars.CalculateFrameRate(timer1.Interval);
 
             RoomController = new RoomController(pbLevel1, pbPlayer, lblRainbowPoints, lblCountDown, 
             new List<Control>() {
@@ -51,77 +45,77 @@ namespace LeafCrunch
                 pbMovingObstacle,
                 pbHazard
             },
-            new Dictionary<Direction, Player.ImageSequence>()
+            new Dictionary<Direction, ImageSequence>()
             {
                 //static images
                 //the only quirk is it immediately switches back to the none image....like
                 //it's fine it's just weird
                 {
-                    Direction.None, new Player.ImageSequence(new List<Image>()
+                    Direction.None, new ImageSequence(new List<Image>()
                     {
-                        ImageFromPath("Images/Player/player_static_south.png")
+                        UtilityMethods.ImageFromPath("Images/Player/player_static_south.png")
                     })
                 },
                 {
-                    Direction.South, new Player.ImageSequence(new List<Image>()
+                    Direction.South, new ImageSequence(new List<Image>()
                     {
-                        ImageFromPath("Images/Player/player_static_south.png")
+                        UtilityMethods.ImageFromPath("Images/Player/player_static_south.png")
                     })
                 },
                 {
-                    Direction.East, new Player.ImageSequence(new List<Image>()
+                    Direction.East, new ImageSequence(new List<Image>()
                     {
-                        ImageFromPath("Images/Player/player_static_east.png")
+                        UtilityMethods.ImageFromPath("Images/Player/player_static_east.png")
                     })
                 },
                 {
-                    Direction.West, new Player.ImageSequence(new List<Image>()
+                    Direction.West, new ImageSequence(new List<Image>()
                     {
-                        ImageFromPath("Images/Player/player_static_west.png")
+                        UtilityMethods.ImageFromPath("Images/Player/player_static_west.png")
                     })
                 },
                 {
-                    Direction.North, new Player.ImageSequence(new List<Image>()
+                    Direction.North, new ImageSequence(new List<Image>()
                     {
-                        ImageFromPath("Images/Player/player_static_north.png")
+                        UtilityMethods.ImageFromPath("Images/Player/player_static_north.png")
                     })
                 }
             },
-            new Dictionary<Direction, Player.ImageSequence>()
+            new Dictionary<Direction, ImageSequence>()
             {
                 //animation sequences
                 {
-                    Direction.None, new Player.ImageSequence(new List<Image>()
+                    Direction.None, new ImageSequence(new List<Image>()
                     {
-                        ImageFromPath("Images/Player/player_static.png")
+                        UtilityMethods.ImageFromPath("Images/Player/player_static.png")
                     })
                 },
                 {
-                    Direction.South, new Player.ImageSequence(new List<Image>()
+                    Direction.South, new ImageSequence(new List<Image>()
                     {
-                        ImageFromPath("Images/Player/Animation/player_south_00.png"),
-                        ImageFromPath("Images/Player/Animation/player_south_01.png")
+                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_south_00.png"),
+                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_south_01.png")
                     })
                 },
                 {
-                    Direction.East, new Player.ImageSequence(new List<Image>()
+                    Direction.East, new ImageSequence(new List<Image>()
                     {
-                        ImageFromPath("Images/Player/Animation/player_east_00.png"),
-                        ImageFromPath("Images/Player/Animation/player_east_01.png")
+                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_east_00.png"),
+                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_east_01.png")
                     })
                 },
                 {
-                    Direction.West, new Player.ImageSequence(new List<Image>()
+                    Direction.West, new ImageSequence(new List<Image>()
                     {
-                        ImageFromPath("Images/Player/Animation/player_west_00.png"),
-                        ImageFromPath("Images/Player/Animation/player_west_01.png")
+                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_west_00.png"),
+                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_west_01.png")
                     })
                 },
                 {
-                    Direction.North, new Player.ImageSequence(new List<Image>()
+                    Direction.North, new ImageSequence(new List<Image>()
                     {
-                        ImageFromPath("Images/Player/Animation/player_north_00.png"),
-                        ImageFromPath("Images/Player/Animation/player_north_01.png")
+                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_north_00.png"),
+                        UtilityMethods.ImageFromPath("Images/Player/Animation/player_north_01.png")
                     })
                 }
             }

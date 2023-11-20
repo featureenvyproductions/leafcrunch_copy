@@ -7,6 +7,19 @@
 
         public static int RoomTileSizeW { get; set; }
         public static int RoomTileSizeH { get; set; }
+
+        //could also hypothetically use this to schedule events besides animation updates
+        //how many ticks we want to pass before updating an animation
+        public static int FrameTickCount { get; set; }
+        //how many frames per second we want the animation to be
+        public static int TargetFrameRate { get; set; }
+
+        public static void CalculateFrameRate(int tickInterval)
+        {
+            TargetFrameRate = 10;
+            var ticksPerSecond = 1000 / tickInterval;
+            FrameTickCount = ticksPerSecond / TargetFrameRate;
+        }
     }
 
     public enum Direction
