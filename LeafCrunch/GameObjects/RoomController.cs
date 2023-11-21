@@ -84,10 +84,11 @@ namespace LeafCrunch.GameObjects
         //like i'll have a prototype and initialize from the prototype
         public RoomController(Control control) : base(control)
         {
+            GlobalVars.SnapToGrid = true;
             GlobalVars.RoomWidth = control.Width;
             GlobalVars.RoomHeight = control.Height;
-            GlobalVars.RoomTileSizeW = 64; //for now
-            GlobalVars.RoomTileSizeH = 64;
+            GlobalVars.RoomTileSizeW = 32; //for now
+            GlobalVars.RoomTileSizeH = 32;
 
             //eventually this will also be where we load custom rooms from some file
             //and there will be an arg here telling us what room file we want
@@ -105,7 +106,7 @@ namespace LeafCrunch.GameObjects
             LoadPlayer();
             LoadOperations();
             LoadItems();
-            LoadObstacles();            
+            LoadObstacles();
 
             //next up will be dynamically loading moving obstacles
             //then we can add sounds maybe and some better images
@@ -122,6 +123,35 @@ namespace LeafCrunch.GameObjects
 
             //oh we also want to start loading things into grid spots rather than just random xys
             //we could take the xys though and snap them to the tile the origin is in. 
+            SnapControls();
+        }
+
+        protected void SnapControls()
+        {
+            //I should probably make sure the room dimensions are multiples of the tile size first
+            //but we can come back to that.
+
+            int roomWidthTiles = GlobalVars.RoomWidth / GlobalVars.RoomTileSizeW;
+            //int roomHeightTiles = GlobalVars.RoomHeight / GlobalVars.RoomTileSizeH;
+
+            //we'd just adjust it to those (before or after adjusting other controls though? idk
+            //oh also this won't snap during movement lololol oh well whatever I guess.
+            //ALTHOUGH we could have a tile size limited to the slowest movement. Like if we have a speed of 10,
+            //nothing should be smaller than that.
+            //we'll figure it out idk 
+            //I also should probably not be recalculating the tile index every single time for objects with a speed
+            //and previous speed of 0
+            //or no speed property
+
+            int playerTileIndex = Player.TileIndex;
+            int playerTileX = playerTileIndex % roomWidthTiles;
+            int playerTileY = (playerTileIndex - playerTileIndex) / roomWidthTiles;
+
+            int newx = GlobalVars.RoomTileSizeW * playerTileX;
+            int newy = GlobalVars.RoomTileSizeH * playerTileY;
+
+            Player.Control.Top = newy;
+            Player.Control.Left = newx;
         }
 
         protected void LoadPlayer()

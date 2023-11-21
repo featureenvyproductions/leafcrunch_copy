@@ -2,6 +2,7 @@
 {
     public class GlobalVars
     {
+        public static bool SnapToGrid { get; set; } //don't know why I would want this to be false but i guess i'll give myself the option
         public static int RoomWidth { get; set; }
         public static int RoomHeight { get; set; }
 
