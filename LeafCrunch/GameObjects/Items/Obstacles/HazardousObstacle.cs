@@ -16,6 +16,28 @@ namespace LeafCrunch.GameObjects.Items.Obstacles
             Operation.ToExecute = InflictDamage;
         }
 
+        public HazardousObstacle(Control control, string operationName) : base(control)
+        {
+            if (!OperationMethodRegistry.TargetOperations.ContainsKey("Items.Obstacles.HazardousObstacle.InflictDamage"))
+                OperationMethodRegistry.TargetOperations.Add("Items.Obstacles.HazardousObstacle.InflictDamage", InflictDamage);
+
+            ActivationKey = Keys.Enter;
+
+            InitializeOperationFromRegistry(operationName);
+            /*
+            var operation = OperationRegistry.Operations[operationName];
+
+            Operation = new Operation()
+            {
+                Params = ConvertParamList(operation.ParamData),
+                ParamData = operation.ParamData,
+                TargetName = operation.TargetName,
+                Target = null,
+                ToExecute = null,
+                ToExecuteName = operation.ToExecuteName
+            };*/
+        }
+
         public override void Update()
         {
             //oh when will we set it to active though

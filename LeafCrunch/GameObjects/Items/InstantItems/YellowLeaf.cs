@@ -21,5 +21,10 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
             : base(control, operation)
         {
         }
+
+        public YellowLeaf(Control control, string operationName)
+            : base(control, operationName)
+        {
+        }
     }
 }
