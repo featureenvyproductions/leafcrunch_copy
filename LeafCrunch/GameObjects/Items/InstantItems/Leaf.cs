@@ -1,13 +1,25 @@
 ﻿using LeafCrunch.GameObjects.ItemProperties;
 using LeafCrunch.GameObjects.Items.ItemOperations;
+using LeafCrunch.Utilities;
+using LeafCrunch.Utilities.Entities;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects.Items.InstantItems
 {
-    public abstract class Leaf : InstantItem
+    //you know once we do the dynamic loading for items, we probaby won't have to have different classes anymore
+    //maybe?
+    //just if we use this we should make sure the point multiplier still works....
+    public class Leaf : InstantItem
     {
         protected int _pointIncrement = 10;
+        private bool _isInitialized = false;
+
+        public bool IsInitialized
+        {
+            get { return _isInitialized; }
+            set { _isInitialized = value; }
+        }
 
         //hacky but eh
         virtual public int PointIncrement
@@ -18,13 +30,13 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
 
         public Leaf(Control control) : base(control)
         {
-            Parent = control.Parent;
+          //  Parent = control.Parent;
         }
 
         public Leaf(Control control, Operation operation)
             : base(control, operation)
         {
-            Parent = control.Parent;
+         //   Parent = control.Parent;
             ActivationKey = Keys.Enter;
             Operation.ToExecute = Apply;
             Operation.Params = new Dictionary<string, object> {
@@ -43,34 +55,37 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
                 OperationMethodRegistry.TargetOperations.Add("Items.InstantItems.Leaf.Apply", Apply);
 
             ActivationKey = Keys.Enter;
-            Parent = control.Parent;
+          //  Parent = control.Parent;
 
             InitializeOperationFromRegistry(operationName);
-           /* //get the operation from the registry
-            //tbd....how do we want to handle this if it's not there
-            var operation = OperationRegistry.Operations[operationName];
-
-            //make a copy in case other people want to use it but need to initialize the params differently
-            //because i cannot be bothered to make some kind of parameter registry from hell.
-            //you know, it occurs to me I can just have a local registry of operation names etc here
-            //but omg i don't care whatever i'll sit on it and change it later maybe
-            //it's dynamic rn and that's what I care about
-
-            Operation = new Operation()
-            {
-                //we'll need to initialize the parameters
-                //this is kind of dumb...I'll make it better later I guess
-                Params = ConvertParamList(operation.ParamData),
-                ParamData = operation.ParamData,
-                TargetName = operation.TargetName,
-                Target = null, //it'll get picked up later
-                ToExecute = null,
-                ToExecuteName = operation.ToExecuteName //this will get picked up later
-            };*/
-
         }
 
-        public Control Parent { get; set; }
+        //create from item data loaded from file
+        public Leaf (ItemData itemData) :base()
+        {
+            if (!OperationMethodRegistry.TargetOperations.ContainsKey("Items.InstantItems.Leaf.Apply"))
+                OperationMethodRegistry.TargetOperations.Add("Items.InstantItems.Leaf.Apply", Apply);
+
+            ActivationKey = Keys.Enter;
+
+            var img = UtilityMethods.ImageFromPath(itemData.SingleImage);
+            Control = new PictureBox()
+            {
+                Left = itemData.X,
+                Top = itemData.Y,
+                Image = img,
+                Width = img.Width,
+                Height = img.Height
+            };
+            _pointIncrement = itemData.PointIncrement;
+          //  Parent.Controls.Add(Control);
+            InitializeOperationFromRegistry(itemData.Operation);
+
+            //only consider it initialized if we came this way for now
+            IsInitialized = true;
+        }
+
+      //  public Control Parent { get; set; }
 
         virtual protected Result Apply(GenericGameObject genericGameObject, object paramList)
         {

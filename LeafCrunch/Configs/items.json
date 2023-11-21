@@ -1,0 +1,36 @@
+{
+  "Items": [
+    {
+      "Type": "GreenLeaf",
+      "Operation": "Items.InstantItems.Leaf.PointIncrement",
+      "SingleImage": "Images/PointItems/greenleaf.png",
+      "X": 400,
+      "Y": 250,
+      "PointIncrement": 1
+    },
+    {
+      "Type": "YellowLeaf",
+      "Operation": "Items.InstantItems.Leaf.PointIncrement",
+      "SingleImage": "Images/PointItems/yellowleaf.png",
+      "X": 400,
+      "Y": 400,
+      "PointIncrement": 5
+    },
+    {
+      "Type": "OrangeLeaf",
+      "Operation": "Items.InstantItems.Leaf.PointIncrement",
+      "SingleImage": "Images/PointItems/orangeleaf.png",
+      "X": 500,
+      "Y": 400,
+      "PointIncrement": 10
+    },
+    {
+      "Type": "RedLeaf",
+      "Operation": "Items.InstantItems.Leaf.PointIncrement",
+      "SingleImage": "Images/PointItems/redleaf.png",
+      "X": 100,
+      "Y": 400,
+      "PointIncrement": 15
+    }
+  ]
+}

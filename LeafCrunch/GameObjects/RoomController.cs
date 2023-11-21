@@ -8,6 +8,8 @@ using LeafCrunch.GameObjects.Items.ItemOperations;
 using LeafCrunch.GameObjects.Items.TemporaryItems;
 using LeafCrunch.GameObjects.Stats;
 using LeafCrunch.GameObjects.Items.Obstacles;
+using LeafCrunch.Utilities.Entities;
+using System.IO;
 
 //you know one thing i should do is when i actually implement the dynamic loading of the game board
 //i should make it so that i only place things exactly in tiles
@@ -113,14 +115,30 @@ namespace LeafCrunch.GameObjects
             //let's try loading up all the operations and stuffing them in the registry
             OperationRegistry.Load();
 
-            //dumb intermittent hard coded solution till we finish the rest
-            _items = new List<GenericItem>()
+            //let's load some items and add those to things
+            /* private const string _configFile = "operations.json";
+
+         private static string LoadJson()
+         {
+             return File.ReadAllText(UtilityMethods.GetConfigPath(_configFile));
+         }*/
+
+            var jsonString = File.ReadAllText(UtilityMethods.GetConfigPath("items.json"));
+            var jsonLoader = new JsonLoader();
+            var itemData = jsonLoader.LoadFromJson<ItemDataCollection>(jsonString);
+
+            
+
+            var gi = new List<GenericItem>();
+            foreach (var item in itemData.Items)
             {
-                new GreenLeaf(itemControls.ElementAt(0), "Items.InstantItems.Leaf.PointIncrement"),
-                new YellowLeaf(itemControls.ElementAt(1), "Items.InstantItems.Leaf.PointIncrement"),
-                new OrangeLeaf(itemControls.ElementAt(2), "Items.InstantItems.Leaf.PointIncrement"),
-                new RedLeaf(itemControls.ElementAt(3), "Items.InstantItems.Leaf.PointIncrement")
-            };
+                var leaf = new Leaf(item);
+                if (leaf.IsInitialized) Control.Controls.Add(leaf.Control);
+                gi.Add(leaf);
+            }
+
+            //dumb intermittent hard coded solution till we finish the rest
+            _items = gi;
 
             _items.Add(new PineCone(itemControls.ElementAt(4), "Items.TemporaryItems.PineCode.LeafPointMultiplier", countDownControl));
 

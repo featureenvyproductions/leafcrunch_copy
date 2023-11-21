@@ -133,6 +133,9 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Configs\items.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Configs\operations.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -165,19 +168,29 @@
     <None Include="Images\Background\level1.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Images\PointItems\greenleaf.png" />
+    <None Include="Images\PointItems\greenleaf.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Images\PointItems\yellowleaf.png" />
+    <None Include="Images\PointItems\yellowleaf.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Images\PointItems\orangeleaf.png" />
+    <None Include="Images\PointItems\orangeleaf.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Images\PointItems\redleaf.png" />
+    <None Include="Images\PointItems\redleaf.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Images\PointItems\ModifierItems\pinecone.png" />
+    <None Include="Images\PointItems\ModifierItems\pinecone.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Images\Obstacles\movingObstacle.png" />

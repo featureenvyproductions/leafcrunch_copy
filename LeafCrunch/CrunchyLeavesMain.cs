@@ -30,10 +30,10 @@ namespace LeafCrunch
 
             RoomController = new RoomController(pbLevel1, lblRainbowPoints, lblCountDown, 
             new List<Control>() {
-                pbGreenLeaf01,
-                pbYellowLeaf01,
-                pbOrangeLeaf01,
-                pbRedLeaf01,
+                null,
+                null,
+                null,
+                null,
                 pbPineCone01
             },
             new List<Control>()
