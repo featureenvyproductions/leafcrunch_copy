@@ -122,10 +122,9 @@ namespace LeafCrunch.GameObjects
                 new RedLeaf(itemControls.ElementAt(3), "Items.InstantItems.Leaf.PointIncrement")
             };
 
-            _items.Add(new PineCone(itemControls.ElementAt(4), new MultiTargetOperation()
-            {
-                Targets = new List<GenericGameObject>(_items.Cast<GenericItem>())
-            }, countDownControl));
+            //uhghghghgh for some reason this isn't applying the fucking multiplier
+            //and somehow i've added my leaves like 3 fucking times
+            _items.Add(new PineCone(itemControls.ElementAt(4), "Items.TemporaryItems.PineCode.LeafPointMultiplier", countDownControl));
 
             RegisterTemporaryItems();
 
@@ -138,7 +137,7 @@ namespace LeafCrunch.GameObjects
             _movingObstacles = new List<MovingObstacle>()
             {
                 new MovingObstacle(movingObstacleControls.ElementAt(0), 10, 10),
-                new HazardousMovingObstacle(movingObstacleControls.ElementAt(1), 5, 5, "Items.Obstacles.HazardousObstacle.PointDecrement")
+                new HazardousMovingObstacle(movingObstacleControls.ElementAt(1), 5, 5, "Items.Obstacles.HazardousMovingObstacle.PointDecrement")
             };
         }
 

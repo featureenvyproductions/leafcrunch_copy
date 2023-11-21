@@ -28,11 +28,14 @@ namespace LeafCrunch.GameObjects.Items
 
         public GenericItem(): base()
         {
-
+            if (!GenericGameObjectRegistry.RegisteredObjects.ContainsValue(this))
+                GenericGameObjectRegistry.RegisteredObjects.Add("GenericItem_" + GetHashCode().ToString(), this);
         }
 
         public GenericItem(Control control) : base(control)
         {
+            if (!GenericGameObjectRegistry.RegisteredObjects.ContainsValue(this))
+                GenericGameObjectRegistry.RegisteredObjects.Add("GenericItem_" + GetHashCode().ToString(), this);
             //idk man I got myself into constructor hell IDK if we want this to be a case or not
             Active = false;
             // Operation = null;
@@ -42,6 +45,8 @@ namespace LeafCrunch.GameObjects.Items
         public GenericItem(Control control, Operation operation)
             : base(control)
         {
+            if (!GenericGameObjectRegistry.RegisteredObjects.ContainsValue(this))
+                GenericGameObjectRegistry.RegisteredObjects.Add("GenericItem_" + GetHashCode().ToString(), this);
             Active = false;
             Operation = operation;
             MarkedForDeletion = false;
@@ -70,10 +75,56 @@ namespace LeafCrunch.GameObjects.Items
 
             Operation = new Operation()
             {
+                OperationName = operationName,
                 Params = ConvertParamList(operation.ParamData),
                 ParamData = operation.ParamData,
                 TargetName = operation.TargetName,
                 Target = null,
+                ToExecute = null,
+                ToExecuteName = operation.ToExecuteName
+            };
+        }
+
+        public virtual void Refresh()
+        {
+            InitializeOperationFromRegistry();
+        }
+
+        //once we set the name we can refresh as needed
+        //necessary if anything is a property reference
+        virtual protected void InitializeOperationFromRegistry()
+        {
+            var operation = OperationRegistry.Operations[Operation.OperationName];
+
+            Operation = new Operation()
+            {
+                OperationName = Operation.OperationName,
+                Params = ConvertParamList(operation.ParamData),
+                ParamData = operation.ParamData,
+                TargetName = operation.TargetName,
+                Target = null,
+                ToExecute = null,
+                ToExecuteName = operation.ToExecuteName
+            };
+        }
+
+        virtual protected void InitializeMultiOperationFromRegistry(string operationName)
+        {
+            var operation = OperationRegistry.Operations[operationName] as MultiTargetOperation;
+
+            //can probably consolidate this stuff
+            //but i'll do that later.
+            //also need to handle if that cast fails...tbd
+            var paramList = operation.ParamData != null ? ConvertParamList(operation.ParamData) : null;
+
+            Operation = new MultiTargetOperation()
+            {
+                OperationName = operationName,
+                Params = paramList,
+                ParamData = operation.ParamData,
+                TargetName = null,
+                Target = null,
+                TargetType = operation.TargetType,
                 ToExecute = null,
                 ToExecuteName = operation.ToExecuteName
             };

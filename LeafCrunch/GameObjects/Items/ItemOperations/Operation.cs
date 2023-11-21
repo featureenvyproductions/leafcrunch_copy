@@ -59,15 +59,32 @@ namespace LeafCrunch.GameObjects.Items.ItemOperations
             var operations = loader.LoadFromJson<OperationDataCollection>(jsonString);
             foreach (var operation in operations.OperationList)
             {
-                _operations.Add(operation.OperationName, new Operation()
+                //clunky but we can tweak it later and handle things like lists of names
+                if (!string.IsNullOrEmpty(operation.TargetType))
                 {
-                    Params = null,
-                    ParamData = operation.ParameterList,
-                    Target = null,
-                    TargetName = operation.TargetName,
-                    ToExecute = null,
-                    ToExecuteName = operation.MethodToExecute
-                });
+                    _operations.Add(operation.OperationName, new MultiTargetOperation()
+                    {
+                        Params = null,
+                        ParamData = operation.ParameterList,
+                        Target = null,
+                        TargetName = null,
+                        TargetType = operation.TargetType,
+                        ToExecute = null,
+                        ToExecuteName = operation.MethodToExecute
+                    });
+                }
+                else
+                {
+                    _operations.Add(operation.OperationName, new Operation()
+                    {
+                        Params = null,
+                        ParamData = operation.ParameterList,
+                        Target = null,
+                        TargetName = operation.TargetName,
+                        ToExecute = null,
+                        ToExecuteName = operation.MethodToExecute
+                    });
+                }
             }
         }
     }
@@ -84,6 +101,7 @@ namespace LeafCrunch.GameObjects.Items.ItemOperations
     //does a thing to a target
     public class Operation : IOperation
     {
+        public string OperationName { get; set; }
         private GenericGameObject _target;
         public GenericGameObject Target 
         { 

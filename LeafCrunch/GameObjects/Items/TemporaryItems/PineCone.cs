@@ -25,6 +25,17 @@ namespace LeafCrunch.GameObjects.Items.TemporaryItems
             Operation.ToExecute = ApplyPointMultiplier;
         }
 
+        public PineCone(Control control, string operationName, Control displayControl) : base(control)
+        {
+            //   Operation.Params = null;
+            DisplayControl = displayControl;
+            //Operation.ToExecute = ApplyPointMultiplier;
+            if (!OperationMethodRegistry.TargetOperations.ContainsKey("Items.TemporaryItems.PineCode.ApplyPointMultiplier"))
+                OperationMethodRegistry.TargetOperations.Add("Items.TemporaryItems.PineCode.ApplyPointMultiplier", ApplyPointMultiplier);
+
+            InitializeMultiOperationFromRegistry(operationName);
+        }
+
         //I feel like this doesn't belong here but eh we'll come back to it
         public override void ShowAsStat()
         {
@@ -60,14 +71,22 @@ namespace LeafCrunch.GameObjects.Items.TemporaryItems
                 {
                     //ok we need to unapply the multiplier
                     var target = genericGameObject as Leaf;
-                    if (target != null) target.PointIncrement /= _multiplier;
+                    if (target != null)
+                    {
+                        target.PointIncrement /= _multiplier;
+                        target.Refresh();
+                    }
                 }
             }
             else
             {
                 //ok we can apply it
                 var target = genericGameObject as Leaf;
-                if (target != null) target.PointIncrement *= _multiplier;
+                if (target != null)
+                {
+                    target.PointIncrement *= _multiplier;
+                    target.Refresh();
+                }
             }
             return new Result //we don't do anything with the result here right now. 
             {

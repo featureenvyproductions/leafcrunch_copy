@@ -26,6 +26,7 @@ namespace LeafCrunch.Utilities.Entities
         public string TargetName { get; set; }
         public string OperationName { get; set; }
         public string MethodToExecute { get; set; }
+        public string TargetType { get; set; }
         public List<ParameterData> ParameterList { get; set; }
     }
 

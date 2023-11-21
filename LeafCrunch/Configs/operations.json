@@ -35,6 +35,11 @@
           "ValueType": "Integer"
         }
       ]
+    },
+    {
+      "TargetType": "LeafCrunch.GameObjects.Items.InstantItems.Leaf",
+      "MethodToExecute": "Items.TemporaryItems.PineCode.ApplyPointMultiplier",
+      "OperationName": "Items.TemporaryItems.PineCode.LeafPointMultiplier"
     }
   ]
 }
