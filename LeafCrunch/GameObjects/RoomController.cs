@@ -122,8 +122,6 @@ namespace LeafCrunch.GameObjects
                 new RedLeaf(itemControls.ElementAt(3), "Items.InstantItems.Leaf.PointIncrement")
             };
 
-            //uhghghghgh for some reason this isn't applying the fucking multiplier
-            //and somehow i've added my leaves like 3 fucking times
             _items.Add(new PineCone(itemControls.ElementAt(4), "Items.TemporaryItems.PineCode.LeafPointMultiplier", countDownControl));
 
             RegisterTemporaryItems();
