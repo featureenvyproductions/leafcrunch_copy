@@ -8,7 +8,6 @@ using LeafCrunch.GameObjects.Items.ItemOperations;
 using LeafCrunch.GameObjects.Items.TemporaryItems;
 using LeafCrunch.GameObjects.Stats;
 using LeafCrunch.GameObjects.Items.Obstacles;
-using LeafCrunch.Utilities.Animation;
 
 //you know one thing i should do is when i actually implement the dynamic loading of the game board
 //i should make it so that i only place things exactly in tiles
@@ -20,6 +19,12 @@ using LeafCrunch.Utilities.Animation;
 //initializing all the underlying obstacle tiles. that's fine probably idk.
 //i probably don't need to get that complex for this....most of the obstacles are going to be rocks or fences or like
 //cats
+
+//note to self....I actually just wanted to calculate the tile of the destination origin pixel and use that
+//for a comparison
+//that should work pretty well we can come back to that. 
+
+//also collect factory code into its own folder so the loading/initializing stuff isn't a fucking mess.
 
 namespace LeafCrunch.GameObjects
 {
@@ -105,13 +110,11 @@ namespace LeafCrunch.GameObjects
             if (Player.IsInitialized) Control.Controls.Add(Player.Control);
             StatsDisplay = new StatsDisplay(statsControl, Player);
 
+            
             //dumb intermittent hard coded solution till we finish the rest
             _items = new List<GenericItem>()
             {
-                new GreenLeaf(itemControls.ElementAt(0), new Operation()
-                {
-                    Target = Player
-                }),
+                new GreenLeaf(itemControls.ElementAt(0),"operationSample.json"),
                 new YellowLeaf(itemControls.ElementAt(1), new Operation()
                 {
                     Target = Player,

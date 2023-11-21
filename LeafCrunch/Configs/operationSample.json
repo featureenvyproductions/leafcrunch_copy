@@ -1,0 +1,12 @@
+{
+  "TargetName": "Player",
+  "MethodToExecute": "Items.InstantItems.Leaf.Apply",
+  "OperationName": "PointIncrement",
+  "ParameterList": [
+    {
+      "Name": "RainbowPoints",
+      "Value": "PointIncrement",
+      "ValueType": "Property"
+    }
+  ]
+}

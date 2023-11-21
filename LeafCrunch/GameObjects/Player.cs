@@ -10,6 +10,8 @@ namespace LeafCrunch.GameObjects
 {
     public class Player : InteractiveGameObject, IReboundable, ICollidable, IDamageReceptor, IItemUser, IAnimated
     {
+        private string _objectName = "Player";
+
         #region Pause Properties
         private bool _isSuspended = false;
         #endregion 
@@ -132,6 +134,7 @@ namespace LeafCrunch.GameObjects
             //double check that adding this to the child controls of the room will set the parent of this to the room
             Control = new PictureBox()
             {
+                Name = _objectName,
                 Image = Sprite.CurrentImage,
                 Width = Sprite.CurrentImage.Width,
                 Height = Sprite.CurrentImage.Height,
@@ -142,6 +145,7 @@ namespace LeafCrunch.GameObjects
             //eventually we'll probably need to have special sprites as well but we'll come back to that
             //like the stomp animation
             IsInitialized = true;
+            GenericGameObjectRegistry.RegisteredObjects.Add(_objectName, this);
         }
         #endregion
 

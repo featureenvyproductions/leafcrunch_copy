@@ -5,10 +5,30 @@ using System.Drawing;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace LeafCrunch.Utilities.Entities
 {
-    //let's try some basic stuff
+    public class ParameterData
+    {
+        public string Name { get; set; }
+        public string Value { get; set; } //I guess this could be a json string representing a more complex object if I need it to be but rn it's just numbers tbh
+        public string ValueType { get; set; } //tells us what to convert to so we can make this a little more generic
+        //if it says "property" then we look for a property in the initializing class.
+    }
+
+    public class OperationData
+    {
+        //the thing that'll make this tricky is we'll either need some kind of reflection
+        //or some kind of hash table with registered operation methods
+        //so we can grab it
+        //that could be an alright way to start. 
+        public string TargetName { get; set; }
+        public string OperationName { get; set; }
+        public string MethodToExecute { get; set; }
+        public List<ParameterData> ParameterList { get; set; }
+    }
+
     public class ImageSequenceData
     {
         public List<string> ImagePaths { get; set; }

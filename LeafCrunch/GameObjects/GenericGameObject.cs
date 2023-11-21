@@ -1,9 +1,28 @@
 ﻿using LeafCrunch.Utilities;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects
 {
+    //this exists because I need ways for objects to operate on or talk to each other
+    //without them being hard coded
+    public class GenericGameObjectRegistry
+    {
+        private static Dictionary<string, GenericGameObject> _registeredObjects = null;
+        public static Dictionary<string, GenericGameObject> RegisteredObjects {
+            get
+            {
+                if (_registeredObjects == null) _registeredObjects = new Dictionary<string, GenericGameObject>();
+                return _registeredObjects;
+            }
+            set
+            {
+                _registeredObjects = value;
+            }
+        }
+    }
+
     //the base thing all the useful things inherit from
     public abstract class GenericGameObject
     {

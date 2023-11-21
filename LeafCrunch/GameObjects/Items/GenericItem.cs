@@ -24,6 +24,11 @@ namespace LeafCrunch.GameObjects.Items
             set { _activationKey = value; }
         }
 
+        public GenericItem(): base()
+        {
+
+        }
+
         public GenericItem(Control control) : base(control)
         {
             //idk man I got myself into constructor hell IDK if we want this to be a case or not

@@ -5,6 +5,11 @@ namespace LeafCrunch.GameObjects.Items
 {
     public class InstantItem : GenericItem
     {
+        public InstantItem () : base()
+        {
+            Control = new Control();
+        }
+
         public InstantItem(Control control) : base(control)
         {
         }

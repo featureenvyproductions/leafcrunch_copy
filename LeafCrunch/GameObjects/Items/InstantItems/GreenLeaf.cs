@@ -23,5 +23,10 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
             : base(control, operation)
         {
         }
+
+        public GreenLeaf(Control control, string jsonString)
+            : base(control, jsonString)
+        {
+        }
     }
 }
