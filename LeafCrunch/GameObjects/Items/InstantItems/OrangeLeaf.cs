@@ -21,5 +21,10 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
             : base(control, operation)
         {
         }
+
+        public OrangeLeaf(Control control, string operationName)
+            : base(control, operationName)
+        {
+        }
     }
 }

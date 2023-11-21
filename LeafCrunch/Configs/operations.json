@@ -1,0 +1,40 @@
+{
+  "OperationList": [
+    {
+      "TargetName": "Player",
+      "MethodToExecute": "Items.InstantItems.Leaf.Apply",
+      "OperationName": "Items.InstantItems.Leaf.PointIncrement",
+      "ParameterList": [
+        {
+          "Name": "RainbowPoints",
+          "Value": "PointIncrement",
+          "ValueType": "Property"
+        }
+      ]
+    },
+    {
+      "TargetName": "Player",
+      "MethodToExecute": "Items.Obstacles.HazardousObstacle.InflictDamage",
+      "OperationName": "Items.Obstacles.HazardousObstacle.PointDecrement",
+      "ParameterList": [
+        {
+          "Name": "RainbowPoints",
+          "Value": "-5",
+          "ValueType": "Integer"
+        }
+      ]
+    },
+    {
+      "TargetName": "Player",
+      "MethodToExecute": "Items.Obstacles.HazardousObstacle.InflictDamage",
+      "OperationName": "Items.Obstacles.HazardousMovingObstacle.PointDecrement",
+      "ParameterList": [
+        {
+          "Name": "RainbowPoints",
+          "Value": "-10",
+          "ValueType": "Integer"
+        }
+      ]
+    }
+  ]
+}

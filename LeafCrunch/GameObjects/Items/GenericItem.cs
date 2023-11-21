@@ -1,4 +1,6 @@
 ﻿using LeafCrunch.GameObjects.Items.ItemOperations;
+using LeafCrunch.Utilities.Entities;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects.Items
@@ -60,5 +62,58 @@ namespace LeafCrunch.GameObjects.Items
         }
 
         virtual protected void HandleResult(Result result) { }
+
+        //when an operation name is provided
+        virtual protected void InitializeOperationFromRegistry(string operationName)
+        {
+            var operation = OperationRegistry.Operations[operationName];
+
+            Operation = new Operation()
+            {
+                Params = ConvertParamList(operation.ParamData),
+                ParamData = operation.ParamData,
+                TargetName = operation.TargetName,
+                Target = null,
+                ToExecute = null,
+                ToExecuteName = operation.ToExecuteName
+            };
+        }
+
+        virtual protected object GetPropertyValue(string propertyName)
+        {
+            var t = GetType();
+            var p = t.GetProperty(propertyName);
+            return p?.GetValue(this);
+        }
+
+        virtual protected Dictionary<string, object> ConvertParamList(List<ParameterData> paramData)
+        {
+            var dict = new Dictionary<string, object>();
+            foreach (var param in paramData)
+            {
+                var val = param.Value;
+                var type = param.ValueType;
+                var name = param.Name;
+                switch (type)
+                {
+                    case "String":
+                        dict.Add(name, val);
+                        break;
+                    case "Integer":
+                        {
+                            int i;
+                            int.TryParse(val, out i); //check what this is if conversion fails...tbd
+                            dict.Add(name, i);
+                            break;
+                        }
+                    case "Property":
+                        {
+                            dict.Add(name, GetPropertyValue(val));
+                        }
+                        break;
+                }
+            }
+            return dict;
+        }
     }
 }

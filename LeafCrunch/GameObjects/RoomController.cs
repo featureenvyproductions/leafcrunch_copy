@@ -110,23 +110,16 @@ namespace LeafCrunch.GameObjects
             if (Player.IsInitialized) Control.Controls.Add(Player.Control);
             StatsDisplay = new StatsDisplay(statsControl, Player);
 
-            
+            //let's try loading up all the operations and stuffing them in the registry
+            OperationRegistry.Load();
+
             //dumb intermittent hard coded solution till we finish the rest
             _items = new List<GenericItem>()
             {
-                new GreenLeaf(itemControls.ElementAt(0),"operationSample.json"),
-                new YellowLeaf(itemControls.ElementAt(1), new Operation()
-                {
-                    Target = Player,
-                }),
-                new OrangeLeaf(itemControls.ElementAt(2), new Operation()
-                {
-                    Target = Player
-                }),
-                new RedLeaf(itemControls.ElementAt(3), new Operation()
-                {
-                    Target = Player
-                })
+                new GreenLeaf(itemControls.ElementAt(0), "Items.InstantItems.Leaf.PointIncrement"),
+                new YellowLeaf(itemControls.ElementAt(1), "Items.InstantItems.Leaf.PointIncrement"),
+                new OrangeLeaf(itemControls.ElementAt(2), "Items.InstantItems.Leaf.PointIncrement"),
+                new RedLeaf(itemControls.ElementAt(3), "Items.InstantItems.Leaf.PointIncrement")
             };
 
             _items.Add(new PineCone(itemControls.ElementAt(4), new MultiTargetOperation()
@@ -139,27 +132,13 @@ namespace LeafCrunch.GameObjects
             _obstacles = new List<Obstacle>()
             {
                 new Obstacle(obstacleControls.ElementAt(0)),
-                new HazardousObstacle(obstacleControls.ElementAt(1), new Operation()
-                {
-                    Target = Player,
-                    Params = new Dictionary<string, object>()
-                    {
-                        { "RainbowPoints", -5 }
-                    }
-                })
+                new HazardousObstacle(obstacleControls.ElementAt(1), "Items.Obstacles.HazardousObstacle.PointDecrement")
             };
 
             _movingObstacles = new List<MovingObstacle>()
             {
                 new MovingObstacle(movingObstacleControls.ElementAt(0), 10, 10),
-                new HazardousMovingObstacle(movingObstacleControls.ElementAt(1), 5, 5, new Operation()
-                {
-                    Target = Player,
-                    Params = new Dictionary<string, object>()
-                    {
-                        { "RainbowPoints", -10 }
-                    }
-                })
+                new HazardousMovingObstacle(movingObstacleControls.ElementAt(1), 5, 5, "Items.Obstacles.HazardousObstacle.PointDecrement")
             };
         }
 

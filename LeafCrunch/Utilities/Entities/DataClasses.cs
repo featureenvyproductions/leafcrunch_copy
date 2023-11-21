@@ -29,6 +29,11 @@ namespace LeafCrunch.Utilities.Entities
         public List<ParameterData> ParameterList { get; set; }
     }
 
+    public class OperationDataCollection
+    {
+        public List<OperationData> OperationList { get; set; }
+    }
+
     public class ImageSequenceData
     {
         public List<string> ImagePaths { get; set; }

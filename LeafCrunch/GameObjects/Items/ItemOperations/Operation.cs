@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using LeafCrunch.Utilities;
+using LeafCrunch.Utilities.Entities;
+using System.Collections.Generic;
+using System.IO;
 
 namespace LeafCrunch.GameObjects.Items.ItemOperations
 {
@@ -39,6 +42,34 @@ namespace LeafCrunch.GameObjects.Items.ItemOperations
                 _operations = value;
             }
         }
+
+        private const string _configFile = "operations.json";
+
+        private static string LoadJson()
+        {
+            return File.ReadAllText(UtilityMethods.GetConfigPath(_configFile));
+        }
+
+        public static void Load()
+        {
+            if (_operations == null) _operations = new Dictionary<string, Operation>();
+
+            var jsonString = LoadJson();
+            var loader = new JsonLoader();
+            var operations = loader.LoadFromJson<OperationDataCollection>(jsonString);
+            foreach (var operation in operations.OperationList)
+            {
+                _operations.Add(operation.OperationName, new Operation()
+                {
+                    Params = null,
+                    ParamData = operation.ParameterList,
+                    Target = null,
+                    TargetName = operation.TargetName,
+                    ToExecute = null,
+                    ToExecuteName = operation.MethodToExecute
+                });
+            }
+        }
     }
 
     public class Result
@@ -53,38 +84,61 @@ namespace LeafCrunch.GameObjects.Items.ItemOperations
     //does a thing to a target
     public class Operation : IOperation
     {
-        public GenericGameObject Target { get; set; }
+        private GenericGameObject _target;
+        public GenericGameObject Target 
+        { 
+            get
+            {
+                if (_target == null)
+                {
+                    //find it in the registry
+                    if (!string.IsNullOrEmpty(TargetName)
+                    && GenericGameObjectRegistry.RegisteredObjects.ContainsKey(TargetName))
+                    {
+                        _target = GenericGameObjectRegistry.RegisteredObjects[TargetName];
+                    }
+                }
+                //if it's still null whelp we've got bigger problems...
+                //again I need to make some validation code
+                return _target;
+            }
+            set { _target = value; }
+        }
         public object Params { get; set; } //must be passed but can be null
-        public TargetOperation ToExecute { get; set; }
+
+        public List<ParameterData> ParamData { get; set; } //in case we want to initialize the data later on
+
+        private TargetOperation _toExecute;
+        public TargetOperation ToExecute 
+        {
+            get 
+            {
+                if (_toExecute == null)
+                {
+                    //see if we're trying to get something from the registry
+                    //if we have it this way then we can load up all the operations and registry names at once
+                    //bc we won't care about any of the methods until all the objects are initialized
+                    //and the objects can just reference operation names
+                    if (!string.IsNullOrEmpty(ToExecuteName)
+                        && OperationMethodRegistry.TargetOperations.ContainsKey(ToExecuteName))
+                    {
+                        _toExecute = OperationMethodRegistry.TargetOperations[ToExecuteName];
+                    }
+                }
+                return _toExecute;
+            }
+            set
+            {
+                _toExecute = value;
+            }
+        }
 
         public string ToExecuteName { get; set; }
         public string TargetName { get; set; }
 
         public Result Execute()
         {
-            if (Target == null)
-            {
-                if (!string.IsNullOrEmpty(TargetName)
-                    && GenericGameObjectRegistry.RegisteredObjects.ContainsKey(TargetName))
-                {
-                    Target = GenericGameObjectRegistry.RegisteredObjects[TargetName];
-                }
-                if (Target == null) return null;
-            }
-
-            if (ToExecute == null)
-            {
-                //see if we're trying to get something from the registry
-                //if we have it this way then we can load up all the operations and registry names at once
-                //bc we won't care about any of the methods until all the objects are initialized
-                //and the objects can just reference operation names
-                if (!string.IsNullOrEmpty(ToExecuteName)
-                    && OperationMethodRegistry.TargetOperations.ContainsKey(ToExecuteName))
-                {
-                    ToExecute = OperationMethodRegistry.TargetOperations[ToExecuteName];
-                }
-                if (ToExecute == null) return null;
-            }
+            if ((Target == null) || (ToExecute == null)) return null;
             return ToExecute(Target, Params);
         }
     }

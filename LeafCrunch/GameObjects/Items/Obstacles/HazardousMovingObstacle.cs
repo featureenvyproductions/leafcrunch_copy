@@ -17,6 +17,14 @@ namespace LeafCrunch.GameObjects.Items.Obstacles
             Operation.ToExecute = InflictDamage;
         }
 
+        public HazardousMovingObstacle(Control control, int speedx, int speedy, string operationName) : base(control, speedx, speedy)
+        {
+            if (!OperationMethodRegistry.TargetOperations.ContainsKey("Items.Obstacles.HazardousMovingObstacle.InflictDamage"))
+                OperationMethodRegistry.TargetOperations.Add("Items.Obstacles.HazardousMovingObstacle.InflictDamage", InflictDamage);
+
+            InitializeOperationFromRegistry(operationName);
+        }
+
         //rebounds, but also inflicts damage if colliding with target
         override public void Rebound(ICollidable collidable)
         {
