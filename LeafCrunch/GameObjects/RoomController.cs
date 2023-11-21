@@ -119,6 +119,9 @@ namespace LeafCrunch.GameObjects
             //oh you know what actually it would be easier to just have a different set of configs for each room and just
             //reconfigure the path to account for the room folder
             //yeah let's do that. way better than cramming shit into like 4 files for a whole game.
+
+            //oh we also want to start loading things into grid spots rather than just random xys
+            //we could take the xys though and snap them to the tile the origin is in. 
         }
 
         protected void LoadPlayer()

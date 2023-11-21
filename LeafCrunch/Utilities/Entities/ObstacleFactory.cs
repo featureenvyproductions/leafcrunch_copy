@@ -45,6 +45,12 @@ namespace LeafCrunch.Utilities.Entities
                             obstacles.Add(o);
                         }
                         break;
+                    case "HazardousMovingObstacle":
+                        {
+                            var o = new HazardousMovingObstacle(obstacle);
+                            obstacles.Add(o);
+                        }
+                        break;
                 }
             }
             return obstacles;

@@ -15,12 +15,20 @@
     },
     {
       "Type": "MovingObstacle",
-      "SingleImage": "Images/Obstacles/stationaryHazard.png",
-      "OperationName": "Items.Obstacles.HazardousObstacle.PointDecrement",
+      "SingleImage": "Images/Obstacles/movingObstacle.png",
       "X": 490,
       "Y": 425,
       "InitialSpeedX": 10,
       "InitialSpeedY": 10
+    },
+    {
+      "Type": "HazardousMovingObstacle",
+      "SingleImage": "Images/Obstacles/hazard.png",
+      "OperationName": "Items.Obstacles.HazardousMovingObstacle.PointDecrement",
+      "X": 260,
+      "Y": 470,
+      "InitialSpeedX": 5,
+      "InitialSpeedY": 5
     }
   ]
 }
