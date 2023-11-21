@@ -120,6 +120,7 @@
     <Compile Include="Utilities\Animation\ImageSequence.cs" />
     <Compile Include="Utilities\CommonProperties.cs" />
     <Compile Include="Utilities\Entities\DataClasses.cs" />
+    <Compile Include="Utilities\Entities\ItemFactory.cs" />
     <Compile Include="Utilities\UtilityMethods.cs" />
     <EmbeddedResource Include="CrunchyLeavesMain.resx">
       <DependentUpon>CrunchyLeavesMain.cs</DependentUpon>

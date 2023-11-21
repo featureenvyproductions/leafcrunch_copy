@@ -9,6 +9,12 @@ using System.Windows.Forms;
 
 namespace LeafCrunch.Utilities.Entities
 {
+    public class DisplayControlData
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+    }
+
     public class ItemData
     {
         public string Type { get; set; }
@@ -22,6 +28,9 @@ namespace LeafCrunch.Utilities.Entities
         //so I'm not limited to the exact things here
         //but I can fix that later on
         public int PointIncrement { get; set; }
+        public int PointMultiplier { get; set; }
+
+        public DisplayControlData DisplayControl { get; set; }
     }
 
     public class ItemDataCollection

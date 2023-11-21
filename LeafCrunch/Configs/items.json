@@ -31,6 +31,18 @@
       "X": 100,
       "Y": 400,
       "PointIncrement": 15
+    },
+    {
+      "Type": "PineCone",
+      "Operation": "Items.TemporaryItems.PineCode.LeafPointMultiplier",
+      "SingleImage": "Images/PointItems/ModifierItems/pinecone.png",
+      "X": 200,
+      "Y": 200,
+      "PointMultiplier": 2,
+      "DisplayControl": {
+        "X": 500,
+        "Y": 30
+      }
     }
   ]
 }

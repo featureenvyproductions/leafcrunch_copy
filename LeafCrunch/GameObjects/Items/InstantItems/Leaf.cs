@@ -13,14 +13,7 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
     public class Leaf : InstantItem
     {
         protected int _pointIncrement = 10;
-        private bool _isInitialized = false;
-
-        public bool IsInitialized
-        {
-            get { return _isInitialized; }
-            set { _isInitialized = value; }
-        }
-
+        
         //hacky but eh
         virtual public int PointIncrement
         {

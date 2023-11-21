@@ -10,6 +10,14 @@ namespace LeafCrunch.GameObjects.Items
         private Keys _activationKey = Keys.None; //if we keep this as none, it means just being on the same tile will activate it
         private bool _isSuspended = false; //different from active...this is just for pausing
 
+        private bool _isInitialized = false;
+
+        public bool IsInitialized
+        {
+            get { return _isInitialized; }
+            set { _isInitialized = value; }
+        }
+
         public Operation Operation { get; set; }
         public bool Active { get; set; }
         public bool MarkedForDeletion { get; set; }
