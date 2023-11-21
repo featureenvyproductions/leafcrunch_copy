@@ -32,12 +32,10 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pnHelpMenu = new System.Windows.Forms.Panel();
             this.lblHelpText = new System.Windows.Forms.Label();
-            this.pbStationaryHazard = new System.Windows.Forms.PictureBox();
             this.pbHazard = new System.Windows.Forms.PictureBox();
             this.pbMovingObstacle = new System.Windows.Forms.PictureBox();
             this.pbLevel1 = new System.Windows.Forms.PictureBox();
             this.pnHelpMenu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbStationaryHazard)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbHazard)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbMovingObstacle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbLevel1)).BeginInit();
@@ -64,15 +62,6 @@
             this.lblHelpText.Size = new System.Drawing.Size(129, 16);
             this.lblHelpText.TabIndex = 0;
             this.lblHelpText.Text = "this is some help text";
-            // 
-            // pbStationaryHazard
-            // 
-            this.pbStationaryHazard.Image = global::LeafCrunch.Properties.Resources.stationaryHazard;
-            this.pbStationaryHazard.Location = new System.Drawing.Point(405, 328);
-            this.pbStationaryHazard.Name = "pbStationaryHazard";
-            this.pbStationaryHazard.Size = new System.Drawing.Size(49, 50);
-            this.pbStationaryHazard.TabIndex = 13;
-            this.pbStationaryHazard.TabStop = false;
             // 
             // pbHazard
             // 
@@ -106,7 +95,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(843, 540);
-            this.Controls.Add(this.pbStationaryHazard);
             this.Controls.Add(this.pbHazard);
             this.Controls.Add(this.pbMovingObstacle);
             this.Controls.Add(this.pbLevel1);
@@ -117,7 +105,6 @@
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CrunchyLeavesMain_KeyUp);
             this.pnHelpMenu.ResumeLayout(false);
             this.pnHelpMenu.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbStationaryHazard)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbHazard)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbMovingObstacle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbLevel1)).EndInit();
@@ -133,7 +120,6 @@
         private System.Windows.Forms.Label lblHelpText;
         private System.Windows.Forms.PictureBox pbMovingObstacle;
         private System.Windows.Forms.PictureBox pbHazard;
-        private System.Windows.Forms.PictureBox pbStationaryHazard;
     }
 }
 
