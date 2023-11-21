@@ -107,12 +107,19 @@ namespace LeafCrunch.GameObjects
             LoadOperations();
             LoadItems();
 
+            var obstacleFactory = new ObstacleFactory();
+            var obstacles = obstacleFactory.LoadObstacles();
+            foreach (var obstacle in obstacles)
+            {
+                if (obstacle.IsInitialized) Control.Controls.Add(obstacle.Control);
+            }
+
             //next up will be dynamically loading obstacles
             //then we can add sounds maybe and some better images
             //then dynamically load subsequent room configurations and game goals etc
             _obstacles = new List<Obstacle>()
             {
-                new Obstacle(obstacleControls.ElementAt(0)),
+                obstacles.ElementAt(0),
                 new HazardousObstacle(obstacleControls.ElementAt(1), "Items.Obstacles.HazardousObstacle.PointDecrement")
             };
 

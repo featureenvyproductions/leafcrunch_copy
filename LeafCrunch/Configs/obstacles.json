@@ -1,0 +1,17 @@
+{
+  "Obstacles": [
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/genericObstacle.png",
+      "X": 500,
+      "Y": 150
+    },
+    {
+      "Type": "HazardousObstacle",
+      "SingleImage": "Images/Obstacles/stationaryHazard.png",
+      "OperationName": "Items.Obstacles.HazardousObstacle.PointDecrement",
+      "X": 400,
+      "Y": 325
+    }
+  ]
+}

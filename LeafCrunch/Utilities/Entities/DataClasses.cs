@@ -9,6 +9,21 @@ using System.Windows.Forms;
 
 namespace LeafCrunch.Utilities.Entities
 {
+    public class ObstacleData
+    {
+        public string Type { get; set; }
+        public string SingleImage { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+
+        public string OperationName { get; set; }
+    }
+
+    public class ObstacleDataCollection
+    {
+        public List<ObstacleData> Obstacles { get; set; }
+    }
+
     public class DisplayControlData
     {
         public int X { get; set; }

@@ -1,4 +1,6 @@
 ﻿using LeafCrunch.GameObjects.ItemProperties;
+using LeafCrunch.Utilities;
+using LeafCrunch.Utilities.Entities;
 using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects.Items.Obstacles
@@ -10,6 +12,19 @@ namespace LeafCrunch.GameObjects.Items.Obstacles
     {
         public Obstacle(Control control) : base(control)
         {
+        }
+        public Obstacle(ObstacleData obstacleData) : base()
+        {
+            var img = UtilityMethods.ImageFromPath(obstacleData.SingleImage);
+            Control = new PictureBox()
+            {
+                Left = obstacleData.X,
+                Top = obstacleData.Y,
+                Image = img,
+                Width = img.Width,
+                Height = img.Height
+            };
+            IsInitialized = true;
         }
 
         //checks if x is within the bounds of the control
