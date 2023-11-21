@@ -1,7 +1,7 @@
 {
   "TargetName": "Player",
   "MethodToExecute": "Items.InstantItems.Leaf.Apply",
-  "OperationName": "PointIncrement",
+  "OperationName": "Items.InstantItems.Leaf.PointIncrement",
   "ParameterList": [
     {
       "Name": "RainbowPoints",

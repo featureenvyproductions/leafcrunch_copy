@@ -43,8 +43,8 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
         //oh we could also use the registry to get the room instead of passing a parent control but idk
         public Leaf(Control control, string jsonFileString) : base(control)
         {
-            if (!OperationRegistry.TargetOperations.ContainsKey("Items.InstantItems.Leaf.Apply"))
-                OperationRegistry.TargetOperations.Add("Items.InstantItems.Leaf.Apply", Apply);
+            if (!OperationMethodRegistry.TargetOperations.ContainsKey("Items.InstantItems.Leaf.Apply"))
+                OperationMethodRegistry.TargetOperations.Add("Items.InstantItems.Leaf.Apply", Apply);
 
             ActivationKey = Keys.Enter;
             Parent = control.Parent;
@@ -57,13 +57,15 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
             Operation = new Operation();
             Operation.Params = ConvertParamList(operationData.ParameterList);
             //what do we do if this object isn't in the dictionary though....should probably handle that.
-            Operation.Target = GenericGameObjectRegistry.RegisteredObjects[operationData.TargetName];
-            Operation.ToExecute = ConvertMethodReference(operationData.MethodToExecute);
+            Operation.Target = null;
+            Operation.TargetName = operationData.TargetName;// GenericGameObjectRegistry.RegisteredObjects[operationData.TargetName];
+            Operation.ToExecute = null;
+            Operation.ToExecuteName = operationData.MethodToExecute;//ConvertMethodReference(operationData.MethodToExecute);
         }
 
         virtual protected TargetOperation ConvertMethodReference(string methodName)
         {
-            return OperationRegistry.TargetOperations[methodName];
+            return OperationMethodRegistry.TargetOperations[methodName];
         }
 
         public Control Parent { get; set; }
