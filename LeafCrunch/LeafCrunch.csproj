@@ -91,11 +91,7 @@
     <Compile Include="GameObjects\ItemProperties\PointVisualizer.cs" />
     <Compile Include="GameObjects\Items\GenericItem.cs" />
     <Compile Include="GameObjects\Items\InstantItem.cs" />
-    <Compile Include="GameObjects\Items\InstantItems\GreenLeaf.cs" />
     <Compile Include="GameObjects\Items\InstantItems\Leaf.cs" />
-    <Compile Include="GameObjects\Items\InstantItems\OrangeLeaf.cs" />
-    <Compile Include="GameObjects\Items\InstantItems\RedLeaf.cs" />
-    <Compile Include="GameObjects\Items\InstantItems\YellowLeaf.cs" />
     <Compile Include="GameObjects\Items\ItemOperations\IOperation.cs" />
     <Compile Include="GameObjects\Items\ItemOperations\MultiTargetOperation.cs" />
     <Compile Include="GameObjects\Items\ItemOperations\Operation.cs" />

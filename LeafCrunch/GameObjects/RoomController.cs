@@ -127,8 +127,6 @@ namespace LeafCrunch.GameObjects
             var jsonLoader = new JsonLoader();
             var itemData = jsonLoader.LoadFromJson<ItemDataCollection>(jsonString);
 
-            
-
             var gi = new List<GenericItem>();
             foreach (var item in itemData.Items)
             {

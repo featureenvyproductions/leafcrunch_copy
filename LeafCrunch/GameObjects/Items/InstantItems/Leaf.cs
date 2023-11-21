@@ -30,13 +30,11 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
 
         public Leaf(Control control) : base(control)
         {
-          //  Parent = control.Parent;
         }
 
         public Leaf(Control control, Operation operation)
             : base(control, operation)
         {
-         //   Parent = control.Parent;
             ActivationKey = Keys.Enter;
             Operation.ToExecute = Apply;
             Operation.Params = new Dictionary<string, object> {
@@ -55,7 +53,6 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
                 OperationMethodRegistry.TargetOperations.Add("Items.InstantItems.Leaf.Apply", Apply);
 
             ActivationKey = Keys.Enter;
-          //  Parent = control.Parent;
 
             InitializeOperationFromRegistry(operationName);
         }
@@ -78,14 +75,11 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
                 Height = img.Height
             };
             _pointIncrement = itemData.PointIncrement;
-          //  Parent.Controls.Add(Control);
             InitializeOperationFromRegistry(itemData.Operation);
 
             //only consider it initialized if we came this way for now
             IsInitialized = true;
         }
-
-      //  public Control Parent { get; set; }
 
         virtual protected Result Apply(GenericGameObject genericGameObject, object paramList)
         {

@@ -1,7 +1,7 @@
 {
   "Items": [
     {
-      "Type": "GreenLeaf",
+      "Type": "Leaf",
       "Operation": "Items.InstantItems.Leaf.PointIncrement",
       "SingleImage": "Images/PointItems/greenleaf.png",
       "X": 400,
@@ -9,7 +9,7 @@
       "PointIncrement": 1
     },
     {
-      "Type": "YellowLeaf",
+      "Type": "Leaf",
       "Operation": "Items.InstantItems.Leaf.PointIncrement",
       "SingleImage": "Images/PointItems/yellowleaf.png",
       "X": 400,
@@ -17,7 +17,7 @@
       "PointIncrement": 5
     },
     {
-      "Type": "OrangeLeaf",
+      "Type": "Leaf",
       "Operation": "Items.InstantItems.Leaf.PointIncrement",
       "SingleImage": "Images/PointItems/orangeleaf.png",
       "X": 500,
@@ -25,7 +25,7 @@
       "PointIncrement": 10
     },
     {
-      "Type": "RedLeaf",
+      "Type": "Leaf",
       "Operation": "Items.InstantItems.Leaf.PointIncrement",
       "SingleImage": "Images/PointItems/redleaf.png",
       "X": 100,
