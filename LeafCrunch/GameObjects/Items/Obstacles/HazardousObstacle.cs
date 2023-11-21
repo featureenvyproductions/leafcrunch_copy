@@ -1,5 +1,6 @@
 ﻿using LeafCrunch.GameObjects.ItemProperties;
 using LeafCrunch.GameObjects.Items.ItemOperations;
+using LeafCrunch.Utilities.Entities;
 using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects.Items.Obstacles
@@ -21,21 +22,23 @@ namespace LeafCrunch.GameObjects.Items.Obstacles
             if (!OperationMethodRegistry.TargetOperations.ContainsKey("Items.Obstacles.HazardousObstacle.InflictDamage"))
                 OperationMethodRegistry.TargetOperations.Add("Items.Obstacles.HazardousObstacle.InflictDamage", InflictDamage);
 
-            ActivationKey = Keys.Enter;
+     //       ActivationKey = Keys.Enter;
 
             InitializeOperationFromRegistry(operationName);
-            /*
-            var operation = OperationRegistry.Operations[operationName];
+        }
 
-            Operation = new Operation()
-            {
-                Params = ConvertParamList(operation.ParamData),
-                ParamData = operation.ParamData,
-                TargetName = operation.TargetName,
-                Target = null,
-                ToExecute = null,
-                ToExecuteName = operation.ToExecuteName
-            };*/
+        public HazardousObstacle(ObstacleData obstacleData) : base(obstacleData)
+        {
+            //we're not initialized till this stuff happens
+            IsInitialized = false;
+            if (!OperationMethodRegistry.TargetOperations.ContainsKey("Items.Obstacles.HazardousObstacle.InflictDamage"))
+                OperationMethodRegistry.TargetOperations.Add("Items.Obstacles.HazardousObstacle.InflictDamage", InflictDamage);
+
+       //     ActivationKey = Keys.Enter;//why did i have an activation key here there's no activation for this...
+
+            InitializeOperationFromRegistry(obstacleData.OperationName);
+
+            IsInitialized = true;
         }
 
         public override void Update()

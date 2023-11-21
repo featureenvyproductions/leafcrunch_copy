@@ -121,6 +121,7 @@
     <Compile Include="Utilities\CommonProperties.cs" />
     <Compile Include="Utilities\Entities\DataClasses.cs" />
     <Compile Include="Utilities\Entities\ItemFactory.cs" />
+    <Compile Include="Utilities\Entities\ObstacleFactory.cs" />
     <Compile Include="Utilities\UtilityMethods.cs" />
     <EmbeddedResource Include="CrunchyLeavesMain.resx">
       <DependentUpon>CrunchyLeavesMain.cs</DependentUpon>
@@ -131,6 +132,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="Configs\items.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Configs\obstacles.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Configs\operations.json">
@@ -190,15 +194,24 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Images\Obstacles\movingObstacle.png" />
+    <None Include="Images\Obstacles\movingObstacle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Images\Obstacles\hazard.png" />
+    <None Include="Images\Obstacles\hazard.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Images\Obstacles\stationaryHazard.png" />
+    <None Include="Images\Obstacles\stationaryHazard.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\Obstacles\genericObstacle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\Player\Animation\player_east_00.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

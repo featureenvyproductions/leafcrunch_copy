@@ -30,11 +30,6 @@ namespace LeafCrunch
 
             RoomController = new RoomController(pbLevel1,
             new List<Control>()
-            {
-                pbGenericObstacle,
-                pbStationaryHazard
-            },
-            new List<Control>()
             { 
                 pbMovingObstacle,
                 pbHazard

@@ -82,8 +82,7 @@ namespace LeafCrunch.GameObjects
         //eventually we're going to load control names from a file I think so I won't need this fucking list
         //or we're gonna initialize the controls on the fly with a location and a type
         //like i'll have a prototype and initialize from the prototype
-        public RoomController(Control control, List<Control> obstacleControls,
-            List<Control> movingObstacleControls) : base(control)
+        public RoomController(Control control, List<Control> movingObstacleControls) : base(control)
         {
             GlobalVars.RoomWidth = control.Width;
             GlobalVars.RoomHeight = control.Height;
@@ -92,7 +91,7 @@ namespace LeafCrunch.GameObjects
 
             //eventually this will also be where we load custom rooms from some file
             //and there will be an arg here telling us what room file we want
-            Load(obstacleControls, movingObstacleControls);
+            Load(movingObstacleControls);
         }
 
         #endregion
@@ -101,20 +100,16 @@ namespace LeafCrunch.GameObjects
         //for now this just loads the test level
         //oh yeah don't forget when we do real loading we need to have stuff that clears the board
         //like removes the items from the list and the item controls
-        protected void Load(List<Control> obstacleControls, List<Control> movingObstacleControls)
+        protected void Load(List<Control> movingObstacleControls)
         {
             LoadPlayer();
             LoadOperations();
             LoadItems();
+            LoadObstacles();            
 
-            //next up will be dynamically loading obstacles
+            //next up will be dynamically loading moving obstacles
             //then we can add sounds maybe and some better images
             //then dynamically load subsequent room configurations and game goals etc
-            _obstacles = new List<Obstacle>()
-            {
-                new Obstacle(obstacleControls.ElementAt(0)),
-                new HazardousObstacle(obstacleControls.ElementAt(1), "Items.Obstacles.HazardousObstacle.PointDecrement")
-            };
 
             _movingObstacles = new List<MovingObstacle>()
             {
@@ -167,6 +162,16 @@ namespace LeafCrunch.GameObjects
             {
                 var tempItem = item as TemporaryItem;
                 if (tempItem != null) _temporaryItems.Add(tempItem);
+            }
+        }
+
+        public void LoadObstacles()
+        {
+            var obstacleFactory = new ObstacleFactory();
+            _obstacles = obstacleFactory.LoadObstacles();
+            foreach (var obstacle in _obstacles)
+            {
+                if (obstacle.IsInitialized) Control.Controls.Add(obstacle.Control);
             }
         }
 
