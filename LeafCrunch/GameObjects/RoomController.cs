@@ -82,7 +82,7 @@ namespace LeafCrunch.GameObjects
         //eventually we're going to load control names from a file I think so I won't need this fucking list
         //or we're gonna initialize the controls on the fly with a location and a type
         //like i'll have a prototype and initialize from the prototype
-        public RoomController(Control control, List<Control> movingObstacleControls) : base(control)
+        public RoomController(Control control) : base(control)
         {
             GlobalVars.RoomWidth = control.Width;
             GlobalVars.RoomHeight = control.Height;
@@ -91,7 +91,7 @@ namespace LeafCrunch.GameObjects
 
             //eventually this will also be where we load custom rooms from some file
             //and there will be an arg here telling us what room file we want
-            Load(movingObstacleControls);
+            LoadRoomObjects();
         }
 
         #endregion
@@ -100,7 +100,7 @@ namespace LeafCrunch.GameObjects
         //for now this just loads the test level
         //oh yeah don't forget when we do real loading we need to have stuff that clears the board
         //like removes the items from the list and the item controls
-        protected void Load(List<Control> movingObstacleControls)
+        protected void LoadRoomObjects()
         {
             LoadPlayer();
             LoadOperations();
@@ -110,12 +110,18 @@ namespace LeafCrunch.GameObjects
             //next up will be dynamically loading moving obstacles
             //then we can add sounds maybe and some better images
             //then dynamically load subsequent room configurations and game goals etc
+            //i realize i probably need to register obstacles as well do i do that?
+            //i think i do that at the object level but
+            //also I should give every item and obstacle a name
+            //and the factory should load everything into a dictionary rather than a list
+            //so the room can pick and choose what it wants maybe? idk. 
 
-            _movingObstacles = new List<MovingObstacle>()
-            {
-                new MovingObstacle(movingObstacleControls.ElementAt(0), 10, 10),
-                new HazardousMovingObstacle(movingObstacleControls.ElementAt(1), 5, 5, "Items.Obstacles.HazardousMovingObstacle.PointDecrement")
-            };
+            //oh you know what actually it would be easier to just have a different set of configs for each room and just
+            //reconfigure the path to account for the room folder
+            //yeah let's do that. way better than cramming shit into like 4 files for a whole game.
+
+            //oh we also want to start loading things into grid spots rather than just random xys
+            //we could take the xys though and snap them to the tile the origin is in. 
         }
 
         protected void LoadPlayer()
@@ -168,10 +174,18 @@ namespace LeafCrunch.GameObjects
         public void LoadObstacles()
         {
             var obstacleFactory = new ObstacleFactory();
-            _obstacles = obstacleFactory.LoadObstacles();
-            foreach (var obstacle in _obstacles)
+            _obstacles = new List<Obstacle>();
+            _movingObstacles = new List<MovingObstacle>();
+
+            var obstacles = obstacleFactory.LoadObstacles();
+            foreach (var obstacle in obstacles)
             {
-                if (obstacle.IsInitialized) Control.Controls.Add(obstacle.Control);
+                if (obstacle.IsInitialized)
+                {
+                    Control.Controls.Add(obstacle.Control);
+                    if (obstacle is MovingObstacle) _movingObstacles.Add((MovingObstacle)obstacle);
+                    else _obstacles.Add(obstacle);
+                }
             }
         }
 

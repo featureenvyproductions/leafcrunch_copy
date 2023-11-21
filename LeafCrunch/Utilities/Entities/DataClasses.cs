@@ -15,6 +15,8 @@ namespace LeafCrunch.Utilities.Entities
         public string SingleImage { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
+        public int InitialSpeedX { get; set; }
+        public int InitialSpeedY { get; set; }
 
         public string OperationName { get; set; }
     }

@@ -1,5 +1,6 @@
 ﻿using LeafCrunch.GameObjects.ItemProperties;
 using LeafCrunch.GameObjects.Items.ItemOperations;
+using LeafCrunch.Utilities.Entities;
 using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects.Items.Obstacles
@@ -23,6 +24,16 @@ namespace LeafCrunch.GameObjects.Items.Obstacles
                 OperationMethodRegistry.TargetOperations.Add("Items.Obstacles.HazardousMovingObstacle.InflictDamage", InflictDamage);
 
             InitializeOperationFromRegistry(operationName);
+        }
+
+        public HazardousMovingObstacle(ObstacleData obstacleData) : base(obstacleData)
+        {
+            IsInitialized = false;
+            if (!OperationMethodRegistry.TargetOperations.ContainsKey("Items.Obstacles.HazardousMovingObstacle.InflictDamage"))
+                OperationMethodRegistry.TargetOperations.Add("Items.Obstacles.HazardousMovingObstacle.InflictDamage", InflictDamage);
+
+            InitializeOperationFromRegistry(obstacleData.OperationName);
+            IsInitialized = true;
         }
 
         //rebounds, but also inflicts damage if colliding with target

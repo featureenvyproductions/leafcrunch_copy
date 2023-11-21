@@ -1,5 +1,6 @@
 ﻿using LeafCrunch.GameObjects.ItemProperties;
 using LeafCrunch.Utilities;
+using LeafCrunch.Utilities.Entities;
 using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects.Items.Obstacles
@@ -29,6 +30,18 @@ namespace LeafCrunch.GameObjects.Items.Obstacles
                 vx = speedx,
                 vy = speedy
             };
+        }
+
+        public MovingObstacle(ObstacleData obstacleData) : base(obstacleData)
+        {
+            IsInitialized = false;
+            Speed = new Speed()
+            {
+                vx = obstacleData.InitialSpeedX,
+                vy = obstacleData.InitialSpeedY
+            };
+
+            IsInitialized = true;
         }
 
         virtual public void Rebound(ICollidable collidable)
