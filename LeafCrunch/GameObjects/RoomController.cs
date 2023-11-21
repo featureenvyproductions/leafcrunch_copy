@@ -8,6 +8,8 @@ using LeafCrunch.GameObjects.Items.ItemOperations;
 using LeafCrunch.GameObjects.Items.TemporaryItems;
 using LeafCrunch.GameObjects.Stats;
 using LeafCrunch.GameObjects.Items.Obstacles;
+using LeafCrunch.Utilities.Entities;
+using System.IO;
 
 //you know one thing i should do is when i actually implement the dynamic loading of the game board
 //i should make it so that i only place things exactly in tiles
@@ -80,8 +82,7 @@ namespace LeafCrunch.GameObjects
         //eventually we're going to load control names from a file I think so I won't need this fucking list
         //or we're gonna initialize the controls on the fly with a location and a type
         //like i'll have a prototype and initialize from the prototype
-        public RoomController(Control control, Control statsControl, Control countDownControl, 
-            List<Control> itemControls, List<Control> obstacleControls,
+        public RoomController(Control control, List<Control> obstacleControls,
             List<Control> movingObstacleControls) : base(control)
         {
             GlobalVars.RoomWidth = control.Width;
@@ -91,9 +92,7 @@ namespace LeafCrunch.GameObjects
 
             //eventually this will also be where we load custom rooms from some file
             //and there will be an arg here telling us what room file we want
-            Load(statsControl, 
-                countDownControl, itemControls, 
-                obstacleControls, movingObstacleControls);
+            Load(obstacleControls, movingObstacleControls);
         }
 
         #endregion
@@ -102,30 +101,15 @@ namespace LeafCrunch.GameObjects
         //for now this just loads the test level
         //oh yeah don't forget when we do real loading we need to have stuff that clears the board
         //like removes the items from the list and the item controls
-        protected void Load(Control statsControl, Control countDownControl, 
-            List<Control> itemControls, List<Control> obstacleControls,
-            List<Control> movingObstacleControls)
+        protected void Load(List<Control> obstacleControls, List<Control> movingObstacleControls)
         {
-            Player = new Player();
-            if (Player.IsInitialized) Control.Controls.Add(Player.Control);
-            StatsDisplay = new StatsDisplay(statsControl, Player);
+            LoadPlayer();
+            LoadOperations();
+            LoadItems();
 
-            //let's try loading up all the operations and stuffing them in the registry
-            OperationRegistry.Load();
-
-            //dumb intermittent hard coded solution till we finish the rest
-            _items = new List<GenericItem>()
-            {
-                new GreenLeaf(itemControls.ElementAt(0), "Items.InstantItems.Leaf.PointIncrement"),
-                new YellowLeaf(itemControls.ElementAt(1), "Items.InstantItems.Leaf.PointIncrement"),
-                new OrangeLeaf(itemControls.ElementAt(2), "Items.InstantItems.Leaf.PointIncrement"),
-                new RedLeaf(itemControls.ElementAt(3), "Items.InstantItems.Leaf.PointIncrement")
-            };
-
-            _items.Add(new PineCone(itemControls.ElementAt(4), "Items.TemporaryItems.PineCode.LeafPointMultiplier", countDownControl));
-
-            RegisterTemporaryItems();
-
+            //next up will be dynamically loading obstacles
+            //then we can add sounds maybe and some better images
+            //then dynamically load subsequent room configurations and game goals etc
             _obstacles = new List<Obstacle>()
             {
                 new Obstacle(obstacleControls.ElementAt(0)),
@@ -137,6 +121,43 @@ namespace LeafCrunch.GameObjects
                 new MovingObstacle(movingObstacleControls.ElementAt(0), 10, 10),
                 new HazardousMovingObstacle(movingObstacleControls.ElementAt(1), 5, 5, "Items.Obstacles.HazardousMovingObstacle.PointDecrement")
             };
+        }
+
+        protected void LoadPlayer()
+        {
+            Player = new Player();
+            if (Player.IsInitialized) Control.Controls.Add(Player.Control);
+            StatsDisplay = new StatsDisplay(Player);
+            Control.Controls.Add(StatsDisplay.Control);
+        }
+
+        protected void LoadOperations()
+        {
+            //let's try loading up all the operations and stuffing them in the registry
+            OperationRegistry.Load();
+        }
+
+        protected void LoadItems()
+        {
+            var itemFactory = new ItemFactory();
+            var gi = itemFactory.LoadItems();
+
+            foreach (var item in gi)
+            {
+                if (item.IsInitialized)
+                {
+                    Control.Controls.Add(item.Control);
+                    if (item is PineCone)
+                    {
+                        //special case...although I probably should have a thing where we like just check everything for a display control
+                        Control.Controls.Add((item as PineCone).DisplayControl);
+                    }
+                }
+            }
+
+            _items = gi;
+
+            RegisterTemporaryItems();
         }
 
         protected void RegisterTemporaryItems()

@@ -91,11 +91,7 @@
     <Compile Include="GameObjects\ItemProperties\PointVisualizer.cs" />
     <Compile Include="GameObjects\Items\GenericItem.cs" />
     <Compile Include="GameObjects\Items\InstantItem.cs" />
-    <Compile Include="GameObjects\Items\InstantItems\GreenLeaf.cs" />
     <Compile Include="GameObjects\Items\InstantItems\Leaf.cs" />
-    <Compile Include="GameObjects\Items\InstantItems\OrangeLeaf.cs" />
-    <Compile Include="GameObjects\Items\InstantItems\RedLeaf.cs" />
-    <Compile Include="GameObjects\Items\InstantItems\YellowLeaf.cs" />
     <Compile Include="GameObjects\Items\ItemOperations\IOperation.cs" />
     <Compile Include="GameObjects\Items\ItemOperations\MultiTargetOperation.cs" />
     <Compile Include="GameObjects\Items\ItemOperations\Operation.cs" />
@@ -124,6 +120,7 @@
     <Compile Include="Utilities\Animation\ImageSequence.cs" />
     <Compile Include="Utilities\CommonProperties.cs" />
     <Compile Include="Utilities\Entities\DataClasses.cs" />
+    <Compile Include="Utilities\Entities\ItemFactory.cs" />
     <Compile Include="Utilities\UtilityMethods.cs" />
     <EmbeddedResource Include="CrunchyLeavesMain.resx">
       <DependentUpon>CrunchyLeavesMain.cs</DependentUpon>
@@ -133,6 +130,9 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Configs\items.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Configs\operations.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -165,19 +165,29 @@
     <None Include="Images\Background\level1.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Images\PointItems\greenleaf.png" />
+    <None Include="Images\PointItems\greenleaf.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Images\PointItems\yellowleaf.png" />
+    <None Include="Images\PointItems\yellowleaf.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Images\PointItems\orangeleaf.png" />
+    <None Include="Images\PointItems\orangeleaf.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Images\PointItems\redleaf.png" />
+    <None Include="Images\PointItems\redleaf.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Images\PointItems\ModifierItems\pinecone.png" />
+    <None Include="Images\PointItems\ModifierItems\pinecone.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Images\Obstacles\movingObstacle.png" />

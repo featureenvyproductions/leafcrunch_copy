@@ -21,6 +21,7 @@ namespace LeafCrunch.GameObjects.Items
             set { _isApplied = value; }
         }
 
+        public TemporaryItem() { }
         public TemporaryItem(Control control) : base(control)
         {
         }

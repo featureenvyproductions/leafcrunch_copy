@@ -7,6 +7,18 @@ namespace LeafCrunch.GameObjects.Stats
     {
         private Player _player { get; set; }
 
+        public StatsDisplay(Player player): base()
+        {
+            _player = player;
+            Label statsControl = new Label()
+            {
+                Left = 50,
+                Top = 30,
+                BackColor = System.Drawing.Color.Transparent
+            };
+            Control = statsControl;
+        }
+
         public StatsDisplay(Control control) : base(control)
         {
         }

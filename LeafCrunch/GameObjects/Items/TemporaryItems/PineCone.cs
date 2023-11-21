@@ -1,5 +1,7 @@
 ﻿using LeafCrunch.GameObjects.Items.InstantItems;
 using LeafCrunch.GameObjects.Items.ItemOperations;
+using LeafCrunch.Utilities;
+using LeafCrunch.Utilities.Entities;
 using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects.Items.TemporaryItems
@@ -10,6 +12,9 @@ namespace LeafCrunch.GameObjects.Items.TemporaryItems
     {
         private int _multiplier = 2;
         private bool _displayingAsStat = false;
+        
+        //eventually we should actually have one object that handles displayed stats but for now we
+        //can just give this its own control to display them it's fine it's whatever
         public Control DisplayControl { get; set; }
 
         public PineCone(Control control) : base(control)
@@ -27,13 +32,42 @@ namespace LeafCrunch.GameObjects.Items.TemporaryItems
 
         public PineCone(Control control, string operationName, Control displayControl) : base(control)
         {
-            //   Operation.Params = null;
             DisplayControl = displayControl;
-            //Operation.ToExecute = ApplyPointMultiplier;
             if (!OperationMethodRegistry.TargetOperations.ContainsKey("Items.TemporaryItems.PineCode.ApplyPointMultiplier"))
                 OperationMethodRegistry.TargetOperations.Add("Items.TemporaryItems.PineCode.ApplyPointMultiplier", ApplyPointMultiplier);
 
             InitializeMultiOperationFromRegistry(operationName);
+        }
+
+        public PineCone(ItemData itemData) : base()
+        {
+            if (!OperationMethodRegistry.TargetOperations.ContainsKey("Items.TemporaryItems.PineCode.ApplyPointMultiplier"))
+                OperationMethodRegistry.TargetOperations.Add("Items.TemporaryItems.PineCode.ApplyPointMultiplier", ApplyPointMultiplier);
+
+            DisplayControl = new Label()
+            {
+                Left = itemData.DisplayControl.X,
+                Top = itemData.DisplayControl.Y,
+                BackColor = System.Drawing.Color.Transparent
+                //will it work without an initial width and height?
+            };
+
+            var img = UtilityMethods.ImageFromPath(itemData.SingleImage);
+            Control = new PictureBox()
+            {
+                Left = itemData.X,
+                Top = itemData.Y,
+                Image = img,
+                Width = img.Width,
+                Height = img.Height
+            };
+            _multiplier = itemData.PointMultiplier;
+
+            InitializeMultiOperationFromRegistry(itemData.Operation);
+
+            //only consider it initialized if we came this way for now
+            IsInitialized = true;
+            
         }
 
         //I feel like this doesn't belong here but eh we'll come back to it

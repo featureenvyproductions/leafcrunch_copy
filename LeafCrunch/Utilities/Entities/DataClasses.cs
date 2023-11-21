@@ -9,6 +9,35 @@ using System.Windows.Forms;
 
 namespace LeafCrunch.Utilities.Entities
 {
+    public class DisplayControlData
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+    }
+
+    public class ItemData
+    {
+        public string Type { get; set; }
+        public string Operation { get; set; }
+        public string SingleImage { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+     //   public string ActivationKey { get; set; } //I don't use this anywhere yet but I might
+        
+        //honestly I should really have a property list here
+        //so I'm not limited to the exact things here
+        //but I can fix that later on
+        public int PointIncrement { get; set; }
+        public int PointMultiplier { get; set; }
+
+        public DisplayControlData DisplayControl { get; set; }
+    }
+
+    public class ItemDataCollection
+    {
+        public List<ItemData> Items { get; set; }
+    }
+
     public class ParameterData
     {
         public string Name { get; set; }

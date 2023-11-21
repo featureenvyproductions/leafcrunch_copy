@@ -30,52 +30,24 @@
         {
             this.components = new System.ComponentModel.Container();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.lblRainbowPoints = new System.Windows.Forms.Label();
-            this.lblCountDown = new System.Windows.Forms.Label();
             this.pnHelpMenu = new System.Windows.Forms.Panel();
             this.lblHelpText = new System.Windows.Forms.Label();
             this.pbStationaryHazard = new System.Windows.Forms.PictureBox();
             this.pbHazard = new System.Windows.Forms.PictureBox();
             this.pbMovingObstacle = new System.Windows.Forms.PictureBox();
             this.pbGenericObstacle = new System.Windows.Forms.PictureBox();
-            this.pbPineCone01 = new System.Windows.Forms.PictureBox();
-            this.pbYellowLeaf01 = new System.Windows.Forms.PictureBox();
-            this.pbRedLeaf01 = new System.Windows.Forms.PictureBox();
-            this.pbOrangeLeaf01 = new System.Windows.Forms.PictureBox();
-            this.pbGreenLeaf01 = new System.Windows.Forms.PictureBox();
             this.pbLevel1 = new System.Windows.Forms.PictureBox();
             this.pnHelpMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbStationaryHazard)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbHazard)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbMovingObstacle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbGenericObstacle)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbPineCone01)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbYellowLeaf01)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbRedLeaf01)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbOrangeLeaf01)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbGreenLeaf01)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbLevel1)).BeginInit();
             this.SuspendLayout();
             // 
             // timer1
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // lblRainbowPoints
-            // 
-            this.lblRainbowPoints.AutoSize = true;
-            this.lblRainbowPoints.Location = new System.Drawing.Point(92, 42);
-            this.lblRainbowPoints.Name = "lblRainbowPoints";
-            this.lblRainbowPoints.Size = new System.Drawing.Size(0, 16);
-            this.lblRainbowPoints.TabIndex = 3;
-            // 
-            // lblCountDown
-            // 
-            this.lblCountDown.AutoSize = true;
-            this.lblCountDown.Location = new System.Drawing.Point(742, 31);
-            this.lblCountDown.Name = "lblCountDown";
-            this.lblCountDown.Size = new System.Drawing.Size(0, 16);
-            this.lblCountDown.TabIndex = 7;
             // 
             // pnHelpMenu
             // 
@@ -125,57 +97,11 @@
             // pbGenericObstacle
             // 
             this.pbGenericObstacle.Image = global::LeafCrunch.Properties.Resources.genericObstacle;
-            this.pbGenericObstacle.Location = new System.Drawing.Point(556, 253);
+            this.pbGenericObstacle.Location = new System.Drawing.Point(556, 147);
             this.pbGenericObstacle.Name = "pbGenericObstacle";
             this.pbGenericObstacle.Size = new System.Drawing.Size(49, 50);
             this.pbGenericObstacle.TabIndex = 10;
             this.pbGenericObstacle.TabStop = false;
-            // 
-            // pbPineCone01
-            // 
-            this.pbPineCone01.Image = global::LeafCrunch.Properties.Resources.pinecone;
-            this.pbPineCone01.Location = new System.Drawing.Point(195, 253);
-            this.pbPineCone01.Name = "pbPineCone01";
-            this.pbPineCone01.Size = new System.Drawing.Size(49, 50);
-            this.pbPineCone01.TabIndex = 8;
-            this.pbPineCone01.TabStop = false;
-            // 
-            // pbYellowLeaf01
-            // 
-            this.pbYellowLeaf01.Image = global::LeafCrunch.Properties.Resources.yellowleaf;
-            this.pbYellowLeaf01.Location = new System.Drawing.Point(385, 403);
-            this.pbYellowLeaf01.Name = "pbYellowLeaf01";
-            this.pbYellowLeaf01.Size = new System.Drawing.Size(49, 50);
-            this.pbYellowLeaf01.TabIndex = 6;
-            this.pbYellowLeaf01.TabStop = false;
-            // 
-            // pbRedLeaf01
-            // 
-            this.pbRedLeaf01.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
-            this.pbRedLeaf01.Image = global::LeafCrunch.Properties.Resources.redleaf;
-            this.pbRedLeaf01.Location = new System.Drawing.Point(95, 426);
-            this.pbRedLeaf01.Name = "pbRedLeaf01";
-            this.pbRedLeaf01.Size = new System.Drawing.Size(49, 50);
-            this.pbRedLeaf01.TabIndex = 5;
-            this.pbRedLeaf01.TabStop = false;
-            // 
-            // pbOrangeLeaf01
-            // 
-            this.pbOrangeLeaf01.Image = global::LeafCrunch.Properties.Resources.orangeleaf;
-            this.pbOrangeLeaf01.Location = new System.Drawing.Point(697, 386);
-            this.pbOrangeLeaf01.Name = "pbOrangeLeaf01";
-            this.pbOrangeLeaf01.Size = new System.Drawing.Size(49, 50);
-            this.pbOrangeLeaf01.TabIndex = 4;
-            this.pbOrangeLeaf01.TabStop = false;
-            // 
-            // pbGreenLeaf01
-            // 
-            this.pbGreenLeaf01.Image = global::LeafCrunch.Properties.Resources.greenleaf;
-            this.pbGreenLeaf01.Location = new System.Drawing.Point(397, 245);
-            this.pbGreenLeaf01.Name = "pbGreenLeaf01";
-            this.pbGreenLeaf01.Size = new System.Drawing.Size(49, 50);
-            this.pbGreenLeaf01.TabIndex = 2;
-            this.pbGreenLeaf01.TabStop = false;
             // 
             // pbLevel1
             // 
@@ -195,13 +121,6 @@
             this.Controls.Add(this.pbHazard);
             this.Controls.Add(this.pbMovingObstacle);
             this.Controls.Add(this.pbGenericObstacle);
-            this.Controls.Add(this.pbPineCone01);
-            this.Controls.Add(this.lblCountDown);
-            this.Controls.Add(this.pbYellowLeaf01);
-            this.Controls.Add(this.pbRedLeaf01);
-            this.Controls.Add(this.pbOrangeLeaf01);
-            this.Controls.Add(this.lblRainbowPoints);
-            this.Controls.Add(this.pbGreenLeaf01);
             this.Controls.Add(this.pbLevel1);
             this.Controls.Add(this.pnHelpMenu);
             this.Name = "CrunchyLeavesMain";
@@ -214,14 +133,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbHazard)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbMovingObstacle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbGenericObstacle)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbPineCone01)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbYellowLeaf01)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbRedLeaf01)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbOrangeLeaf01)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbGreenLeaf01)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbLevel1)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -229,13 +142,6 @@
 
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.PictureBox pbLevel1;
-        private System.Windows.Forms.PictureBox pbGreenLeaf01;
-        private System.Windows.Forms.Label lblRainbowPoints;
-        private System.Windows.Forms.PictureBox pbOrangeLeaf01;
-        private System.Windows.Forms.PictureBox pbRedLeaf01;
-        private System.Windows.Forms.PictureBox pbYellowLeaf01;
-        private System.Windows.Forms.Label lblCountDown;
-        private System.Windows.Forms.PictureBox pbPineCone01;
         private System.Windows.Forms.Panel pnHelpMenu;
         private System.Windows.Forms.Label lblHelpText;
         private System.Windows.Forms.PictureBox pbGenericObstacle;
