@@ -12,6 +12,15 @@
       "OperationName": "Items.Obstacles.HazardousObstacle.PointDecrement",
       "X": 400,
       "Y": 325
+    },
+    {
+      "Type": "MovingObstacle",
+      "SingleImage": "Images/Obstacles/stationaryHazard.png",
+      "OperationName": "Items.Obstacles.HazardousObstacle.PointDecrement",
+      "X": 490,
+      "Y": 425,
+      "InitialSpeedX": 10,
+      "InitialSpeedY": 10
     }
   ]
 }

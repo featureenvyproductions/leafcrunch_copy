@@ -33,11 +33,9 @@
             this.pnHelpMenu = new System.Windows.Forms.Panel();
             this.lblHelpText = new System.Windows.Forms.Label();
             this.pbHazard = new System.Windows.Forms.PictureBox();
-            this.pbMovingObstacle = new System.Windows.Forms.PictureBox();
             this.pbLevel1 = new System.Windows.Forms.PictureBox();
             this.pnHelpMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbHazard)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbMovingObstacle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbLevel1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -72,15 +70,6 @@
             this.pbHazard.TabIndex = 12;
             this.pbHazard.TabStop = false;
             // 
-            // pbMovingObstacle
-            // 
-            this.pbMovingObstacle.Image = global::LeafCrunch.Properties.Resources.movingObstacle;
-            this.pbMovingObstacle.Location = new System.Drawing.Point(496, 424);
-            this.pbMovingObstacle.Name = "pbMovingObstacle";
-            this.pbMovingObstacle.Size = new System.Drawing.Size(49, 50);
-            this.pbMovingObstacle.TabIndex = 11;
-            this.pbMovingObstacle.TabStop = false;
-            // 
             // pbLevel1
             // 
             this.pbLevel1.Image = global::LeafCrunch.Properties.Resources.level1;
@@ -96,7 +85,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(843, 540);
             this.Controls.Add(this.pbHazard);
-            this.Controls.Add(this.pbMovingObstacle);
             this.Controls.Add(this.pbLevel1);
             this.Controls.Add(this.pnHelpMenu);
             this.Name = "CrunchyLeavesMain";
@@ -106,7 +94,6 @@
             this.pnHelpMenu.ResumeLayout(false);
             this.pnHelpMenu.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbHazard)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbMovingObstacle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbLevel1)).EndInit();
             this.ResumeLayout(false);
 
@@ -118,7 +105,6 @@
         private System.Windows.Forms.PictureBox pbLevel1;
         private System.Windows.Forms.Panel pnHelpMenu;
         private System.Windows.Forms.Label lblHelpText;
-        private System.Windows.Forms.PictureBox pbMovingObstacle;
         private System.Windows.Forms.PictureBox pbHazard;
     }
 }
