@@ -27,10 +27,34 @@
     {
       "Type": "Leaf",
       "Operation": "Items.InstantItems.Leaf.PointIncrement",
-      "SingleImage": "Images/PointItems/redleaf.png",
+      "SingleImage": "Images/PointItems/redmaple.png",
       "X": 100,
       "Y": 400,
-      "PointIncrement": 15
+      "PointIncrement": 25
+    },
+    {
+      "Type": "Leaf",
+      "Operation": "Items.InstantItems.Leaf.PointIncrement",
+      "SingleImage": "Images/PointItems/orangemaple.png",
+      "X": 300,
+      "Y": 500,
+      "PointIncrement": 23
+    },
+    {
+      "Type": "Leaf",
+      "Operation": "Items.InstantItems.Leaf.PointIncrement",
+      "SingleImage": "Images/PointItems/yellowmaple.png",
+      "X": 170,
+      "Y": 400,
+      "PointIncrement": 20
+    },
+    {
+      "Type": "Leaf",
+      "Operation": "Items.InstantItems.Leaf.PointIncrement",
+      "SingleImage": "Images/PointItems/brownmaple.png",
+      "X": 100,
+      "Y": 40,
+      "PointIncrement": 12
     },
     {
       "Type": "PineCone",
