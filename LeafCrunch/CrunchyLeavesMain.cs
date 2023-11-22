@@ -27,8 +27,8 @@ namespace LeafCrunch
         private int roomIndex = -1;
         private List<string> OrderedRooms = new List<string>()
         {
-            "intro",
-            "instructions",
+           // "intro",
+            //"instructions",
             "test",
             "transition1",
             "testlevel2",

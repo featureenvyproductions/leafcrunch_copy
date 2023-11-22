@@ -58,6 +58,7 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
 
             ActivationKey = Keys.Enter;
 
+            //this could probably go in the generic item code but whatever
             var img = UtilityMethods.ImageFromPath(itemData.SingleImage);
             Control = new PictureBox()
             {
@@ -65,7 +66,8 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
                 Top = itemData.Y,
                 Image = img,
                 Width = img.Width,
-                Height = img.Height
+                Height = img.Height,
+                BackColor = System.Drawing.Color.Transparent
             };
             _pointIncrement = itemData.PointIncrement;
             InitializeOperationFromRegistry(itemData.Operation);

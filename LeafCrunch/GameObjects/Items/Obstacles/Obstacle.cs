@@ -22,7 +22,8 @@ namespace LeafCrunch.GameObjects.Items.Obstacles
                 Top = obstacleData.Y,
                 Image = img,
                 Width = img.Width,
-                Height = img.Height
+                Height = img.Height,
+                BackColor = System.Drawing.Color.Transparent
             };
             IsInitialized = true;
         }
