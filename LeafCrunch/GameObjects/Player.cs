@@ -139,7 +139,8 @@ namespace LeafCrunch.GameObjects
                 Width = Sprite.CurrentImage.Width,
                 Height = Sprite.CurrentImage.Height,
                 Top = playerData.Stats.InitialY,
-                Left = playerData.Stats.InitialX
+                Left = playerData.Stats.InitialX,
+                BackColor = System.Drawing.Color.Transparent
             };
 
             //eventually we'll probably need to have special sprites as well but we'll come back to that
