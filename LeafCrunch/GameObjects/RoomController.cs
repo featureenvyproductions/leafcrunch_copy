@@ -547,10 +547,10 @@ namespace LeafCrunch.GameObjects
 
             //try to load the new image into the control
 
-            //I DON"T UNDERSTAND THIS WAS FUCKING FINE BEFORE
-            Color backColor = targetBitmap.GetPixel(1, 1);
-            targetBitmap.MakeTransparent(backColor);
-            targetBitmap.Save("targetBitmap6.bmp");
+            //WHY IS THE BACKGROUND COLOR ALWAYS FUCKING GRAY I DON'T UNDERSTAND
+            //Color backColor = targetBitmap.GetPixel(1, 1);
+            targetBitmap.MakeTransparent(targetBitmap.GetPixel(1, 1));// backColor);
+            targetBitmap.Save("targetBitmap8.bmp");
             var img = UtilityMethods.ImageFromBitmap(targetBitmap);
             Player.test = img;
 
@@ -586,7 +586,7 @@ namespace LeafCrunch.GameObjects
             {
                 if (TileObjectPlayerCollision(item))
                 {
-                    CombineImages(item);
+                 //   CombineImages(item);
                     //put combine images code here eventually...god this is gonna be so slow
                     //oh wait we should do this AFTER the rebound code executes or it won't be quite right
                 }

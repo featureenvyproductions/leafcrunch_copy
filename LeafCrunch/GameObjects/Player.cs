@@ -136,17 +136,42 @@ namespace LeafCrunch.GameObjects
             //double check that adding this to the child controls of the room will set the parent of this to the room
             //var img = UtilityMethods.ImageFromPath("Images/PointItems/redmaple.png");
 
+
+            //what happens if i combine the images before i ever fuck with the control.
+            var playerimg = Sprite.CurrentImage;
+            var itemimg = UtilityMethods.ImageFromPath("Images/PointItems/redmaple.png");
+            // Load the source bitmap
+            Bitmap sourceBitmap = new Bitmap(playerimg);
+
+            // Create a new bitmap //with the same dimensions as the source bitmap
+            Bitmap targetBitmap = new Bitmap(itemimg);
+
+            // Create a Graphics object from the target bitmap
+            using (Graphics g = Graphics.FromImage(targetBitmap))
+            {
+                // Draw the source bitmap onto the target bitmap
+                g.DrawImage(sourceBitmap, new Rectangle(0, 0, sourceBitmap.Width, sourceBitmap.Height), new Rectangle(0, 0, sourceBitmap.Width, sourceBitmap.Height), GraphicsUnit.Pixel);
+            }
+
+//            targetBitmap.MakeTransparent(targetBitmap.GetPixel(1, 1));
+         //   targetBitmap.Save("temp.png");
+           // var img = UtilityMethods.ImageFromBitmap(targetBitmap);
+            System.IO.MemoryStream surewhynot = new System.IO.MemoryStream();
+            targetBitmap.Save(surewhynot, ImageFormat.Png);
+
             Control = new PictureBox()
             {
                 Name = _objectName,
-                Image = Sprite.CurrentImage,
-                Width = Sprite.CurrentImage.Width,
+                Image = Image.FromStream(surewhynot),//UtilityMethods.ImageFromPath("temp.png"),//Sprite.CurrentImage,
+            Width = Sprite.CurrentImage.Width,
                 Height = Sprite.CurrentImage.Height,
                 Top = playerData.Stats.InitialY,
                 Left = playerData.Stats.InitialX,
-               // BackColor = System.Drawing.Color.Transparent
+                BackColor = System.Drawing.Color.Transparent
             };
 
+           // surewhynot.Close(); //or this idk
+            surewhynot.Dispose(); //do i need to close this or something
             //eventually we'll probably need to have special sprites as well but we'll come back to that
             //like the stomp animation
             IsInitialized = true;
@@ -424,6 +449,7 @@ namespace LeafCrunch.GameObjects
 
         public void UpdateAnimation()
         {
+            return;
             if (!IsInitialized) return;
             //basically if enough ticks have gone by
             //we update the animation to be the next frame in the current one
@@ -465,8 +491,13 @@ namespace LeafCrunch.GameObjects
 
             //whatever happens, make sure we're displaying the right image in the control
             //this had better be a picture box or we have bigger problems
-            if (test!= null)
-                (Control as PictureBox).Image = test;
+            if (test != null)
+            {
+                var bmp = new Bitmap(test);
+                bmp.MakeTransparent(bmp.GetPixel(1,1));
+                //Control.Parent.BackColor = Color.Transparent;
+                (Control as PictureBox).Image = UtilityMethods.ImageFromBitmap(bmp);//test;
+            }
             else (Control as PictureBox).Image = Sprite.CurrentImage;
         }
         public Image test = null;

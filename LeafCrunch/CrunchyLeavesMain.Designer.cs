@@ -43,6 +43,7 @@
             this.ClientSize = new System.Drawing.Size(843, 540);
             this.Name = "CrunchyLeavesMain";
             this.Text = "Crunchy Leaves";
+            this.TransparencyKey = System.Drawing.Color.LightGray;
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CrunchyLeavesMain_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CrunchyLeavesMain_KeyUp);
             this.ResumeLayout(false);
