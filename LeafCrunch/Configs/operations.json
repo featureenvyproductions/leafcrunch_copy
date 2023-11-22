@@ -38,7 +38,7 @@
     },
     {
       "TargetName": "Player",
-      "MethodToExecute": "Items.Obstacles.HazardousObstacle.InflictDamage",
+      "MethodToExecute": "Items.Obstacles.HazardousMovingObstacle.InflictDamage",
       "OperationName": "Items.Obstacles.HazardousMovingObstacle.MinorPointDecrement",
       "ParameterList": [
         {
