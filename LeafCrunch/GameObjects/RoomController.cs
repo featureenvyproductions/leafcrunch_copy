@@ -412,15 +412,28 @@ namespace LeafCrunch.GameObjects
             if (bgimg == null) bgimg = (Image)((Control as PictureBox).Image.Clone());
             var playerimg = Player.Sprite.CurrentImage;
 
+            //oh wait i wonder if i need to get the actual control to make this work
+            var leafimg = (_items[0] as Leaf).Image;
+
             // Load the source bitmap
+          //  Bitmap target = new Bitmap(bgimg);
             Bitmap bg = new Bitmap(bgimg);
             Bitmap source2 = new Bitmap(playerimg);
+            Bitmap source3 = new Bitmap(leafimg);
+
+            //i may need to draw the leaf onto the player and then draw the composite onto the background actually
 
             // Create a Graphics object from the target bitmap
             using (Graphics g = Graphics.FromImage(bg))
             {
+                //  g.DrawImage(bg, 0, 0);
                 //why the flying fuck does this work until i fix that to be control.top
-                g.DrawImage(source2,Player.Control.Left,Player.Control.Right);//, new Rectangle(0, 0, source2.Width, source2.Height), new Rectangle(0, 0, source2.Width, source2.Height), GraphicsUnit.Pixel);
+                g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
+                g.DrawImage(source2,Player.Control.Left,Player.Control.Top/* IT ONLY WORKS WITH THIS or hard coding Player.Control.Right*/);//, new Rectangle(0, 0, source2.Width, source2.Height), new Rectangle(0, 0, source2.Width, source2.Height), GraphicsUnit.Pixel);
+                //you know for the stationary items we could just draw them into the background and save the whole image.
+                //like have an isstationary flag or go by type or something
+                //then we wouldn't be trying to draw EVERYTHING every game loop
+                g.DrawImage(source3, _items[0].Control.Left, _items[0].Control.Top);
             }
 
             //            targetBitmap.MakeTransparent(targetBitmap.GetPixel(1, 1));

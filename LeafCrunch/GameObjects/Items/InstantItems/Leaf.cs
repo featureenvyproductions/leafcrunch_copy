@@ -3,6 +3,7 @@ using LeafCrunch.GameObjects.Items.ItemOperations;
 using LeafCrunch.Utilities;
 using LeafCrunch.Utilities.Entities;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects.Items.InstantItems
@@ -59,14 +60,14 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
             ActivationKey = Keys.Enter;
 
             //this could probably go in the generic item code but whatever
-            var img = UtilityMethods.ImageFromPath(itemData.SingleImage);
+            /*var img*/ Image = UtilityMethods.ImageFromPath(itemData.SingleImage);
             Control = new PictureBox()
             {
                 Left = itemData.X,
                 Top = itemData.Y,
-                Image = img,
-                Width = img.Width,
-                Height = img.Height,
+               // Image = img,
+                Width = Image.Width,
+                Height = Image.Height,
                 BackColor = System.Drawing.Color.Transparent
             };
             _pointIncrement = itemData.PointIncrement;
@@ -75,6 +76,8 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
             //only consider it initialized if we came this way for now
             IsInitialized = true;
         }
+
+        public Image Image { get; set; }
 
         virtual protected Result Apply(GenericGameObject genericGameObject, object paramList)
         {
