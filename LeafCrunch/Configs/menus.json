@@ -1,0 +1,21 @@
+{
+  "Menus": [
+    {
+      "Type": "HelpMenu",
+      "Display": "True",
+      "BackgroundImagePath": "Images/Menus/help.png",
+      "ActivationKey": "F1",
+      "Text": {
+        "Text": "one day this will have helpful information",
+        "X": 50,
+        "Y": 50,
+        "Transparent": "True"
+      }
+    },
+    {
+      "Type": "Pause",
+      "Display": "False",
+      "ActivationKey": "Space"
+    }
+  ]
+}
