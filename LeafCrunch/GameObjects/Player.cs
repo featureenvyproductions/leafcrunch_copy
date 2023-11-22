@@ -5,6 +5,8 @@ using LeafCrunch.GameObjects.Items.Obstacles;
 using LeafCrunch.GameObjects.ItemProperties;
 using LeafCrunch.Utilities.Animation;
 using LeafCrunch.Utilities.Entities;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace LeafCrunch.GameObjects
 {
@@ -132,6 +134,8 @@ namespace LeafCrunch.GameObjects
             Sprite.UpdateSequence(Direction.South, true);
 
             //double check that adding this to the child controls of the room will set the parent of this to the room
+            //var img = UtilityMethods.ImageFromPath("Images/PointItems/redmaple.png");
+
             Control = new PictureBox()
             {
                 Name = _objectName,
@@ -140,7 +144,7 @@ namespace LeafCrunch.GameObjects
                 Height = Sprite.CurrentImage.Height,
                 Top = playerData.Stats.InitialY,
                 Left = playerData.Stats.InitialX,
-                BackColor = System.Drawing.Color.Transparent
+               // BackColor = System.Drawing.Color.Transparent
             };
 
             //eventually we'll probably need to have special sprites as well but we'll come back to that
@@ -461,8 +465,11 @@ namespace LeafCrunch.GameObjects
 
             //whatever happens, make sure we're displaying the right image in the control
             //this had better be a picture box or we have bigger problems
-            (Control as PictureBox).Image = Sprite.CurrentImage;
+            if (test!= null)
+                (Control as PictureBox).Image = test;
+            else (Control as PictureBox).Image = Sprite.CurrentImage;
         }
+        public Image test = null;
         #endregion
     }
 }

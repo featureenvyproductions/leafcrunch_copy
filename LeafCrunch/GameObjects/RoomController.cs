@@ -12,6 +12,8 @@ using LeafCrunch.Utilities.Entities;
 using System.IO;
 using static LeafCrunch.Utilities.GlobalVars;
 using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 
 //you know one thing i should do is when i actually implement the dynamic loading of the game board
 //i should make it so that i only place things exactly in tiles
@@ -184,7 +186,8 @@ namespace LeafCrunch.GameObjects
                 Left = 0,
                 Width = GlobalVars.RoomWidth,
                 Height = GlobalVars.RoomHeight,
-                Image = img
+                Image = img,
+                BackColor = System.Drawing.Color.Transparent
             };
 
             parent.Controls.Add(Control);
@@ -509,6 +512,55 @@ namespace LeafCrunch.GameObjects
             _items.RemoveAll(i => i.MarkedForDeletion);
         }
 
+        //no idea how to undo this just seeing if I can DO it in the first place
+        private void CombineImages(GenericItem item)
+        {
+            //just for testing....once it's set don't fuck with it
+            if (Player.test != null) return;
+
+            //Bitmap original = new Bitmap("Images/PointItems/redmaple.png");
+            //Rectangle srcRect = new Rectangle(0, 0, , 5);
+            //Bitmap cropped = (Bitmap)original.Clone(srcRect, original.PixelFormat);
+
+            //  Color backColor = original.GetPixel(1, 1);
+            // original.MakeTransparent(backColor);
+            //var img = UtilityMethods.ImageFromBitmap(original);
+
+            //get the images
+            var playerimg = Player.Sprite.CurrentImage;
+            var itemimg = (item.Control as PictureBox).Image;
+            // Load the source bitmap
+            Bitmap sourceBitmap = new Bitmap(playerimg);
+
+            // Create a new bitmap with the same dimensions as the source bitmap
+            Bitmap targetBitmap = new Bitmap(itemimg);//new Bitmap(sourceBitmap.Width/2, sourceBitmap.Height/2);
+
+            // Create a Graphics object from the target bitmap
+            using (Graphics g = Graphics.FromImage(targetBitmap))
+            {
+                // Draw the source bitmap onto the target bitmap
+                g.DrawImage(sourceBitmap, new Rectangle(0, 0, sourceBitmap.Width, sourceBitmap.Height), new Rectangle(0, 0, sourceBitmap.Width, sourceBitmap.Height), GraphicsUnit.Pixel);
+            }
+
+            // Save the target bitmap to a file
+            //  targetBitmap.Save("targetBitmap2.bmp");
+
+            //try to load the new image into the control
+
+            //I DON"T UNDERSTAND THIS WAS FUCKING FINE BEFORE
+            Color backColor = targetBitmap.GetPixel(1, 1);
+            targetBitmap.MakeTransparent(backColor);
+            targetBitmap.Save("targetBitmap6.bmp");
+            var img = UtilityMethods.ImageFromBitmap(targetBitmap);
+            Player.test = img;
+
+            //god this is fucking slow.
+            //i could probably load this into some kind of "collision cache"
+            //and give the collision for these player coordinates a unique identifier
+            //(and for the moving stuff, lets just keep it box shaped)
+            //gotta fix that transparent color though bc it's gray rn.
+        }
+
         //the room SHOULD know about the player right
         protected void PerformItemOperations()
         {
@@ -527,6 +579,18 @@ namespace LeafCrunch.GameObjects
             }
 
             UpdateTemporaryItems();
+
+            //note: we need to actually combine images
+            //I'll move this to a different spot after experimenting
+            foreach (var item in _items)
+            {
+                if (TileObjectPlayerCollision(item))
+                {
+                    CombineImages(item);
+                    //put combine images code here eventually...god this is gonna be so slow
+                    //oh wait we should do this AFTER the rebound code executes or it won't be quite right
+                }
+            }
         }
         #endregion
     }

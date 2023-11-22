@@ -67,7 +67,7 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
                 Image = img,
                 Width = img.Width,
                 Height = img.Height,
-                BackColor = System.Drawing.Color.Transparent
+             //   BackColor = System.Drawing.Color.Transparent
             };
             _pointIncrement = itemData.PointIncrement;
             InitializeOperationFromRegistry(itemData.Operation);
