@@ -37,6 +37,18 @@
       ]
     },
     {
+      "TargetName": "Player",
+      "MethodToExecute": "Items.Obstacles.HazardousMovingObstacle.InflictDamage",
+      "OperationName": "Items.Obstacles.HazardousMovingObstacle.MinorPointDecrement",
+      "ParameterList": [
+        {
+          "Name": "RainbowPoints",
+          "Value": "-5",
+          "ValueType": "Integer"
+        }
+      ]
+    },
+    {
       "TargetType": "LeafCrunch.GameObjects.Items.InstantItems.Leaf",
       "MethodToExecute": "Items.TemporaryItems.PineCode.ApplyPointMultiplier",
       "OperationName": "Items.TemporaryItems.PineCode.LeafPointMultiplier"

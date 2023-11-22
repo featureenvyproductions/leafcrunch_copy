@@ -1,0 +1,13 @@
+{
+  "Obstacles": [
+    {
+      "Type": "HazardousMovingObstacle",
+      "SingleImage": "Images/Obstacles/hazard.png",
+      "OperationName": "Items.Obstacles.HazardousMovingObstacle.MinorPointDecrement",
+      "X": 100,
+      "Y": 200,
+      "InitialSpeedX": 15,
+      "InitialSpeedY": 15
+    }
+  ]
+}

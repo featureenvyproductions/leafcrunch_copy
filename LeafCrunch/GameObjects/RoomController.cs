@@ -29,10 +29,14 @@ using static LeafCrunch.Utilities.GlobalVars;
 
 //also collect factory code into its own folder so the loading/initializing stuff isn't a fucking mess.
 
+//also also why isn't the generic game object class the thing that registers shit in the fucking registry
+//what is my problem
+
 namespace LeafCrunch.GameObjects
 {
     public class RoomController : GenericGameObject
     {
+        private bool _interactive = true; //eh there's probably a better way to do this but
         public bool ActiveRoom = true; //always true right now, idk if we want more rooms in the future
         private bool _isInitialized = false;
 
@@ -172,9 +176,22 @@ namespace LeafCrunch.GameObjects
 
             //could i consolidate this
             LoadWinConditions(roomData.WinConditions);
+
+            if (roomData.RoomType == "Transition")
+            {
+                _isInitialized = true;
+                _interactive = false;
+                return;
+            }
             LoadLoseConditions(roomData.LoseConditions);
             //note to self: need to re-init the player location with each room and account for that
             LoadRoomObjects();
+
+            if (Player != null)
+            {
+                if (roomData.InitialPlayerX >= 0) Player.Control.Left = roomData.InitialPlayerX;
+                if (roomData.InitialPlayerY >= 0) Player.Control.Top = roomData.InitialPlayerY;
+            }
             _isInitialized = true;
         }
 
@@ -306,6 +323,11 @@ namespace LeafCrunch.GameObjects
         //because I don't want to ignore them completely.
         public void Suspend()
         {
+            //ignore the request on transition rooms
+            //i mean this is definitely clunky and why i should have a separate class maybe
+            //for transitions
+            //but i'll figure that out later 
+            if (!_interactive) return;
             _isSuspended = true;
             ActiveKeys.Clear();
             Player.Suspend();
@@ -317,6 +339,7 @@ namespace LeafCrunch.GameObjects
 
         public void Resume()
         {
+            if (!_interactive) return;
             _isSuspended = false;
             Player.Resume();
             foreach (var item in _items)
@@ -329,6 +352,14 @@ namespace LeafCrunch.GameObjects
         #region Event Handling
         public override void Update()
         {
+            if (!_interactive)
+            {
+                //transition room
+                if (!_isSuspended) //i suppose i should disable menus and pausing on transition screens
+                    //but that's a problem for future ej
+                    TotalTicks++;
+                return;
+            }
             if (!_isSuspended)
             {
                 Player.Update();
@@ -347,7 +378,7 @@ namespace LeafCrunch.GameObjects
 
         public override void OnKeyPress(KeyEventArgs e)
         {
-            if (_isSuspended) return;
+            if (_isSuspended || !_interactive) return;
             Player.OnKeyPress(e);
             StatsDisplay.OnKeyPress(e);
             if (!ActiveKeys.Contains(e.KeyCode))
@@ -356,7 +387,7 @@ namespace LeafCrunch.GameObjects
 
         public override void OnKeyUp(KeyEventArgs e)
         {
-            if (_isSuspended) return;
+            if (_isSuspended || !_interactive) return;
             Player.OnKeyUp(e);
             StatsDisplay.OnKeyUp(e);
             ActiveKeys.Remove(e.KeyCode);

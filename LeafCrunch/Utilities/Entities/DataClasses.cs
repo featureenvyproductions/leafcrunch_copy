@@ -47,9 +47,12 @@ namespace LeafCrunch.Utilities.Entities
         public int Width { get; set; }
         public int TileSizeH { get; set; }
         public int TileSizeW { get; set; }
+        public int InitialPlayerX { get; set; }
+        public int InitialPlayerY { get; set; }
         public string BackgroundImagePath { get; set; }
         public List<ConditionData> WinConditions { get; set; }
         public List<ConditionData> LoseConditions { get; set; }
+        public string RoomType { get; set; }
     }
 
     public class ObstacleData
