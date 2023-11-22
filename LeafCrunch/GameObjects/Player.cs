@@ -7,6 +7,7 @@ using LeafCrunch.Utilities.Animation;
 using LeafCrunch.Utilities.Entities;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Diagnostics;
 
 namespace LeafCrunch.GameObjects
 {
@@ -136,13 +137,16 @@ namespace LeafCrunch.GameObjects
             //double check that adding this to the child controls of the room will set the parent of this to the room
             //var img = UtilityMethods.ImageFromPath("Images/PointItems/redmaple.png");
 
-
+            Stopwatch s = new Stopwatch();
+            s.Start();
             //what happens if i combine the images before i ever fuck with the control.
             var playerimg = Sprite.CurrentImage;
             var itemimg = UtilityMethods.ImageFromPath("Images/PointItems/redmaple.png");
+            var testimg2 = Sprite.StaticImage[Direction.West].Images[0];
+
             // Load the source bitmap
             Bitmap sourceBitmap = new Bitmap(playerimg);
-
+            Bitmap source2 = new Bitmap(testimg2);
             // Create a new bitmap //with the same dimensions as the source bitmap
             Bitmap targetBitmap = new Bitmap(itemimg);
 
@@ -151,13 +155,24 @@ namespace LeafCrunch.GameObjects
             {
                 // Draw the source bitmap onto the target bitmap
                 g.DrawImage(sourceBitmap, new Rectangle(0, 0, sourceBitmap.Width, sourceBitmap.Height), new Rectangle(0, 0, sourceBitmap.Width, sourceBitmap.Height), GraphicsUnit.Pixel);
+                g.DrawImage(source2, new Rectangle(0, 0, source2.Width, source2.Height), new Rectangle(0, 0, source2.Width, source2.Height), GraphicsUnit.Pixel);
             }
 
-//            targetBitmap.MakeTransparent(targetBitmap.GetPixel(1, 1));
-         //   targetBitmap.Save("temp.png");
-           // var img = UtilityMethods.ImageFromBitmap(targetBitmap);
+            //            targetBitmap.MakeTransparent(targetBitmap.GetPixel(1, 1));
+            //   targetBitmap.Save("temp.png");
+            // var img = UtilityMethods.ImageFromBitmap(targetBitmap);
+            
             System.IO.MemoryStream surewhynot = new System.IO.MemoryStream();
             targetBitmap.Save(surewhynot, ImageFormat.Png);
+            var test = Image.FromStream(surewhynot);
+            s.Stop();
+
+            //let's maybe actually cache these combined images
+            //at least for the stationary things
+            //i mean to be perfectly honest we could ALSO just literally draw the screen manually. 
+            //like the whole ass screen.
+            //as in have the parent control and then one by one go through the child controls and draw all the shit exactly like this.
+            //does this work with multiple images?
 
             Control = new PictureBox()
             {
@@ -169,6 +184,7 @@ namespace LeafCrunch.GameObjects
                 Left = playerData.Stats.InitialX,
                 BackColor = System.Drawing.Color.Transparent
             };
+            
 
            // surewhynot.Close(); //or this idk
             surewhynot.Dispose(); //do i need to close this or something
