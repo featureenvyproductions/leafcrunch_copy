@@ -13,9 +13,14 @@ namespace LeafCrunch.Utilities.Entities
     {
         private const string _configFile = "obstacles.json";
 
-        public List<Obstacle> LoadObstacles()
+        private string AppendRoomName(string roomName)
         {
-            var jsonString = File.ReadAllText(UtilityMethods.GetConfigPath(_configFile));
+            return (string.IsNullOrEmpty(roomName)) ? string.Empty : "Rooms/" + roomName + "/";
+        }
+
+        public List<Obstacle> LoadObstacles(string roomName = null)
+        {
+            var jsonString = File.ReadAllText(UtilityMethods.GetConfigPath($"{AppendRoomName(roomName)}{_configFile}"));
 
             var jsonLoader = new JsonLoader();
             var obstacleData = jsonLoader.LoadFromJson<ObstacleDataCollection>(jsonString);

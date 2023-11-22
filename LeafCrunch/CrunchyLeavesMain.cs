@@ -28,7 +28,10 @@ namespace LeafCrunch
 
             GlobalVars.CalculateFrameRate(timer1.Interval);
 
-            RoomController = new RoomController(pbLevel1);
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            AutoSize = true;
+
+            RoomController = new RoomController(this, "test");
 
             InterruptController = new InterruptController(new List<Control>() { pnHelpMenu });
             
