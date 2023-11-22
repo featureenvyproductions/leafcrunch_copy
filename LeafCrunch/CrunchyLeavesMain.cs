@@ -1,4 +1,5 @@
 ﻿using LeafCrunch.GameObjects;
+using LeafCrunch.GameObjects.Stats;
 using LeafCrunch.Menus;
 using LeafCrunch.Utilities;
 using LeafCrunch.Utilities.Animation;
