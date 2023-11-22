@@ -38,34 +38,78 @@ namespace LeafCrunch.GameObjects
 
         #region Win Condition Properties
 
-        public WinCondition winCondition {
+        public WinCondition WinCondition {
             get
             {
                 //wait till we're loaded and running
                 if (!_isInitialized || _isSuspended) return WinCondition.None;
-                //check all the conditions
-                //if all the goals are met, return a win
-                //if any are failed, return a lose
-
                 foreach (var condition in _winConditions)
                 {
-                    //if lose
-                    //break and return lose
-                    //if none
-                    //break and return none
-                    //if win
-                    //set win and keep going
+                    if (condition.CheckCondition(this) == WinCondition.None)
+                        return WinCondition.None;
                 }
-                //if we get here it's a win.
-                //but for the purpose of doing an intermittent check in i'm putting none
-                return WinCondition.None;
+                return WinCondition.Win;
             }
         }
 
         private int _totalTicks = 0;
-        public int TotalTicks { get; set; }
+        public int TotalTicks
+        { 
+            get { return _totalTicks; }
+            set { _totalTicks = value; }
+        }
 
-        private Dictionary<string, object> _winConditions = new Dictionary<string, object>();
+        //i'm only doing win conditions right now.
+        //i'll have a separate list of lose conditions
+        //but we'll come back to that
+
+        private List<Condition> _winConditions = new List<Condition>()
+        {
+            //just to test
+            new Condition()
+            {
+                PropertyName = "TotalTicks",
+                Value = 50,
+                Comparison = ">=",
+                ValueType = "Int",
+                WinCondition = WinCondition.Win
+            }
+        };
+
+        public class Condition
+        {
+            public string PropertyName { get; set; }
+            public object Value { get; set; }
+            public string Comparison { get; set; }
+            public string ValueType { get; set; }
+            public WinCondition WinCondition { get; set; }
+
+            public WinCondition CheckCondition(object parent)
+            {
+                //get the property value
+                var t = parent.GetType();
+                var p = t.GetProperty(PropertyName);
+                var propValue = p?.GetValue(parent);
+
+                switch (Comparison)
+                {
+                    case ">=":
+                        if (ValueType == "Double")
+                            return ((double)propValue >= (double)Value) ? WinCondition : WinCondition.None;
+                        else
+                            return ((int)propValue >= (int)Value) ? WinCondition : WinCondition.None;
+                    case "<=":
+                        if (ValueType == "Double")
+                            return ((double)propValue <= (double)Value) ? WinCondition : WinCondition.None;
+                        else
+                            return ((double)propValue <= (double)Value) ? WinCondition : WinCondition.None;
+                    case "==":
+                        //this will only work for values so I'm not sure about it
+                            return (propValue.Equals(Value)) ? WinCondition : WinCondition.None;
+                }
+                return WinCondition.None;
+            }
+        }
 
         #endregion
 
@@ -286,7 +330,7 @@ namespace LeafCrunch.GameObjects
                 CleanUpItems();
                 UpdateStationaryObstacles();
                 UpdateMovingObstacles();
-                _totalTicks++; //I only want to update this when the room is actually active
+                TotalTicks++; //I only want to update this when the room is actually active
                 //in case we use it for a level timer or something
             }
         }

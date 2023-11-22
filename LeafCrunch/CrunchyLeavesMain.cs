@@ -37,8 +37,10 @@ namespace LeafCrunch
                 if (roomIndex >= OrderedRooms.Count)
                 {
                     //you win the game....we'll display a final screen here but I'll figure that part out later
+                    Application.Exit();
+                    Initialized = false;
+                    return;
                 }
-                return;
             }
             RoomController = new RoomController(this, OrderedRooms[roomIndex]);
             //note to self: I think for level transitions we'll just have a "room" sort of thing but there's nothing in it
@@ -47,8 +49,10 @@ namespace LeafCrunch
             //only the win condition will just be Ticks = however long I want to display it for.
         }
 
+        private bool Initialized = false;
         public CrunchyLeavesMain()
         {
+            Initialized = false;
             InitializeComponent();
 
             GlobalVars.CalculateFrameRate(timer1.Interval);
@@ -99,10 +103,12 @@ namespace LeafCrunch
             //doesn't do anything to preserve persistence between levels but eh we'll figure that out later
             
             timer1.Start();
+            Initialized = true;
         }
 
         private void CrunchyLeavesMain_KeyDown(object sender, KeyEventArgs e)
         {
+            if (!Initialized) return;
             //determine whether the interrupt controller is active
             switch (InterruptController.OnKeyDown(e))
             {
@@ -136,6 +142,7 @@ namespace LeafCrunch
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            if (!Initialized) return;
             //is controller active
             switch (InterruptController.Update())
             {
@@ -143,13 +150,14 @@ namespace LeafCrunch
                     break;
                 default:
                     RoomController.Update();
-                    HandleWinCondition(RoomController.winCondition);
+                    HandleWinCondition(RoomController.WinCondition);
                     break;
             }
         }
 
         private void CrunchyLeavesMain_KeyUp(object sender, KeyEventArgs e)
         {
+            if (!Initialized) return;
             //is controller active
             switch (InterruptController.OnKeyUp(e))
             {
