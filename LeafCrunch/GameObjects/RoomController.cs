@@ -39,6 +39,7 @@ namespace LeafCrunch.GameObjects
         #endregion
 
         #region Room Objects
+        private string _roomName = string.Empty;
         private List<Obstacle> _obstacles = new List<Obstacle>();
         private List<GenericItem> _items = new List<GenericItem>();
         private List<TemporaryItem> _temporaryItems = new List<TemporaryItem>();
@@ -82,17 +83,35 @@ namespace LeafCrunch.GameObjects
         //eventually we're going to load control names from a file I think so I won't need this fucking list
         //or we're gonna initialize the controls on the fly with a location and a type
         //like i'll have a prototype and initialize from the prototype
-        public RoomController(Control control) : base(control)
+        public RoomController(Form parent, string roomName) : base()
         {
-            GlobalVars.RoomWidth = control.Width;
-            GlobalVars.RoomHeight = control.Height;
-            GlobalVars.RoomTileSizeW = 64; //for now
-            GlobalVars.RoomTileSizeH = 64;
+            _roomName = roomName;
+            var jsonString = File.ReadAllText(UtilityMethods.GetConfigPath($"Rooms/{_roomName}/room.json"));
+            var jsonLoader = new JsonLoader();
+            var roomData = jsonLoader.LoadFromJson<RoomData>(jsonString);
 
-            //eventually this will also be where we load custom rooms from some file
-            //and there will be an arg here telling us what room file we want
+            GlobalVars.RoomWidth = roomData.Width;
+            GlobalVars.RoomHeight = roomData.Height;
+            GlobalVars.RoomTileSizeW = roomData.TileSizeW;
+            GlobalVars.RoomTileSizeH = roomData.TileSizeH;
+
+            var img = UtilityMethods.ImageFromPath(roomData.BackgroundImagePath);
+            Control = new PictureBox()
+            {
+                Top = 0,
+                Left = 0,
+                Width = GlobalVars.RoomWidth,
+                Height = GlobalVars.RoomHeight,
+                Image = img
+            };
+
+            parent.Controls.Add(Control);
+            Control.BringToFront();
+            
             LoadRoomObjects();
         }
+
+        
 
         #endregion
 
@@ -107,7 +126,6 @@ namespace LeafCrunch.GameObjects
             LoadItems();
             LoadObstacles();            
 
-            //next up will be dynamically loading moving obstacles
             //then we can add sounds maybe and some better images
             //then dynamically load subsequent room configurations and game goals etc
             //i realize i probably need to register obstacles as well do i do that?
@@ -119,9 +137,6 @@ namespace LeafCrunch.GameObjects
             //oh you know what actually it would be easier to just have a different set of configs for each room and just
             //reconfigure the path to account for the room folder
             //yeah let's do that. way better than cramming shit into like 4 files for a whole game.
-
-            //oh we also want to start loading things into grid spots rather than just random xys
-            //we could take the xys though and snap them to the tile the origin is in. 
         }
 
         protected void LoadPlayer()
@@ -141,7 +156,7 @@ namespace LeafCrunch.GameObjects
         protected void LoadItems()
         {
             var itemFactory = new ItemFactory();
-            var gi = itemFactory.LoadItems();
+            var gi = itemFactory.LoadItems(_roomName);
 
             foreach (var item in gi)
             {
@@ -177,7 +192,7 @@ namespace LeafCrunch.GameObjects
             _obstacles = new List<Obstacle>();
             _movingObstacles = new List<MovingObstacle>();
 
-            var obstacles = obstacleFactory.LoadObstacles();
+            var obstacles = obstacleFactory.LoadObstacles(_roomName);
             foreach (var obstacle in obstacles)
             {
                 if (obstacle.IsInitialized)

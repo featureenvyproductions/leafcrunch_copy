@@ -9,6 +9,16 @@ using System.Windows.Forms;
 
 namespace LeafCrunch.Utilities.Entities
 {
+    public class RoomData
+    {
+        public string Name { get; set; }
+        public int Height { get; set; }
+        public int Width { get; set; }
+        public int TileSizeH { get; set; }
+        public int TileSizeW { get; set; }
+        public string BackgroundImagePath { get; set; }
+    }
+
     public class ObstacleData
     {
         public string Type { get; set; }
