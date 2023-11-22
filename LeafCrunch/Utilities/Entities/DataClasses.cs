@@ -52,6 +52,7 @@ namespace LeafCrunch.Utilities.Entities
         public string BackgroundImagePath { get; set; }
         public List<ConditionData> WinConditions { get; set; }
         public List<ConditionData> LoseConditions { get; set; }
+        public string RoomType { get; set; }
     }
 
     public class ObstacleData

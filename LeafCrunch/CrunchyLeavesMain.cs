@@ -27,8 +27,11 @@ namespace LeafCrunch
         private int roomIndex = -1;
         private List<string> OrderedRooms = new List<string>()
         {
+            "intro",
             "test",
-            "testlevel2" //some issues......it didn't resize the window and it didn't pay attention to my point decrement operation
+            "transition1",
+            "testlevel2",
+            "outro"
         };
 
         private void InitializeRoom(bool reload)
