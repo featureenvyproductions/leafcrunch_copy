@@ -53,6 +53,7 @@ namespace LeafCrunch.Utilities.Entities
         public List<ConditionData> WinConditions { get; set; }
         public List<ConditionData> LoseConditions { get; set; }
         public string RoomType { get; set; }
+        public string ContinueKey { get; set; }
     }
 
     public class ObstacleData
