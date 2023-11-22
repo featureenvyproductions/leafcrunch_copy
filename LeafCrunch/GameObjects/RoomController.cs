@@ -65,6 +65,17 @@ namespace LeafCrunch.GameObjects
             set { _totalTicks = value; }
         }
 
+        //i mean I suppose I could give the player a list of win conditions to check but
+        //i'm tired and i'm not doing that
+        public int TotalPoints
+        {
+            get
+            {
+                if (Player != null) return Player.RainbowPoints;
+                return 0;
+            }
+        }
+
         //i'm only doing win conditions right now.
         //i'll have a separate list of lose conditions
         //but we'll come back to that
@@ -131,6 +142,11 @@ namespace LeafCrunch.GameObjects
         public RoomController(Form parent, string roomName) : base()
         {
             _isInitialized = false;
+            //i wonder if these would be better somewhere else
+            GenericGameObjectRegistry.RegisteredObjects = new Dictionary<string, GenericGameObject>();
+            OperationMethodRegistry.TargetOperations = new Dictionary<string, TargetOperation>();
+            OperationRegistry.Operations = new Dictionary<string, Operation>();
+
             _roomName = roomName;
             var jsonString = File.ReadAllText(UtilityMethods.GetConfigPath($"Rooms/{_roomName}/room.json"));
             var jsonLoader = new JsonLoader();
@@ -154,7 +170,9 @@ namespace LeafCrunch.GameObjects
             parent.Controls.Add(Control);
             Control.BringToFront();
 
+            //could i consolidate this
             LoadWinConditions(roomData.WinConditions);
+            LoadLoseConditions(roomData.LoseConditions);
             //note to self: need to re-init the player location with each room and account for that
             LoadRoomObjects();
             _isInitialized = true;

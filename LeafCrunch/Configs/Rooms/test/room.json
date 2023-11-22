@@ -7,10 +7,18 @@
   "BackgroundImagePath": "Images/Background/testlevel.png",
   "WinConditions": [
     {
-      "PropertyName": "TotalTicks",
+      "PropertyName": "TotalPoints",
       "ValueType": "Integer",
-      "Value": 30,
+      "Value": 25,
       "Comparison": ">="
+    }
+  ],
+  "LoseConditions": [
+    {
+      "PropertyName": "TotalPoints",
+      "ValueType": "Integer",
+      "Value": -5,
+      "Comparison": "<="
     }
   ]
 }
