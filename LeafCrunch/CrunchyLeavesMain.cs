@@ -1,4 +1,5 @@
 ﻿using LeafCrunch.GameObjects;
+using LeafCrunch.GameObjects.Stats;
 using LeafCrunch.Menus;
 using LeafCrunch.Utilities;
 using LeafCrunch.Utilities.Animation;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using static LeafCrunch.Utilities.GlobalVars;
 
 namespace LeafCrunch
 {
@@ -22,8 +24,36 @@ namespace LeafCrunch
 
         private InterruptController InterruptController { get; set; }
 
+        private int roomIndex = -1;
+        private List<string> OrderedRooms = new List<string>()
+        {
+            "test"
+        };
+
+        private void InitializeRoom(bool reload)
+        {
+            if (!reload)
+            {
+                roomIndex++;
+                if (roomIndex >= OrderedRooms.Count)
+                {
+                    //you win the game....we'll display a final screen here but I'll figure that part out later
+                    Application.Exit();
+                    Initialized = false;
+                    return;
+                }
+            }
+            RoomController = new RoomController(this, OrderedRooms[roomIndex]);
+            //note to self: I think for level transitions we'll just have a "room" sort of thing but there's nothing in it
+            //or maybe in the json I can have a special transition type
+            //and this can inherit from the same thing as roomcontroller maybe
+            //only the win condition will just be Ticks = however long I want to display it for.
+        }
+
+        private bool Initialized = false;
         public CrunchyLeavesMain()
         {
+            Initialized = false;
             InitializeComponent();
 
             GlobalVars.CalculateFrameRate(timer1.Interval);
@@ -31,8 +61,18 @@ namespace LeafCrunch
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             AutoSize = true;
 
-            RoomController = new RoomController(this, "test");
+            InitializeRoom(false); //I think this'll work to start
 
+            //oh shit i forgot to dynamically initialize activation keys we'll come back to that
+            //and we'll add some code to make sure there's only one thing that can happen in this game per key
+            //like instead of just SETTING an activation key explicitly, we'll call "request activation key"
+            //from the utilities 
+            //and it'll query a list of used keys to make sure it's not in there or whatever
+            //if relevant anyway
+            //we can just set the key without requesting if we don't care
+            //like items can all have the same one
+            //but menus shouldn't
+            //oh ok maybe we'll just do that for menus.
             InterruptController = new InterruptController(this);
 
             //how are we going to transition levels though
@@ -64,10 +104,12 @@ namespace LeafCrunch
             //doesn't do anything to preserve persistence between levels but eh we'll figure that out later
             
             timer1.Start();
+            Initialized = true;
         }
 
         private void CrunchyLeavesMain_KeyDown(object sender, KeyEventArgs e)
         {
+            if (!Initialized) return;
             //determine whether the interrupt controller is active
             switch (InterruptController.OnKeyDown(e))
             {
@@ -83,8 +125,25 @@ namespace LeafCrunch
             }
         }
 
+        private void HandleWinCondition(WinCondition win)
+        {
+            switch (win)
+            {
+                case WinCondition.Lose:
+                    //reinitialize the current room
+                    InitializeRoom(true);
+                    break;
+                case WinCondition.Win:
+                    InitializeRoom(false); //proceed to the next room
+                    break;
+                default:
+                    break;//keep trucking
+            }
+        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
+            if (!Initialized) return;
             //is controller active
             switch (InterruptController.Update())
             {
@@ -92,12 +151,14 @@ namespace LeafCrunch
                     break;
                 default:
                     RoomController.Update();
+                    HandleWinCondition(RoomController.WinCondition);
                     break;
             }
         }
 
         private void CrunchyLeavesMain_KeyUp(object sender, KeyEventArgs e)
         {
+            if (!Initialized) return;
             //is controller active
             switch (InterruptController.OnKeyUp(e))
             {

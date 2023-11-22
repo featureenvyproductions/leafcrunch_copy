@@ -10,6 +10,7 @@ using LeafCrunch.GameObjects.Stats;
 using LeafCrunch.GameObjects.Items.Obstacles;
 using LeafCrunch.Utilities.Entities;
 using System.IO;
+using static LeafCrunch.Utilities.GlobalVars;
 
 //you know one thing i should do is when i actually implement the dynamic loading of the game board
 //i should make it so that i only place things exactly in tiles
@@ -33,6 +34,56 @@ namespace LeafCrunch.GameObjects
     public class RoomController : GenericGameObject
     {
         public bool ActiveRoom = true; //always true right now, idk if we want more rooms in the future
+        private bool _isInitialized = false;
+
+        #region Win Condition Properties
+
+        public WinCondition WinCondition {
+            get
+            {
+                //wait till we're loaded and running
+                if (!_isInitialized || _isSuspended) return WinCondition.None;
+                foreach (var condition in _loseConditions)
+                {
+                    //one and done
+                    if (condition.CheckCondition(this) == WinCondition.Lose)
+                        return WinCondition.Lose;
+                }
+                foreach (var condition in _winConditions)
+                {
+                    if (condition.CheckCondition(this) == WinCondition.None)
+                        return WinCondition.None;
+                }
+                return WinCondition.Win;
+            }
+        }
+
+        private int _totalTicks = 0;
+        public int TotalTicks
+        { 
+            get { return _totalTicks; }
+            set { _totalTicks = value; }
+        }
+
+        //i mean I suppose I could give the player a list of win conditions to check but
+        //i'm tired and i'm not doing that
+        public int TotalPoints
+        {
+            get
+            {
+                if (Player != null) return Player.RainbowPoints;
+                return 0;
+            }
+        }
+
+        //i'm only doing win conditions right now.
+        //i'll have a separate list of lose conditions
+        //but we'll come back to that
+
+        private List<Condition> _winConditions = new List<Condition>();
+        private List<Condition> _loseConditions = new List<Condition>();
+
+        #endregion
 
         #region Pause Handling
         private bool _isSuspended = false; //says whether or not the room is active (as opposed to a menu)
@@ -40,6 +91,11 @@ namespace LeafCrunch.GameObjects
 
         #region Room Objects
         private string _roomName = string.Empty;
+        public string RoomName
+        {
+            get { return _roomName; }
+            set { _roomName = value; }
+        }
         private List<Obstacle> _obstacles = new List<Obstacle>();
         private List<GenericItem> _items = new List<GenericItem>();
         private List<TemporaryItem> _temporaryItems = new List<TemporaryItem>();
@@ -85,6 +141,12 @@ namespace LeafCrunch.GameObjects
         //like i'll have a prototype and initialize from the prototype
         public RoomController(Form parent, string roomName) : base()
         {
+            _isInitialized = false;
+            //i wonder if these would be better somewhere else
+            GenericGameObjectRegistry.RegisteredObjects = new Dictionary<string, GenericGameObject>();
+            OperationMethodRegistry.TargetOperations = new Dictionary<string, TargetOperation>();
+            OperationRegistry.Operations = new Dictionary<string, Operation>();
+
             _roomName = roomName;
             var jsonString = File.ReadAllText(UtilityMethods.GetConfigPath($"Rooms/{_roomName}/room.json"));
             var jsonLoader = new JsonLoader();
@@ -107,13 +169,44 @@ namespace LeafCrunch.GameObjects
 
             parent.Controls.Add(Control);
             Control.BringToFront();
-            
+
+            //could i consolidate this
+            LoadWinConditions(roomData.WinConditions);
+            LoadLoseConditions(roomData.LoseConditions);
             //note to self: need to re-init the player location with each room and account for that
             LoadRoomObjects();
+            _isInitialized = true;
         }
 
-        
+        protected void LoadWinConditions(List<ConditionData> conditionData)
+        {
+            foreach (var condition in conditionData)
+            {
+                _winConditions.Add(new Condition()
+                {
+                    PropertyName = condition.PropertyName,
+                    Value = condition.Value,
+                    Comparison = condition.Comparison,
+                    ValueType = condition.ValueType,
+                    WinCondition = WinCondition.Win
+                });
+            }
+        }
 
+        protected void LoadLoseConditions(List<ConditionData> conditionData)
+        {
+            foreach (var condition in conditionData)
+            {
+                _loseConditions.Add(new Condition()
+                {
+                    PropertyName = condition.PropertyName,
+                    Value = condition.Value,
+                    Comparison = condition.Comparison,
+                    ValueType = condition.ValueType,
+                    WinCondition = WinCondition.Lose
+                });
+            }
+        }
         #endregion
 
         #region Loading and Initialization
@@ -247,6 +340,8 @@ namespace LeafCrunch.GameObjects
                 CleanUpItems();
                 UpdateStationaryObstacles();
                 UpdateMovingObstacles();
+                TotalTicks++; //I only want to update this when the room is actually active
+                //in case we use it for a level timer or something
             }
         }
 

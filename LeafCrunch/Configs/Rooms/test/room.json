@@ -4,5 +4,21 @@
   "Height": 512,
   "TileSizeH": 64,
   "TileSizeW": 64,
-  "BackgroundImagePath": "Images/Background/testlevel.png"
+  "BackgroundImagePath": "Images/Background/testlevel.png",
+  "WinConditions": [
+    {
+      "PropertyName": "TotalPoints",
+      "ValueType": "Integer",
+      "Value": 25,
+      "Comparison": ">="
+    }
+  ],
+  "LoseConditions": [
+    {
+      "PropertyName": "TotalPoints",
+      "ValueType": "Integer",
+      "Value": -5,
+      "Comparison": "<="
+    }
+  ]
 }

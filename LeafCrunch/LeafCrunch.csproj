@@ -104,6 +104,7 @@
     <Compile Include="GameObjects\Player.cs" />
     <Compile Include="GameObjects\RoomController.cs" />
     <Compile Include="GameObjects\Stats\StatsDisplay.cs" />
+    <Compile Include="GameObjects\Stats\WinConditions.cs" />
     <Compile Include="Menus\GenericInterrupt.cs" />
     <Compile Include="Menus\GenericMenu.cs" />
     <Compile Include="Menus\HelpMenu.cs" />
