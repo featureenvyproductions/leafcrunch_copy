@@ -28,6 +28,7 @@ namespace LeafCrunch
         private List<string> OrderedRooms = new List<string>()
         {
             "intro",
+            "instructions",
             "test",
             "transition1",
             "testlevel2",

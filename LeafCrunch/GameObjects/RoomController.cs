@@ -11,6 +11,7 @@ using LeafCrunch.GameObjects.Items.Obstacles;
 using LeafCrunch.Utilities.Entities;
 using System.IO;
 using static LeafCrunch.Utilities.GlobalVars;
+using System;
 
 //you know one thing i should do is when i actually implement the dynamic loading of the game board
 //i should make it so that i only place things exactly in tiles
@@ -133,6 +134,21 @@ namespace LeafCrunch.GameObjects
 
         protected bool ItemActiveKeyPressed(GenericItem i) => i.ActivationKey == Keys.None || ActiveKeys.Contains(i.ActivationKey);
 
+        //for instruction screen
+        //this stuff should probably be its own thing but whatever
+        private Keys _continueKey = Keys.None;
+        public Keys ContinueKey
+        {
+            get { return _continueKey; }
+            set { _continueKey = value; }
+        }
+
+        private bool _continue = false;
+        public bool Continue
+        {
+            get { return _continue; }
+            set { _continue = value; }
+        }
         #endregion
 
         #region Collision Handler Related
@@ -181,6 +197,11 @@ namespace LeafCrunch.GameObjects
             {
                 _isInitialized = true;
                 _interactive = false;
+
+                //set continue key if the pause is indefinite
+                //Keys continueKey;
+                Enum.TryParse(roomData.ContinueKey ?? "None", out _continueKey);
+                //_continueKey = continueKey;
                 return;
             }
             LoadLoseConditions(roomData.LoseConditions);
@@ -378,7 +399,17 @@ namespace LeafCrunch.GameObjects
 
         public override void OnKeyPress(KeyEventArgs e)
         {
-            if (_isSuspended || !_interactive) return;
+            if (_isSuspended) return;
+            if (!_interactive)
+            {
+                //do we have a continue key specified?
+                if (ContinueKey != Keys.None
+                    && e.KeyCode == ContinueKey)
+                {
+                    Continue = true;
+                }
+                return;
+            }
             Player.OnKeyPress(e);
             StatsDisplay.OnKeyPress(e);
             if (!ActiveKeys.Contains(e.KeyCode))

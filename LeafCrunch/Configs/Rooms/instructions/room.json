@@ -1,0 +1,21 @@
+{
+  "Name": "intro",
+  "Width": 400,
+  "Height": 400,
+  "TileSizeH": 64,
+  "TileSizeW": 64,
+  "InitialPlayerX": -64,
+  "InitialPlayerY": -64,
+  "BackgroundImagePath": "Images/Background/instructions.png",
+  "WinConditions": [
+    {
+      "PropertyName": "Continue",
+      "ValueType": "String",
+      "Value": "True",
+      "Comparison": "=="
+    }
+  ],
+  "LoseConditions": [],
+  "RoomType": "Transition",
+  "ContinueKey": "Enter"
+}
