@@ -8,7 +8,8 @@
       "Text": {
         "Text": "one day this will have helpful information",
         "X": 50,
-        "Y": 50
+        "Y": 50,
+        "Transparent": "True"
       }
     },
     {

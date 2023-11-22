@@ -57,9 +57,14 @@ namespace LeafCrunch.Menus
                     {
                         Top = menu.Text.Y,
                         Left = menu.Text.X,
-                        Text = menu.Text.Text
+                        Text = menu.Text.Text,
+                        AutoSize = true
                         //tbd need to handle styling and word wrapping
                     };
+                    if (menu.Text.Transparent == "True")
+                    {
+                        Text.BackColor = System.Drawing.Color.Transparent;
+                    }
                     Control.Controls.Add(Text);
                     //don't forget to make the form the parent for this
 
