@@ -43,6 +43,12 @@ namespace LeafCrunch.GameObjects
             {
                 //wait till we're loaded and running
                 if (!_isInitialized || _isSuspended) return WinCondition.None;
+                foreach (var condition in _loseConditions)
+                {
+                    //one and done
+                    if (condition.CheckCondition(this) == WinCondition.Lose)
+                        return WinCondition.Lose;
+                }
                 foreach (var condition in _winConditions)
                 {
                     if (condition.CheckCondition(this) == WinCondition.None)
@@ -63,18 +69,8 @@ namespace LeafCrunch.GameObjects
         //i'll have a separate list of lose conditions
         //but we'll come back to that
 
-        private List<Condition> _winConditions = new List<Condition>()
-        {
-            //just to test
-            new Condition()
-            {
-                PropertyName = "TotalTicks",
-                Value = 50,
-                Comparison = ">=",
-                ValueType = "Int",
-                WinCondition = WinCondition.Win
-            }
-        };
+        private List<Condition> _winConditions = new List<Condition>();
+        private List<Condition> _loseConditions = new List<Condition>();
 
         #endregion
 
@@ -157,10 +153,41 @@ namespace LeafCrunch.GameObjects
 
             parent.Controls.Add(Control);
             Control.BringToFront();
-            
+
+            LoadWinConditions(roomData.WinConditions);
             //note to self: need to re-init the player location with each room and account for that
             LoadRoomObjects();
             _isInitialized = true;
+        }
+
+        protected void LoadWinConditions(List<ConditionData> conditionData)
+        {
+            foreach (var condition in conditionData)
+            {
+                _winConditions.Add(new Condition()
+                {
+                    PropertyName = condition.PropertyName,
+                    Value = condition.Value,
+                    Comparison = condition.Comparison,
+                    ValueType = condition.ValueType,
+                    WinCondition = WinCondition.Win
+                });
+            }
+        }
+
+        protected void LoadLoseConditions(List<ConditionData> conditionData)
+        {
+            foreach (var condition in conditionData)
+            {
+                _loseConditions.Add(new Condition()
+                {
+                    PropertyName = condition.PropertyName,
+                    Value = condition.Value,
+                    Comparison = condition.Comparison,
+                    ValueType = condition.ValueType,
+                    WinCondition = WinCondition.Lose
+                });
+            }
         }
         #endregion
 

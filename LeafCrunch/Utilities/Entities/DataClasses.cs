@@ -9,6 +9,14 @@ using System.Windows.Forms;
 
 namespace LeafCrunch.Utilities.Entities
 {
+    public class ConditionData
+    {
+        public string PropertyName { get; set; }
+        public object Value { get; set; }
+        public string Comparison { get; set; }
+        public string ValueType { get; set; }
+    }
+
     public class MenuText
     {
         public string Text { get; set; }
@@ -40,6 +48,8 @@ namespace LeafCrunch.Utilities.Entities
         public int TileSizeH { get; set; }
         public int TileSizeW { get; set; }
         public string BackgroundImagePath { get; set; }
+        public List<ConditionData> WinConditions { get; set; }
+        public List<ConditionData> LoseConditions { get; set; }
     }
 
     public class ObstacleData

@@ -5,9 +5,12 @@
   "TileSizeH": 64,
   "TileSizeW": 64,
   "BackgroundImagePath": "Images/Background/testlevel.png",
-  "WinCondition": {
-    "Property": "Ticks",
-    "ValueType": "Integer",
-    "Value": "30"
-  }
+  "WinConditions": [
+    {
+      "PropertyName": "TotalTicks",
+      "ValueType": "Integer",
+      "Value": 30,
+      "Comparison": ">="
+    }
+  ]
 }
