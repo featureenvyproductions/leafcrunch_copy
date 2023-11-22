@@ -4,5 +4,10 @@
   "Height": 512,
   "TileSizeH": 64,
   "TileSizeW": 64,
-  "BackgroundImagePath": "Images/Background/testlevel.png"
+  "BackgroundImagePath": "Images/Background/testlevel.png",
+  "WinCondition": {
+    "Property": "Ticks",
+    "ValueType": "Integer",
+    "Value": "30"
+  }
 }

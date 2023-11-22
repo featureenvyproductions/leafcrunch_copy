@@ -10,6 +10,7 @@ using LeafCrunch.GameObjects.Stats;
 using LeafCrunch.GameObjects.Items.Obstacles;
 using LeafCrunch.Utilities.Entities;
 using System.IO;
+using static LeafCrunch.Utilities.GlobalVars;
 
 //you know one thing i should do is when i actually implement the dynamic loading of the game board
 //i should make it so that i only place things exactly in tiles
@@ -33,6 +34,40 @@ namespace LeafCrunch.GameObjects
     public class RoomController : GenericGameObject
     {
         public bool ActiveRoom = true; //always true right now, idk if we want more rooms in the future
+        private bool _isInitialized = false;
+
+        #region Win Condition Properties
+
+        public WinCondition winCondition {
+            get
+            {
+                //wait till we're loaded and running
+                if (!_isInitialized || _isSuspended) return WinCondition.None;
+                //check all the conditions
+                //if all the goals are met, return a win
+                //if any are failed, return a lose
+
+                foreach (var condition in _winConditions)
+                {
+                    //if lose
+                    //break and return lose
+                    //if none
+                    //break and return none
+                    //if win
+                    //set win and keep going
+                }
+                //if we get here it's a win.
+                //but for the purpose of doing an intermittent check in i'm putting none
+                return WinCondition.None;
+            }
+        }
+
+        private int _totalTicks = 0;
+        public int TotalTicks { get; set; }
+
+        private Dictionary<string, object> _winConditions = new Dictionary<string, object>();
+
+        #endregion
 
         #region Pause Handling
         private bool _isSuspended = false; //says whether or not the room is active (as opposed to a menu)
@@ -40,6 +75,11 @@ namespace LeafCrunch.GameObjects
 
         #region Room Objects
         private string _roomName = string.Empty;
+        public string RoomName
+        {
+            get { return _roomName; }
+            set { _roomName = value; }
+        }
         private List<Obstacle> _obstacles = new List<Obstacle>();
         private List<GenericItem> _items = new List<GenericItem>();
         private List<TemporaryItem> _temporaryItems = new List<TemporaryItem>();
@@ -85,6 +125,7 @@ namespace LeafCrunch.GameObjects
         //like i'll have a prototype and initialize from the prototype
         public RoomController(Form parent, string roomName) : base()
         {
+            _isInitialized = false;
             _roomName = roomName;
             var jsonString = File.ReadAllText(UtilityMethods.GetConfigPath($"Rooms/{_roomName}/room.json"));
             var jsonLoader = new JsonLoader();
@@ -110,10 +151,8 @@ namespace LeafCrunch.GameObjects
             
             //note to self: need to re-init the player location with each room and account for that
             LoadRoomObjects();
+            _isInitialized = true;
         }
-
-        
-
         #endregion
 
         #region Loading and Initialization
@@ -247,6 +286,8 @@ namespace LeafCrunch.GameObjects
                 CleanUpItems();
                 UpdateStationaryObstacles();
                 UpdateMovingObstacles();
+                _totalTicks++; //I only want to update this when the room is actually active
+                //in case we use it for a level timer or something
             }
         }
 

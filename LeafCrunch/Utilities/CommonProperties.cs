@@ -8,6 +8,14 @@
         public static int RoomTileSizeW { get; set; }
         public static int RoomTileSizeH { get; set; }
 
+        public enum WinCondition
+        {
+            None,
+            Win,
+            Lose
+        };
+        public static WinCondition Win = WinCondition.None;
+
         //could also hypothetically use this to schedule events besides animation updates
         //how many ticks we want to pass before updating an animation
         public static int FrameTickCount { get; set; }
