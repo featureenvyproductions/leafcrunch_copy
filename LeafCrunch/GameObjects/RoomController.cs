@@ -12,6 +12,8 @@ using LeafCrunch.Utilities.Entities;
 using System.IO;
 using static LeafCrunch.Utilities.GlobalVars;
 using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 //you know one thing i should do is when i actually implement the dynamic loading of the game board
 //i should make it so that i only place things exactly in tiles
@@ -393,8 +395,42 @@ namespace LeafCrunch.GameObjects
                 UpdateStationaryObstacles();
                 UpdateMovingObstacles();
                 TotalTicks++; //I only want to update this when the room is actually active
-                //in case we use it for a level timer or something
+                              //in case we use it for a level timer or something
+
+                DrawControls();
             }
+        }
+
+        Image bgimg = null;
+        public void DrawControls()
+        {
+            //code to make up for microsoft being a crock of morons
+
+            //loop through all the fucking controls and draw them onto the motherfucking background
+
+            //  var backgroundimg = (Control as PictureBox).Image;
+            if (bgimg == null) bgimg = (Image)((Control as PictureBox).Image.Clone());
+            var playerimg = Player.Sprite.CurrentImage;
+
+            // Load the source bitmap
+            Bitmap bg = new Bitmap(bgimg);
+            Bitmap source2 = new Bitmap(playerimg);
+
+            // Create a Graphics object from the target bitmap
+            using (Graphics g = Graphics.FromImage(bg))
+            {
+                //why the flying fuck does this work until i fix that to be control.top
+                g.DrawImage(source2,Player.Control.Left,Player.Control.Right);//, new Rectangle(0, 0, source2.Width, source2.Height), new Rectangle(0, 0, source2.Width, source2.Height), GraphicsUnit.Pixel);
+            }
+
+            //            targetBitmap.MakeTransparent(targetBitmap.GetPixel(1, 1));
+           //    bg.Save("temp.png");
+            // var img = UtilityMethods.ImageFromBitmap(targetBitmap);
+
+           System.IO.MemoryStream surewhynot = new System.IO.MemoryStream();
+            bg.Save(surewhynot, ImageFormat.Png);
+            var test = Image.FromStream(surewhynot);
+            (Control as PictureBox).Image = test;
         }
 
         public override void OnKeyPress(KeyEventArgs e)

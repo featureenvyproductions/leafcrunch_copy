@@ -135,7 +135,7 @@ namespace LeafCrunch.GameObjects
             Control = new PictureBox()
             {
                 Name = _objectName,
-                Image = Sprite.CurrentImage,
+               // Image = Sprite.CurrentImage,
                 Width = Sprite.CurrentImage.Width,
                 Height = Sprite.CurrentImage.Height,
                 Top = playerData.Stats.InitialY,
@@ -461,7 +461,7 @@ namespace LeafCrunch.GameObjects
 
             //whatever happens, make sure we're displaying the right image in the control
             //this had better be a picture box or we have bigger problems
-            (Control as PictureBox).Image = Sprite.CurrentImage;
+          //  (Control as PictureBox).Image = Sprite.CurrentImage;
         }
         #endregion
     }
