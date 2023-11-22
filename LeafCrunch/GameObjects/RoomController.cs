@@ -108,6 +108,7 @@ namespace LeafCrunch.GameObjects
             parent.Controls.Add(Control);
             Control.BringToFront();
             
+            //note to self: need to re-init the player location with each room and account for that
             LoadRoomObjects();
         }
 

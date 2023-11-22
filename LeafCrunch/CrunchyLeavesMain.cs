@@ -33,7 +33,7 @@ namespace LeafCrunch
 
             RoomController = new RoomController(this, "test");
 
-            InterruptController = new InterruptController(new List<Control>() { pnHelpMenu });
+            InterruptController = new InterruptController(this);
             
             timer1.Start();
         }

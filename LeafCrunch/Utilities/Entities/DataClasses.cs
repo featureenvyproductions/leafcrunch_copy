@@ -9,6 +9,28 @@ using System.Windows.Forms;
 
 namespace LeafCrunch.Utilities.Entities
 {
+    public class MenuText
+    {
+        public string Text { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+    }
+
+    public class MenuData
+    {
+        public string Type { get; set; }
+        public string Display { get; set; }
+        public string BackgroundImagePath { get; set; }
+        public string ActivationKey { get; set; }
+        public MenuText Text { get; set; } //we probably want to be able to have some more formatting and some controls but this is good enough for testing
+    }
+
+    //I mean I call it menus but this includes anything that pauses gameplay tbh
+    public class MenuCollection
+    {
+        public List<MenuData> Menus { get; set; }
+    }
+
     public class RoomData
     {
         public string Name { get; set; }

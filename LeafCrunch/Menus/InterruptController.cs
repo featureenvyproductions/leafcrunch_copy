@@ -1,5 +1,7 @@
 ﻿using LeafCrunch.Utilities;
+using LeafCrunch.Utilities.Entities;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -19,9 +21,9 @@ namespace LeafCrunch.Menus
         }
 
         //like the room we'll eventually have a real loading system and not this hacked together ordered control list
-        public InterruptController(List<Control> menuControls)
+        public InterruptController(Control parent)
         {
-            Load(menuControls);
+            Load(parent);
 
             //before we start, hide all the menus
             foreach (var interrupt in _interrupts)
@@ -30,20 +32,61 @@ namespace LeafCrunch.Menus
             }
         }
 
-        protected void Load(List<Control> menuControls)
+        protected void Load(Control parent)
         {
-            _interrupts = new List<GenericInterrupt>()
+            var jsonString = File.ReadAllText(UtilityMethods.GetConfigPath($"menus.json"));
+            var jsonLoader = new JsonLoader();
+            var menuData = jsonLoader.LoadFromJson<MenuCollection>(jsonString);
+
+            _interrupts = new List<GenericInterrupt>();
+
+            foreach (var menu in menuData.Menus)
+            {
+                if (menu.Display == "True") //has a control...I should probably have called this "hasControl" idk...
                 {
-                    new HelpMenu()
+                    var img = UtilityMethods.ImageFromPath(menu.BackgroundImagePath);
+                    var Control = new PictureBox()
                     {
-                        IsActive = false,
-                        Control = menuControls.ElementAt(0) // un-hard-code this when we implement the real loading code
-                    },
-                    new Pause()
+                        Top = 0,
+                        Left = 0,
+                        Width = img.Width,
+                        Height = img.Height,
+                        Image = img
+                    };
+                    var Text = new Label()
                     {
-                        IsActive = false
+                        Top = menu.Text.Y,
+                        Left = menu.Text.X,
+                        Text = menu.Text.Text
+                        //tbd need to handle styling and word wrapping
+                    };
+                    Control.Controls.Add(Text);
+                    //don't forget to make the form the parent for this
+
+                    parent.Controls.Add(Control);
+
+                    if (menu.Type == "HelpMenu")
+                    {
+                        _interrupts.Add(new HelpMenu()
+                        {
+                            IsActive = false,
+                            Control = Control,
+                            ActivationKey = Keys.F1
+                        });
                     }
-                };
+                }
+                else
+                {
+                    if (menu.Type == "Pause")
+                    {
+                        _interrupts.Add(new Pause()
+                        {
+                            IsActive = false,
+                            ActivationKey= Keys.Space
+                        });
+                    }
+                }
+            }
         }
 
         public ControllerState OnKeyDown(KeyEventArgs e)
