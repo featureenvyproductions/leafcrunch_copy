@@ -30,45 +30,21 @@
         {
             this.components = new System.ComponentModel.Container();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.pnHelpMenu = new System.Windows.Forms.Panel();
-            this.lblHelpText = new System.Windows.Forms.Label();
-            this.pnHelpMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // timer1
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // pnHelpMenu
-            // 
-            this.pnHelpMenu.Controls.Add(this.lblHelpText);
-            this.pnHelpMenu.Location = new System.Drawing.Point(12, 12);
-            this.pnHelpMenu.Name = "pnHelpMenu";
-            this.pnHelpMenu.Size = new System.Drawing.Size(819, 464);
-            this.pnHelpMenu.TabIndex = 9;
-            this.pnHelpMenu.Visible = false;
-            // 
-            // lblHelpText
-            // 
-            this.lblHelpText.AutoSize = true;
-            this.lblHelpText.Location = new System.Drawing.Point(373, 174);
-            this.lblHelpText.Name = "lblHelpText";
-            this.lblHelpText.Size = new System.Drawing.Size(129, 16);
-            this.lblHelpText.TabIndex = 0;
-            this.lblHelpText.Text = "this is some help text";
-            // 
             // CrunchyLeavesMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(843, 540);
-            this.Controls.Add(this.pnHelpMenu);
             this.Name = "CrunchyLeavesMain";
             this.Text = "Crunchy Leaves";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CrunchyLeavesMain_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.CrunchyLeavesMain_KeyUp);
-            this.pnHelpMenu.ResumeLayout(false);
-            this.pnHelpMenu.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -76,8 +52,6 @@
         #endregion
 
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.Panel pnHelpMenu;
-        private System.Windows.Forms.Label lblHelpText;
     }
 }
 

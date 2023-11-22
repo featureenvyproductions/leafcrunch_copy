@@ -29,8 +29,99 @@ using static LeafCrunch.Utilities.GlobalVars;
 
 //also collect factory code into its own folder so the loading/initializing stuff isn't a fucking mess.
 
+//also also why isn't the generic game object class the thing that registers shit in the fucking registry
+//what is my problem
+
 namespace LeafCrunch.GameObjects
 {
+    /*
+    //like a room but is basically a screen that sits there for a bit
+    public class TransitionController : GenericGameObject
+    {
+        public WinCondition WinCondition
+        {
+            get
+            {
+                //wait till we're loaded and running
+                if (!_isInitialized) return WinCondition.None;
+                return TotalTicks
+            }
+        }
+
+        private int _totalTicks = 0;
+        public int TotalTicks
+        {
+            get { return _totalTicks; }
+            set { _totalTicks = value; }
+        }
+
+        private bool _isInitialized = false;
+        private string _containerName = string.Empty;
+
+        public TransitionController(Form parent, string containerName) : base()
+        {
+            _isInitialized = false;
+            //i wonder if these would be better somewhere else
+            GenericGameObjectRegistry.RegisteredObjects = new Dictionary<string, GenericGameObject>();
+            OperationMethodRegistry.TargetOperations = new Dictionary<string, TargetOperation>();
+            OperationRegistry.Operations = new Dictionary<string, Operation>();
+
+            _containerName = containerName;
+            var jsonString = File.ReadAllText(UtilityMethods.GetConfigPath($"Transitions/{_containerName}/transition.json"));
+            var jsonLoader = new JsonLoader();
+            var roomData = jsonLoader.LoadFromJson<RoomData>(jsonString);
+
+            GlobalVars.RoomWidth = roomData.Width;
+            GlobalVars.RoomHeight = roomData.Height;
+            GlobalVars.RoomTileSizeW = roomData.TileSizeW;
+            GlobalVars.RoomTileSizeH = roomData.TileSizeH;
+
+            var img = UtilityMethods.ImageFromPath(roomData.BackgroundImagePath);
+            Control = new PictureBox()
+            {
+                Top = 0,
+                Left = 0,
+                Width = GlobalVars.RoomWidth,
+                Height = GlobalVars.RoomHeight,
+                Image = img
+            };
+
+            parent.Controls.Add(Control);
+            Control.BringToFront();
+
+            //could i consolidate this
+            LoadWinConditions(roomData.WinConditions);
+            _isInitialized = true;
+        }
+
+        protected void LoadWinConditions(List<ConditionData> conditionData)
+        {
+            foreach (var condition in conditionData)
+            {
+                _winConditions.Add(new Condition()
+                {
+                    PropertyName = condition.PropertyName,
+                    Value = condition.Value,
+                    Comparison = condition.Comparison,
+                    ValueType = condition.ValueType,
+                    WinCondition = WinCondition.Win
+                });
+            }
+        }
+    }*/
+
+    public class TransitionController: RoomController
+    {
+        public TransitionController(Form parent, string roomName) : base(parent, roomName)
+        {
+        }
+
+        override public void Initialize() { }
+        override public void Update() { TotalTicks++; }
+        override public void OnKeyPress(KeyEventArgs e) { }
+        override public void OnKeyUp(KeyEventArgs e) { }
+    }
+
     public class RoomController : GenericGameObject
     {
         public bool ActiveRoom = true; //always true right now, idk if we want more rooms in the future
@@ -175,6 +266,12 @@ namespace LeafCrunch.GameObjects
             LoadLoseConditions(roomData.LoseConditions);
             //note to self: need to re-init the player location with each room and account for that
             LoadRoomObjects();
+
+            if (Player != null)
+            {
+                if (roomData.InitialPlayerX >= 0) Player.Control.Left = roomData.InitialPlayerX;
+                if (roomData.InitialPlayerY >= 0) Player.Control.Top = roomData.InitialPlayerY;
+            }
             _isInitialized = true;
         }
 

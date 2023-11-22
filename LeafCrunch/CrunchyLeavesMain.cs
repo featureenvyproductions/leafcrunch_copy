@@ -27,7 +27,8 @@ namespace LeafCrunch
         private int roomIndex = -1;
         private List<string> OrderedRooms = new List<string>()
         {
-            "test"
+            "test",
+            "testlevel2" //some issues......it didn't resize the window and it didn't pay attention to my point decrement operation
         };
 
         private void InitializeRoom(bool reload)
@@ -42,6 +43,11 @@ namespace LeafCrunch
                     Initialized = false;
                     return;
                 }
+            }
+            if (RoomController?.Control != null)
+            {
+                //remove the control no matter what.
+                this.Controls.Remove(RoomController.Control);
             }
             RoomController = new RoomController(this, OrderedRooms[roomIndex]);
             //note to self: I think for level transitions we'll just have a "room" sort of thing but there's nothing in it

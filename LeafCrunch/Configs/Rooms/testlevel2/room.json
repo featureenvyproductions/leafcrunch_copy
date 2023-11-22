@@ -1,17 +1,17 @@
 {
-  "Name": "test",
-  "Width": 768,
+  "Name": "testlevel2",
+  "Width": 400,
   "Height": 512,
   "TileSizeH": 64,
   "TileSizeW": 64,
-  "InitialPlayerX": -1,
-  "InitialPlayerY":  -1,
-  "BackgroundImagePath": "Images/Background/testlevel.png",
+  "InitialPlayerX": 10,
+  "InitialPlayerY": 10,
+  "BackgroundImagePath": "Images/Background/testlevel2.png",
   "WinConditions": [
     {
       "PropertyName": "TotalPoints",
       "ValueType": "Integer",
-      "Value": 25,
+      "Value": 100,
       "Comparison": ">="
     }
   ],
@@ -19,7 +19,7 @@
     {
       "PropertyName": "TotalPoints",
       "ValueType": "Integer",
-      "Value": -5,
+      "Value": -15,
       "Comparison": "<="
     }
   ]

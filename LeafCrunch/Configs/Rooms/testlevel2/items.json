@@ -1,0 +1,12 @@
+{
+  "Items": [
+    {
+      "Type": "Leaf",
+      "Operation": "Items.InstantItems.Leaf.PointIncrement",
+      "SingleImage": "Images/PointItems/redleaf.png",
+      "X": 100,
+      "Y": 150,
+      "PointIncrement": 100
+    }
+  ]
+}
