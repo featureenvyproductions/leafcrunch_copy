@@ -6,8 +6,8 @@ namespace LeafCrunch.GameObjects.ItemProperties
     public class PointVisualizer
     {
         private int _displayTicks = 10;
-        private Label _control { get; set; }
-        private Control _parent { get; set; }
+        public Label _control { get; set; }
+       // private Control _parent { get; set; }
         private Timer _timer = new Timer();
         private int _currentTicks = 0;
 
@@ -19,17 +19,21 @@ namespace LeafCrunch.GameObjects.ItemProperties
             }
         }
 
-        public PointVisualizer(Control parent, int points)
+        public bool pos { get; set; }
+        public PointVisualizer(int points, int x, int y)
         {
-            _parent = parent;
+            //_parent = parent;
             _control = new Label();
             var sign = points > 0 ? "+" : string.Empty;
+            pos = (points > 0);
             _control.Text = $"{sign}{points}";
-            _control.Parent = parent;
-            _parent.Controls.Add(_control);
+          //  _control.Parent = parent;
+            //_parent.Controls.Add(_control);
             _control.Visible = true;
             _control.ForeColor = System.Drawing.Color.Black;
             _control.BackColor = System.Drawing.Color.Transparent;
+            _control.Left = x;
+            _control.Top = y;
 
             //uhg this all still makes it disappear when it goes off the person :<
             //i'll have to figure that out....
@@ -44,7 +48,7 @@ namespace LeafCrunch.GameObjects.ItemProperties
             if (++_currentTicks == _displayTicks)
             {
                 _control.Visible = false;
-                _parent.Controls.Remove(_control);
+             //   _parent.Controls.Remove(_control);
                 _timer.Stop();
             }
             else

@@ -19,6 +19,12 @@ namespace LeafCrunch.GameObjects
 
         #region Points Properties
         private List<PointVisualizer> _pointVisualizer = new List<PointVisualizer>();
+
+        //this is overkill, we really need a way to draw text on the fly. 
+        public List<PointVisualizer> PointVisualizers
+        {
+            get { return _pointVisualizer; }
+        }
         private int _maxRainbowPoints = 100;
         private int _rainbowPoints = 0;
         public int RainbowPoints
@@ -30,7 +36,7 @@ namespace LeafCrunch.GameObjects
                 if (value > _maxRainbowPoints) _rainbowPoints = _maxRainbowPoints;
                 else _rainbowPoints = value;
                 var diff = _rainbowPoints - current;
-                _pointVisualizer.Add(new PointVisualizer(Control, diff));
+                _pointVisualizer.Add(new PointVisualizer(diff, X, Y));
             }
         }
         #endregion

@@ -284,6 +284,10 @@ namespace LeafCrunch.GameObjects
             if (Player.IsInitialized)// Control.Controls.Add(Player.Control);
             {
                 StatsDisplay = new StatsDisplay(Player);
+
+                //to be fixed....right now this doesn't draw
+                //bc we use manual draw code
+                //we'll need to come back and figure out how to draw this manually. 
                 Control.Controls.Add(StatsDisplay.Control);
             }
         }
@@ -303,7 +307,7 @@ namespace LeafCrunch.GameObjects
             {
                 if (item.IsInitialized)
                 {
-                    Control.Controls.Add(item.Control);
+                   // Control.Controls.Add(item.Control);
                     if (item is PineCone)
                     {
                         //special case...although I probably should have a thing where we like just check everything for a display control
@@ -405,7 +409,6 @@ namespace LeafCrunch.GameObjects
                               //in case we use it for a level timer or something
 
                 Draw();
-               // DrawControls();
             }
         }
 
@@ -425,20 +428,17 @@ namespace LeafCrunch.GameObjects
                 //we need to clean this up
                 foreach (var item in _items)
                 {
-                    Bitmap itemsource = null;
                     var leaf = (item as Leaf);
                     if (leaf != null)
                     {
-                        itemsource = new Bitmap(leaf.CurrentImage);
+                        Bitmap itemsource = new Bitmap(leaf.CurrentImage);
+                        g.DrawImage(itemsource, leaf.X, leaf.Y);
                     }
                     var pinecone = (item as PineCone);
                     if (pinecone != null)
                     {
-                        itemsource = new Bitmap(pinecone.CurrentImage);
-                    }
-                    if (itemsource != null)
-                    {
-                        g.DrawImage(itemsource, item.Control.Left, item.Control.Top);
+                        Bitmap itemsource = new Bitmap(pinecone.CurrentImage);
+                        g.DrawImage(itemsource, pinecone.Control.Left, pinecone.Control.Top);
                     }
                 }
 
@@ -451,6 +451,12 @@ namespace LeafCrunch.GameObjects
                     g.DrawImage(new Bitmap(movingobstacle.CurrentImage), movingobstacle.Control.Left, movingobstacle.Control.Top);
                 }
                 g.DrawImage(playersource, Player.X, Player.Y);
+                //revisit this
+                //StatsDisplay.Control.DrawToBitmap(bg, new Rectangle(StatsDisplay.Control.Left, StatsDisplay.Control.Top, StatsDisplay.Control.Width, StatsDisplay.Control.Height));
+                foreach (var v in Player.PointVisualizers)
+                {
+                    g.DrawString(v._control.Text, new Font("Tahoma", 8), v.pos ? Brushes.Green : Brushes.Red, new Rectangle(v._control.Left, v._control.Top, v._control.Width, v._control.Height));
+                }
             }
 
             //System.IO.MemoryStream surewhynot = new System.IO.MemoryStream();

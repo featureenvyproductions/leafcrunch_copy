@@ -62,8 +62,9 @@ namespace LeafCrunch.GameObjects.Items
 
         public void Cleanup()
         {
-            var parent = Control.Parent;
-            parent.Controls.Remove(Control); //this is dumb I should figure out a better way to do this
+            var parent = Control?.Parent;
+            if (parent != null)
+                parent.Controls.Remove(Control); //this is dumb I should figure out a better way to do this
         }
 
         new virtual public void Update()

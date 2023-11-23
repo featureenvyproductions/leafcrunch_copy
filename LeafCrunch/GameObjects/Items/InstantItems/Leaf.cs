@@ -11,7 +11,7 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
     //you know once we do the dynamic loading for items, we probaby won't have to have different classes anymore
     //maybe?
     //just if we use this we should make sure the point multiplier still works....
-    public class Leaf : InstantItem
+    public class Leaf : InstantItem, IDrawable
     {
         protected int _pointIncrement = 10;
         
@@ -60,16 +60,11 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
             ActivationKey = Keys.Enter;
 
             //this could probably go in the generic item code but whatever
-            /*var img*/ CurrentImage = UtilityMethods.ImageFromPath(itemData.SingleImage);
-            Control = new PictureBox()
-            {
-                Left = itemData.X,
-                Top = itemData.Y,
-               // Image = img,
-                Width = CurrentImage.Width,
-                Height = CurrentImage.Height,
-                BackColor = System.Drawing.Color.Transparent
-            };
+            _image = UtilityMethods.ImageFromPath(itemData.SingleImage);
+            X = itemData.X;
+            Y = itemData.Y;
+            W = _image.Width;
+            H = _image.Height;
             _pointIncrement = itemData.PointIncrement;
             InitializeOperationFromRegistry(itemData.Operation);
 
@@ -77,7 +72,32 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
             IsInitialized = true;
         }
 
-        public Image CurrentImage { get; set; }
+        private Image _image;
+        public Image CurrentImage { get { return _image; } }
+        public int X { get; set; }
+        public int Y { get; set; }
+
+        //should probably put these in a higher level
+        public int H { get; set; }
+        public int W { get; set; }
+
+        //base class needs to be modified
+        override public int TileIndex
+        {
+            get
+            {
+                int row = Y / GlobalVars.RoomTileSizeH;
+                int tileIndex = X / GlobalVars.RoomTileSizeW; //close enough it doesn't have to be exact
+                                                                         //if we're past the first row we need to do some addition
+                if (row > 0)
+                {
+                    //get the max row length
+                    int maxCols = GlobalVars.RoomWidth / GlobalVars.RoomTileSizeW; //this is fine for our purposes even if decimals get truncated
+                    tileIndex += maxCols * row;
+                }
+                return tileIndex;
+            }
+        }
 
         virtual protected Result Apply(GenericGameObject genericGameObject, object paramList)
         {
