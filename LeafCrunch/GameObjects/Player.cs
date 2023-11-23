@@ -220,9 +220,9 @@ namespace LeafCrunch.GameObjects
             }
 
             Control.Top += Speed.vy;
-            if (Control.Top <= 0)
+            if (Control.Top <= GlobalVars.RoomTopMargin)
             {
-                while (Control.Top <= 0) Control.Top++;
+                while (Control.Top <= GlobalVars.RoomTopMargin) Control.Top++;
             }
 
             if ((Control.Left + Control.Width) >= GlobalVars.RoomWidth)

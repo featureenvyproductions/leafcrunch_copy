@@ -174,7 +174,12 @@ namespace LeafCrunch.GameObjects
             var jsonLoader = new JsonLoader();
             var roomData = jsonLoader.LoadFromJson<RoomData>(jsonString);
 
+            //really eventually we'll have a specific stats control and get the margin based on that
+            //but we're just doing this for now
+            GlobalVars.RoomTopMargin = 40;
             GlobalVars.RoomWidth = roomData.Width;
+            //we're gonna leave some padding to avoid stats items i think but idk how I want to do that
+            //i may need to have a room top coordinate
             GlobalVars.RoomHeight = roomData.Height;
             GlobalVars.RoomTileSizeW = roomData.TileSizeW;
             GlobalVars.RoomTileSizeH = roomData.TileSizeH;

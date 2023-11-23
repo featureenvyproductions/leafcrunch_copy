@@ -78,9 +78,9 @@ namespace LeafCrunch.GameObjects.Items.Obstacles
             }
 
             Control.Top += Speed.vy;
-            if (Control.Top <= 0)
+            if (Control.Top <= GlobalVars.RoomTopMargin)
             {
-                while (Control.Top <= 0) Control.Top++;
+                while (Control.Top <= GlobalVars.RoomTopMargin) Control.Top++;
                 Speed.vy *= -1;
             }
 
