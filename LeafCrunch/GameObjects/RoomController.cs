@@ -206,9 +206,7 @@ namespace LeafCrunch.GameObjects
                 _interactive = false;
 
                 //set continue key if the pause is indefinite
-                //Keys continueKey;
                 Enum.TryParse(roomData.ContinueKey ?? "None", out _continueKey);
-                //_continueKey = continueKey;
                 return;
             }
             LoadLoseConditions(roomData.LoseConditions);
@@ -255,69 +253,32 @@ namespace LeafCrunch.GameObjects
         #endregion
 
         #region Loading and Initialization
-        //for now this just loads the test level
-        //oh yeah don't forget when we do real loading we need to have stuff that clears the board
-        //like removes the items from the list and the item controls
         protected void LoadRoomObjects()
         {
             LoadPlayer();
             LoadOperations();
             LoadItems();
             LoadObstacles();            
-
-            //then we can add sounds maybe and some better images
-            //then dynamically load subsequent room configurations and game goals etc
-            //i realize i probably need to register obstacles as well do i do that?
-            //i think i do that at the object level but
-            //also I should give every item and obstacle a name
-            //and the factory should load everything into a dictionary rather than a list
-            //so the room can pick and choose what it wants maybe? idk. 
-
-            //oh you know what actually it would be easier to just have a different set of configs for each room and just
-            //reconfigure the path to account for the room folder
-            //yeah let's do that. way better than cramming shit into like 4 files for a whole game.
         }
 
         protected void LoadPlayer()
         {
             Player = new Player();
-            if (Player.IsInitialized)// Control.Controls.Add(Player.Control);
+            if (Player.IsInitialized)
             {
                 StatsDisplay = new StatsDisplay(Player);
-
-                //to be fixed....right now this doesn't draw
-                //bc we use manual draw code
-                //we'll need to come back and figure out how to draw this manually. 
-                //Control.Controls.Add(StatsDisplay.Control);
             }
         }
 
         protected void LoadOperations()
         {
-            //let's try loading up all the operations and stuffing them in the registry
             OperationRegistry.Load();
         }
 
         protected void LoadItems()
         {
             var itemFactory = new ItemFactory();
-            /*var gi =*/ _items = itemFactory.LoadItems(_roomName);
-/*
-            foreach (var item in gi)
-            {
-                if (item.IsInitialized)
-                {
-                   // Control.Controls.Add(item.Control);
-                 //   if (item is PineCone)
-                   // {
-                        //special case...although I probably should have a thing where we like just check everything for a display control
-                     //   Control.Controls.Add((item as PineCone).DisplayControl);
-                    //}
-                }
-            }
-
-            _items = gi;*/
-
+            _items = itemFactory.LoadItems(_roomName);
             RegisterTemporaryItems();
         }
 
@@ -331,6 +292,11 @@ namespace LeafCrunch.GameObjects
             }
         }
 
+
+        //to be updated.....i don't want the obstacles using controls either
+        //there shouldn't be a single goddamn control in this game except what i'm using as a canvas
+        //unrelated reminder to myself...
+        //dont forget to add the player x0y0 reinit code
         public void LoadObstacles()
         {
             var obstacleFactory = new ObstacleFactory();
@@ -342,7 +308,6 @@ namespace LeafCrunch.GameObjects
             {
                 if (obstacle.IsInitialized)
                 {
-                    Control.Controls.Add(obstacle.Control);
                     if (obstacle is MovingObstacle) _movingObstacles.Add((MovingObstacle)obstacle);
                     else _obstacles.Add(obstacle);
                 }
@@ -447,17 +412,16 @@ namespace LeafCrunch.GameObjects
                         {
                             g.DrawImage(itemsource, pinecone.X, pinecone.Y);
                         }//shouldn't have named this stuff countdown it might not always be a countdown
-                        //g.DrawString(pinecone.CountdownDisplayText, new Font("Tahoma", 8), Brushes.Black, new Rectangle(pinecone.CountdownDisplayX, pinecone.CountdownDisplayY, pinecone.CountdownDisplayWidth, pinecone.CountdownDisplayHeight));
                     }
                 }
 
                 foreach (var obstacle in _obstacles)
                 {
-                    g.DrawImage(new Bitmap(obstacle.CurrentImage), obstacle.Control.Left, obstacle.Control.Top);
+                    g.DrawImage(new Bitmap(obstacle.CurrentImage), obstacle.X, obstacle.Y);
                 }
                 foreach (var movingobstacle in _movingObstacles)
                 {
-                    g.DrawImage(new Bitmap(movingobstacle.CurrentImage), movingobstacle.Control.Left, movingobstacle.Control.Top);
+                    g.DrawImage(new Bitmap(movingobstacle.CurrentImage), movingobstacle.X, movingobstacle.Y);
                 }
                 g.DrawImage(playersource, Player.X, Player.Y);
                 g.DrawString(StatsDisplay.Text, new Font("Tahoma", 8), Brushes.Black, new Rectangle(StatsDisplay.X, StatsDisplay.Y, StatsDisplay.W, StatsDisplay.H));
