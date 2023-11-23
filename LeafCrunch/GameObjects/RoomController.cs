@@ -281,9 +281,11 @@ namespace LeafCrunch.GameObjects
         protected void LoadPlayer()
         {
             Player = new Player();
-            if (Player.IsInitialized) Control.Controls.Add(Player.Control);
-            StatsDisplay = new StatsDisplay(Player);
-            Control.Controls.Add(StatsDisplay.Control);
+            if (Player.IsInitialized)// Control.Controls.Add(Player.Control);
+            {
+                StatsDisplay = new StatsDisplay(Player);
+                Control.Controls.Add(StatsDisplay.Control);
+            }
         }
 
         protected void LoadOperations()
@@ -418,8 +420,6 @@ namespace LeafCrunch.GameObjects
 
             using (Graphics g = Graphics.FromImage(bg))
             {
-                //  g.DrawImage(bg, 0, 0);
-                //why the flying fuck does this work until i fix that to be control.top
                 g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
 
                 //we need to clean this up
@@ -450,70 +450,13 @@ namespace LeafCrunch.GameObjects
                 {
                     g.DrawImage(new Bitmap(movingobstacle.CurrentImage), movingobstacle.Control.Left, movingobstacle.Control.Top);
                 }
-                g.DrawImage(playersource, Player.Control.Left, Player.Control.Top);
+                g.DrawImage(playersource, Player.X, Player.Y);
             }
 
             //System.IO.MemoryStream surewhynot = new System.IO.MemoryStream();
             //bg.Save(surewhynot, ImageFormat.Png);
             //var test = Image.FromStream(surewhynot);
             (Control as PictureBox).Image = UtilityMethods.ImageFromBitmap(bg);//test;
-        }
-
-        public void DrawControls()
-        {
-            //code to make up for microsoft being a crock of morons
-
-            //loop through all the fucking controls and draw them onto the motherfucking background
-
-            //  var backgroundimg = (Control as PictureBox).Image;
-            if (bgimg == null) bgimg = (Image)((Control as PictureBox).Image.Clone());
-            var playerimg = Player.Sprite.CurrentImage;
-
-            //oh wait i wonder if i need to get the actual control to make this work
-            var leafimg = (_items[0] as Leaf).CurrentImage;
-
-            // Load the source bitmap
-          //  Bitmap target = new Bitmap(bgimg);
-            Bitmap bg = new Bitmap(bgimg);
-            Bitmap source2 = new Bitmap(playerimg);
-            Bitmap source3 = new Bitmap(leafimg);
-
-            //i may need to draw the leaf onto the player and then draw the composite onto the background actually
-
-            // Create a Graphics object from the target bitmap
-            using (Graphics g = Graphics.FromImage(bg))
-            {
-                //  g.DrawImage(bg, 0, 0);
-                //why the flying fuck does this work until i fix that to be control.top
-                g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
-                g.DrawImage(source3, _items[0].Control.Left, _items[0].Control.Top);
-                g.DrawImage(source2,Player.Control.Left,Player.Control.Top/* IT ONLY WORKS WITH THIS or hard coding Player.Control.Right*/);//, new Rectangle(0, 0, source2.Width, source2.Height), new Rectangle(0, 0, source2.Width, source2.Height), GraphicsUnit.Pixel);
-                //you know for the stationary items we could just draw them into the background and save the whole image.
-                //like have an isstationary flag or go by type or something
-                //then we wouldn't be trying to draw EVERYTHING every game loop
-            }
-
-            //            targetBitmap.MakeTransparent(targetBitmap.GetPixel(1, 1));
-           //    bg.Save("temp.png");
-            // var img = UtilityMethods.ImageFromBitmap(targetBitmap);
-
-
-            //ok so when i come back from my break....
-            //we'll replace the Control objects with some coordinates etc later
-            //that'll be a bigger project since i'm not going to need them anymore since they were literally just for drawing
-            //but what i'll do first is have an image object for every interactive item i guess...whatever generic items and the
-            //player inherit from
-            //OH WAIT OR I HAVE A BETTER IDEA
-            //i'll have an "IDrawable" interface with a CurrentImage property
-            //and then all the room controller has to do is loop through and get that 
-            //and create the composite image. 
-            //yeah let's do that A+ strategy. 
-
-            //since i'm compositing everything onto the background now i may not actually need this png conversion code.
-           System.IO.MemoryStream surewhynot = new System.IO.MemoryStream();
-            bg.Save(surewhynot, ImageFormat.Png);
-            var test = Image.FromStream(surewhynot);
-            (Control as PictureBox).Image = test;
         }
 
         public override void OnKeyPress(KeyEventArgs e)

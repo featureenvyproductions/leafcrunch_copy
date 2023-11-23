@@ -5,10 +5,11 @@ using LeafCrunch.GameObjects.Items.Obstacles;
 using LeafCrunch.GameObjects.ItemProperties;
 using LeafCrunch.Utilities.Animation;
 using LeafCrunch.Utilities.Entities;
+using System.Drawing;
 
 namespace LeafCrunch.GameObjects
 {
-    public class Player : InteractiveGameObject, IReboundable, ICollidable, IDamageReceptor, IItemUser, IAnimated
+    public class Player : InteractiveGameObject, IDrawable, IReboundable, ICollidable, IDamageReceptor, IItemUser, IAnimated
     {
         private string _objectName = "Player";
 
@@ -83,6 +84,19 @@ namespace LeafCrunch.GameObjects
         public AnimatedSprite Sprite { get; set; }
         #endregion
 
+        #region IDrawable
+        public Image CurrentImage 
+        { 
+            get
+            {
+                return Sprite.CurrentImage;
+            }
+        }
+
+        public int X { get; set; }
+        public int Y { get; set; }
+        #endregion
+
         #region Loading and Initialization
         //how should we do the data
         //i guess let's have a file for each entity maybe
@@ -123,30 +137,24 @@ namespace LeafCrunch.GameObjects
                 vx = playerData.Stats.InitialSpeedX,
                 vy = playerData.Stats.InitialSpeedY
             };
-            Sprite = playerData.Sprite; //of course things could have gone wrong when initializing this but i don't have
-            //emotional energy to check all that.
-            //I'll make some friggin validator code later or some shit but right now
-            //the game should just stop working anyway if the stuff isn't there that needs to be there
-
-            //it looks like everything is initializing to show an image right away BUT I'M JUST CHECKING
+            Sprite = playerData.Sprite; //I am once again reminding myself i need validator code
+            //and need to account for special sprites eventually
             Sprite.UpdateSequence(Direction.South, true);
 
-            //double check that adding this to the child controls of the room will set the parent of this to the room
-            Control = new PictureBox()
-            {
-                Name = _objectName,
-               // Image = Sprite.CurrentImage,
-                Width = Sprite.CurrentImage.Width,
-                Height = Sprite.CurrentImage.Height,
-                Top = playerData.Stats.InitialY,
-                Left = playerData.Stats.InitialX,
-                BackColor = System.Drawing.Color.Transparent
-            };
+            X = playerData.Stats.InitialX;
+            Y = playerData.Stats.InitialY;
 
-            //eventually we'll probably need to have special sprites as well but we'll come back to that
-            //like the stomp animation
             IsInitialized = true;
             GenericGameObjectRegistry.RegisteredObjects.Add(_objectName, this);
+        }
+
+        public int W 
+        {
+            get { return Sprite.CurrentImage.Width; }
+        }
+        public int H
+        {
+            get { return Sprite.CurrentImage.Height; }
         }
         #endregion
 
@@ -211,27 +219,25 @@ namespace LeafCrunch.GameObjects
         #region Motion
         protected void UpdateLocation()
         {
-            if (Control == null) return;
-
-            Control.Left += Speed.vx;
-            if (Control.Left <= 0)
+            X += Speed.vx;
+            if (X <= 0)
             {
-                while (Control.Left <= 0) Control.Left++;
+                while (X <= 0) X++;
             }
 
-            Control.Top += Speed.vy;
-            if (Control.Top <= GlobalVars.RoomTopMargin)
+            Y += Speed.vy;
+            if (Y <= GlobalVars.RoomTopMargin)
             {
-                while (Control.Top <= GlobalVars.RoomTopMargin) Control.Top++;
+                while (Y <= GlobalVars.RoomTopMargin) Y++;
             }
 
-            if ((Control.Left + Control.Width) >= GlobalVars.RoomWidth)
+            if ((X + W) >= GlobalVars.RoomWidth)
             {
-                while ((Control.Left + Control.Width) >= GlobalVars.RoomWidth) Control.Left--;
+                while ((X + W) >= GlobalVars.RoomWidth) X--;
             }
-            if ((Control.Top + Control.Height) >= GlobalVars.RoomHeight)
+            if ((Y + H) >= GlobalVars.RoomHeight)
             {
-                while ((Control.Top + Control.Height) >= GlobalVars.RoomHeight) Control.Top--;
+                while ((Y + H) >= GlobalVars.RoomHeight) Y--;
             }
         }
 
@@ -279,6 +285,23 @@ namespace LeafCrunch.GameObjects
         #endregion
 
         #region Collision Handling
+        override public int TileIndex
+        {
+            get
+            {
+                int row = Y / GlobalVars.RoomTileSizeH;
+                int tileIndex = X / GlobalVars.RoomTileSizeW; //close enough it doesn't have to be exact
+                                                                         //if we're past the first row we need to do some addition
+                if (row > 0)
+                {
+                    //get the max row length
+                    int maxCols = GlobalVars.RoomWidth / GlobalVars.RoomTileSizeW; //this is fine for our purposes even if decimals get truncated
+                    tileIndex += maxCols * row;
+                }
+                return tileIndex;
+            }
+        }
+
         private void ForceStop(Axis axisOfMotion)
         {
             //stop the player moving a direction and do the equivalent of forcing a key release
@@ -299,15 +322,15 @@ namespace LeafCrunch.GameObjects
 
         private bool CollisionX(Obstacle obstacle)
         {
-            return (obstacle.CollisionX(Control.Left) ||
-                    obstacle.CollisionX(Control.Right) ||
+            return (obstacle.CollisionX(X) ||
+                    obstacle.CollisionX(X + W) ||
                     obstacle.TileIndex == TileIndex);
         }
 
         private bool CollisionY(Obstacle obstacle)
         {
-            return obstacle.CollisionY(Control.Top) ||
-                    obstacle.CollisionY(Control.Bottom) ||
+            return obstacle.CollisionY(Y) ||
+                    obstacle.CollisionY(Y + H) ||
                     obstacle.TileIndex == TileIndex;
         }
 
@@ -355,7 +378,7 @@ namespace LeafCrunch.GameObjects
             {
                 while (CollisionX(obstacle))
                 {
-                    Control.Left += reboundSpeedx;
+                    X += reboundSpeedx;
                 }
                 ForceStop(Axis.Horizontal);
             }
@@ -363,7 +386,7 @@ namespace LeafCrunch.GameObjects
             {
                 while (CollisionY(obstacle))
                 {
-                    Control.Top += reboundSpeedy;
+                    Y += reboundSpeedy;
                 }
                 ForceStop(Axis.Vertical);
             }

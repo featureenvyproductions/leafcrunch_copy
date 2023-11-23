@@ -26,7 +26,7 @@ namespace LeafCrunch.GameObjects
         //revisit moving things because they can be tricky...
         //have them do their own collision checking with stationary objects and the player
         //after calculating the index of their own destination pixels
-        public int TileIndex
+        virtual public int TileIndex
         {
             get
             {

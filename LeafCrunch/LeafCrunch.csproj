@@ -84,6 +84,7 @@
     <Compile Include="GameObjects\InteractiveGameObject.cs" />
     <Compile Include="GameObjects\ItemProperties\IAnimated.cs" />
     <Compile Include="GameObjects\ItemProperties\IDamageReceptor.cs" />
+    <Compile Include="GameObjects\ItemProperties\IDrawable.cs" />
     <Compile Include="GameObjects\ItemProperties\IHazard.cs" />
     <Compile Include="GameObjects\ItemProperties\IItemUser.cs" />
     <Compile Include="GameObjects\ItemProperties\IReboundable.cs" />
