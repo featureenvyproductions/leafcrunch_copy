@@ -1,0 +1,80 @@
+{
+  "Items": [
+    {
+      "Type": "Leaf",
+      "Operation": "Items.InstantItems.Leaf.PointIncrement",
+      "SingleImage": "Images/PointItems/greenleaf.png",
+      "X": 400,
+      "Y": 250,
+      "PointIncrement": 1
+    },
+    {
+      "Type": "Leaf",
+      "Operation": "Items.InstantItems.Leaf.PointIncrement",
+      "SingleImage": "Images/PointItems/yellowleaf.png",
+      "X": 400,
+      "Y": 400,
+      "PointIncrement": 5
+    },
+    {
+      "Type": "Leaf",
+      "Operation": "Items.InstantItems.Leaf.PointIncrement",
+      "SingleImage": "Images/PointItems/orangeleaf.png",
+      "X": 500,
+      "Y": 400,
+      "PointIncrement": 10
+    },
+    {
+      "Type": "Leaf",
+      "Operation": "Items.InstantItems.Leaf.PointIncrement",
+      "SingleImage": "Images/PointItems/redleaf.png",
+      "X": 200,
+      "Y": 300,
+      "PointIncrement": 25
+    },
+    {
+      "Type": "Leaf",
+      "Operation": "Items.InstantItems.Leaf.PointIncrement",
+      "SingleImage": "Images/PointItems/redmaple.png",
+      "X": 100,
+      "Y": 300,
+      "PointIncrement": 25
+    },
+    {
+      "Type": "Leaf",
+      "Operation": "Items.InstantItems.Leaf.PointIncrement",
+      "SingleImage": "Images/PointItems/orangemaple.png",
+      "X": 300,
+      "Y": 320,
+      "PointIncrement": 23
+    },
+    {
+      "Type": "Leaf",
+      "Operation": "Items.InstantItems.Leaf.PointIncrement",
+      "SingleImage": "Images/PointItems/yellowmaple.png",
+      "X": 170,
+      "Y": 390,
+      "PointIncrement": 20
+    },
+    {
+      "Type": "Leaf",
+      "Operation": "Items.InstantItems.Leaf.PointIncrement",
+      "SingleImage": "Images/PointItems/brownmaple.png",
+      "X": 100,
+      "Y": 80,
+      "PointIncrement": 12
+    },
+    {
+      "Type": "PineCone",
+      "Operation": "Items.TemporaryItems.PineCode.LeafPointMultiplier",
+      "SingleImage": "Images/PointItems/ModifierItems/pinecone.png",
+      "X": 200,
+      "Y": 200,
+      "PointMultiplier": 2,
+      "DisplayControl": {
+        "X": 500,
+        "Y": 30
+      }
+    }
+  ]
+}

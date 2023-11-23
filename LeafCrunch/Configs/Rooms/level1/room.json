@@ -1,0 +1,26 @@
+{
+  "Name": "test",
+  "Width": 640,
+  "Height": 512,
+  "TileSizeH": 32,
+  "TileSizeW": 32,
+  "InitialPlayerX": 320,
+  "InitialPlayerY":  320,
+  "BackgroundImagePath": "Images/Background/level1/bg.png",
+  "WinConditions": [
+    {
+      "PropertyName": "TotalPoints",
+      "ValueType": "Integer",
+      "Value": 100,
+      "Comparison": ">="
+    }
+  ],
+  "LoseConditions": [
+    {
+      "PropertyName": "TotalPoints",
+      "ValueType": "Integer",
+      "Value": -5,
+      "Comparison": "<="
+    }
+  ]
+}

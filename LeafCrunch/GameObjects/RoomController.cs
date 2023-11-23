@@ -15,6 +15,10 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 
+//ohhhhh i need to account for things drawing over the protgonist like tree trunks
+
+//also i need to change the size of the young sprite
+
 //you know one thing i should do is when i actually implement the dynamic loading of the game board
 //i should make it so that i only place things exactly in tiles
 //because right now dropping them on the board in the form designer

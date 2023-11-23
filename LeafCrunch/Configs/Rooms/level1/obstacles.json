@@ -1,0 +1,10 @@
+{
+  "Obstacles": [
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/tiny tree.png",
+      "X": 430,
+      "Y": 200
+    }
+  ]
+}
