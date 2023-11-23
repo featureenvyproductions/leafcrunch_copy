@@ -301,22 +301,22 @@ namespace LeafCrunch.GameObjects
         protected void LoadItems()
         {
             var itemFactory = new ItemFactory();
-            var gi = itemFactory.LoadItems(_roomName);
-
+            /*var gi =*/ _items = itemFactory.LoadItems(_roomName);
+/*
             foreach (var item in gi)
             {
                 if (item.IsInitialized)
                 {
                    // Control.Controls.Add(item.Control);
-                    if (item is PineCone)
-                    {
+                 //   if (item is PineCone)
+                   // {
                         //special case...although I probably should have a thing where we like just check everything for a display control
-                        Control.Controls.Add((item as PineCone).DisplayControl);
-                    }
+                     //   Control.Controls.Add((item as PineCone).DisplayControl);
+                    //}
                 }
             }
 
-            _items = gi;
+            _items = gi;*/
 
             RegisterTemporaryItems();
         }
@@ -438,7 +438,16 @@ namespace LeafCrunch.GameObjects
                     if (pinecone != null)
                     {
                         Bitmap itemsource = new Bitmap(pinecone.CurrentImage);
-                        g.DrawImage(itemsource, pinecone.Control.Left, pinecone.Control.Top);
+                        if (pinecone.DisplayingAsStat)
+                        {
+                            g.DrawImage(itemsource, pinecone.CountdownDisplayX - pinecone.W, pinecone.CountdownDisplayY);
+                            g.DrawString(pinecone.CountdownDisplayText, new Font("Tahoma", 8), Brushes.Black, new Rectangle(pinecone.CountdownDisplayX, pinecone.CountdownDisplayY, pinecone.CountdownDisplayWidth, pinecone.CountdownDisplayHeight));
+                        }
+                        else
+                        {
+                            g.DrawImage(itemsource, pinecone.X, pinecone.Y);
+                        }//shouldn't have named this stuff countdown it might not always be a countdown
+                        //g.DrawString(pinecone.CountdownDisplayText, new Font("Tahoma", 8), Brushes.Black, new Rectangle(pinecone.CountdownDisplayX, pinecone.CountdownDisplayY, pinecone.CountdownDisplayWidth, pinecone.CountdownDisplayHeight));
                     }
                 }
 

@@ -16,7 +16,7 @@ namespace LeafCrunch.GameObjects.Items.TemporaryItems
         
         //eventually we should actually have one object that handles displayed stats but for now we
         //can just give this its own control to display them it's fine it's whatever
-        public Control DisplayControl { get; set; }
+      //  public Control DisplayControl { get; set; }
 
         public PineCone(Control control) : base(control)
         {
@@ -27,13 +27,13 @@ namespace LeafCrunch.GameObjects.Items.TemporaryItems
         public PineCone(Control control, Operation operation, Control displayControl) : base(control, operation)
         {
             Operation.Params = null;
-            DisplayControl = displayControl;
+       //     DisplayControl = displayControl;
             Operation.ToExecute = ApplyPointMultiplier;
         }
 
         public PineCone(Control control, string operationName, Control displayControl) : base(control)
         {
-            DisplayControl = displayControl;
+         //   DisplayControl = displayControl;
             if (!OperationMethodRegistry.TargetOperations.ContainsKey("Items.TemporaryItems.PineCode.ApplyPointMultiplier"))
                 OperationMethodRegistry.TargetOperations.Add("Items.TemporaryItems.PineCode.ApplyPointMultiplier", ApplyPointMultiplier);
 
@@ -42,28 +42,23 @@ namespace LeafCrunch.GameObjects.Items.TemporaryItems
 
         public PineCone(ItemData itemData) : base()
         {
+            IsApplied = false;
+            Active = false;
             if (!OperationMethodRegistry.TargetOperations.ContainsKey("Items.TemporaryItems.PineCode.ApplyPointMultiplier"))
                 OperationMethodRegistry.TargetOperations.Add("Items.TemporaryItems.PineCode.ApplyPointMultiplier", ApplyPointMultiplier);
 
-            DisplayControl = new Label()
-            {
-                Left = itemData.DisplayControl.X,
-                Top = itemData.DisplayControl.Y,
-                //we need to add this to the things drawn by the room 
-                BackColor = System.Drawing.Color.Transparent
-                //will it work without an initial width and height?
-            };
+            CountdownDisplayX = itemData.DisplayControl.X;
+            CountdownDisplayY = itemData.DisplayControl.Y;
+            CountdownDisplayWidth = 150;
+            CountdownDisplayHeight = 50;
+            
+            CurrentImage = UtilityMethods.ImageFromPath(itemData.SingleImage);
+            
+            X = itemData.X;
+            Y = itemData.Y;
+            W = CurrentImage.Width;
+            H = CurrentImage.Height;
 
-            /*var img =*/ CurrentImage = UtilityMethods.ImageFromPath(itemData.SingleImage);
-            Control = new PictureBox()
-            {
-                Left = itemData.X,
-                Top = itemData.Y,
-              //  Image = img,
-                Width = CurrentImage.Width,
-                Height = CurrentImage.Height,
-                Visible = false
-            };
             _multiplier = itemData.PointMultiplier;
 
             InitializeMultiOperationFromRegistry(itemData.Operation);
@@ -72,32 +67,71 @@ namespace LeafCrunch.GameObjects.Items.TemporaryItems
             IsInitialized = true;
             
         }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int H { get; set; }
+        public int W { get; set; }
 
         public Image CurrentImage { get; set; }
+
+        override public int TileIndex
+        {
+            get
+            {
+                int row = Y / GlobalVars.RoomTileSizeH;
+                int tileIndex = X / GlobalVars.RoomTileSizeW; //close enough it doesn't have to be exact
+                                                                         //if we're past the first row we need to do some addition
+                if (row > 0)
+                {
+                    //get the max row length
+                    int maxCols = GlobalVars.RoomWidth / GlobalVars.RoomTileSizeW; //this is fine for our purposes even if decimals get truncated
+                    tileIndex += maxCols * row;
+                }
+                return tileIndex;
+            }
+        }
 
         //I feel like this doesn't belong here but eh we'll come back to it
         public override void ShowAsStat()
         {
-            if (DisplayControl == null) return;
+          //  if (DisplayControl == null) return;
             if (!_displayingAsStat)
             {
                 //align the top
-                Control.Top = DisplayControl.Top;
+            //    Control.Top = DisplayControl.Top;
                 //line up the right side of one with the left of the other
-                Control.Left = DisplayControl.Left - Control.Width;
+              //  Control.Left = DisplayControl.Left - Control.Width;
                 _displayingAsStat = true;
+            }
+        }
+
+        public bool DisplayingAsStat
+        {
+            get { return _displayingAsStat; }
+        }
+        public int CountdownDisplayX
+        {
+            get; set;
+        }
+        public int CountdownDisplayY
+        { get; set; }
+        public int CountdownDisplayWidth
+        { get; set; }
+        public int CountdownDisplayHeight
+        { get; set; }
+        public string CountdownDisplayText
+        {
+            get
+            {
+                if (Ticks <= 0) return string.Empty;
+                return Ticks.ToString();
             }
         }
 
         public override void Update()
         {
             if (IsSuspended) return;
-            base.Update(); //do what the base does
-            //but we also want to update the count down
-            if (DisplayControl == null) return;
-            DisplayControl.Text = Ticks.ToString();
-            if (Ticks <= 0) DisplayControl.Visible = false;
-            DisplayControl.Refresh();
+            base.Update();
         }
 
         private Result ApplyPointMultiplier(GenericGameObject genericGameObject, object paramList)
