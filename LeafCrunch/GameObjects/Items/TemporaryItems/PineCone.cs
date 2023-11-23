@@ -2,6 +2,7 @@
 using LeafCrunch.GameObjects.Items.ItemOperations;
 using LeafCrunch.Utilities;
 using LeafCrunch.Utilities.Entities;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects.Items.TemporaryItems
@@ -48,18 +49,20 @@ namespace LeafCrunch.GameObjects.Items.TemporaryItems
             {
                 Left = itemData.DisplayControl.X,
                 Top = itemData.DisplayControl.Y,
+                //we need to add this to the things drawn by the room 
                 BackColor = System.Drawing.Color.Transparent
                 //will it work without an initial width and height?
             };
 
-            var img = UtilityMethods.ImageFromPath(itemData.SingleImage);
+            /*var img =*/ CurrentImage = UtilityMethods.ImageFromPath(itemData.SingleImage);
             Control = new PictureBox()
             {
                 Left = itemData.X,
                 Top = itemData.Y,
-                Image = img,
-                Width = img.Width,
-                Height = img.Height
+              //  Image = img,
+                Width = CurrentImage.Width,
+                Height = CurrentImage.Height,
+                Visible = false
             };
             _multiplier = itemData.PointMultiplier;
 
@@ -69,6 +72,8 @@ namespace LeafCrunch.GameObjects.Items.TemporaryItems
             IsInitialized = true;
             
         }
+
+        public Image CurrentImage { get; set; }
 
         //I feel like this doesn't belong here but eh we'll come back to it
         public override void ShowAsStat()

@@ -397,11 +397,63 @@ namespace LeafCrunch.GameObjects
                 TotalTicks++; //I only want to update this when the room is actually active
                               //in case we use it for a level timer or something
 
-                DrawControls();
+                Draw();
+               // DrawControls();
             }
         }
 
         Image bgimg = null;
+
+        public void Draw()
+        {
+            if (bgimg == null) bgimg = (Image)((Control as PictureBox).Image.Clone());
+
+            Bitmap bg = new Bitmap(bgimg);
+            Bitmap playersource = new Bitmap(Player.Sprite.CurrentImage);
+
+            using (Graphics g = Graphics.FromImage(bg))
+            {
+                //  g.DrawImage(bg, 0, 0);
+                //why the flying fuck does this work until i fix that to be control.top
+                g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
+
+                //we need to clean this up
+                foreach (var item in _items)
+                {
+                    Bitmap itemsource = null;
+                    var leaf = (item as Leaf);
+                    if (leaf != null)
+                    {
+                        itemsource = new Bitmap(leaf.CurrentImage);
+                    }
+                    var pinecone = (item as PineCone);
+                    if (pinecone != null)
+                    {
+                        itemsource = new Bitmap(pinecone.CurrentImage);
+                    }
+                    if (itemsource != null)
+                    {
+                        g.DrawImage(itemsource, item.Control.Left, item.Control.Top);
+                    }
+                }
+
+                foreach (var obstacle in _obstacles)
+                {
+                    g.DrawImage(new Bitmap(obstacle.CurrentImage), obstacle.Control.Left, obstacle.Control.Top);
+                }
+                foreach (var movingobstacle in _movingObstacles)
+                {
+                    g.DrawImage(new Bitmap(movingobstacle.CurrentImage), movingobstacle.Control.Left, movingobstacle.Control.Top);
+                }
+                g.DrawImage(playersource, Player.Control.Left, Player.Control.Top);
+            }
+
+            //System.IO.MemoryStream surewhynot = new System.IO.MemoryStream();
+            //bg.Save(surewhynot, ImageFormat.Png);
+            //var test = Image.FromStream(surewhynot);
+            (Control as PictureBox).Image = UtilityMethods.ImageFromBitmap(bg);//test;
+        }
+
         public void DrawControls()
         {
             //code to make up for microsoft being a crock of morons
@@ -413,7 +465,7 @@ namespace LeafCrunch.GameObjects
             var playerimg = Player.Sprite.CurrentImage;
 
             //oh wait i wonder if i need to get the actual control to make this work
-            var leafimg = (_items[0] as Leaf).Image;
+            var leafimg = (_items[0] as Leaf).CurrentImage;
 
             // Load the source bitmap
           //  Bitmap target = new Bitmap(bgimg);
@@ -440,6 +492,19 @@ namespace LeafCrunch.GameObjects
            //    bg.Save("temp.png");
             // var img = UtilityMethods.ImageFromBitmap(targetBitmap);
 
+
+            //ok so when i come back from my break....
+            //we'll replace the Control objects with some coordinates etc later
+            //that'll be a bigger project since i'm not going to need them anymore since they were literally just for drawing
+            //but what i'll do first is have an image object for every interactive item i guess...whatever generic items and the
+            //player inherit from
+            //OH WAIT OR I HAVE A BETTER IDEA
+            //i'll have an "IDrawable" interface with a CurrentImage property
+            //and then all the room controller has to do is loop through and get that 
+            //and create the composite image. 
+            //yeah let's do that A+ strategy. 
+
+            //since i'm compositing everything onto the background now i may not actually need this png conversion code.
            System.IO.MemoryStream surewhynot = new System.IO.MemoryStream();
             bg.Save(surewhynot, ImageFormat.Png);
             var test = Image.FromStream(surewhynot);

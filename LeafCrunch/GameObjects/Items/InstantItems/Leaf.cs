@@ -60,14 +60,14 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
             ActivationKey = Keys.Enter;
 
             //this could probably go in the generic item code but whatever
-            /*var img*/ Image = UtilityMethods.ImageFromPath(itemData.SingleImage);
+            /*var img*/ CurrentImage = UtilityMethods.ImageFromPath(itemData.SingleImage);
             Control = new PictureBox()
             {
                 Left = itemData.X,
                 Top = itemData.Y,
                // Image = img,
-                Width = Image.Width,
-                Height = Image.Height,
+                Width = CurrentImage.Width,
+                Height = CurrentImage.Height,
                 BackColor = System.Drawing.Color.Transparent
             };
             _pointIncrement = itemData.PointIncrement;
@@ -77,7 +77,7 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
             IsInitialized = true;
         }
 
-        public Image Image { get; set; }
+        public Image CurrentImage { get; set; }
 
         virtual protected Result Apply(GenericGameObject genericGameObject, object paramList)
         {
