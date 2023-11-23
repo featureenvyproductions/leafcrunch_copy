@@ -288,7 +288,7 @@ namespace LeafCrunch.GameObjects
                 //to be fixed....right now this doesn't draw
                 //bc we use manual draw code
                 //we'll need to come back and figure out how to draw this manually. 
-                Control.Controls.Add(StatsDisplay.Control);
+                //Control.Controls.Add(StatsDisplay.Control);
             }
         }
 
@@ -451,8 +451,7 @@ namespace LeafCrunch.GameObjects
                     g.DrawImage(new Bitmap(movingobstacle.CurrentImage), movingobstacle.Control.Left, movingobstacle.Control.Top);
                 }
                 g.DrawImage(playersource, Player.X, Player.Y);
-                //revisit this
-                //StatsDisplay.Control.DrawToBitmap(bg, new Rectangle(StatsDisplay.Control.Left, StatsDisplay.Control.Top, StatsDisplay.Control.Width, StatsDisplay.Control.Height));
+                g.DrawString(StatsDisplay.Text, new Font("Tahoma", 8), Brushes.Black, new Rectangle(StatsDisplay.X, StatsDisplay.Y, StatsDisplay.W, StatsDisplay.H));
                 foreach (var v in Player.PointVisualizers)
                 {
                     g.DrawString(v.Text, new Font("Tahoma", 8), v.Gain ? Brushes.Green : Brushes.Red, new Rectangle(v.X, v.Y, v.W, v.H));
