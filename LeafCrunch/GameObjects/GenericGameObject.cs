@@ -24,6 +24,7 @@ namespace LeafCrunch.GameObjects
     }
 
     //the base thing all the useful things inherit from
+    //may not need any of the control stuff anymore since only the room and interrupt containers need them
     public abstract class GenericGameObject
     {
         public Control Control { get; set; } //the associated forms control

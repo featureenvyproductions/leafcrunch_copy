@@ -210,7 +210,6 @@ namespace LeafCrunch.GameObjects
                 return;
             }
             LoadLoseConditions(roomData.LoseConditions);
-            //note to self: need to re-init the player location with each room and account for that
             LoadRoomObjects();
 
             if (Player != null)

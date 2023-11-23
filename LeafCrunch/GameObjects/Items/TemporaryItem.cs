@@ -1,5 +1,4 @@
 ﻿using LeafCrunch.GameObjects.Items.ItemOperations;
-using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects.Items
 {
@@ -19,15 +18,6 @@ namespace LeafCrunch.GameObjects.Items
         {
             get { return _isApplied; }
             set { _isApplied = value; }
-        }
-
-        public TemporaryItem() { }
-        public TemporaryItem(Control control) : base(control)
-        {
-        }
-
-        public TemporaryItem(Control control, Operation operation) : base(control, operation)
-        {
         }
 
         protected override void HandleResult(Result result)

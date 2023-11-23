@@ -1,9 +1,10 @@
-﻿using LeafCrunch.Utilities;
-using System.Windows.Forms;
+﻿using LeafCrunch.GameObjects.ItemProperties;
+using LeafCrunch.Utilities;
+using System.Drawing;
 
 namespace LeafCrunch.GameObjects
 {
-    public class InteractiveGameObject : GenericGameObject
+    public class InteractiveGameObject : GenericGameObject, IDrawable
     {
         public Speed Speed { get; set; }
 
@@ -12,10 +13,14 @@ namespace LeafCrunch.GameObjects
             Speed = new Speed() { vx = 0, vy = 0 };
         }
 
-        public InteractiveGameObject(Control control) : base(control)
-        {
-            Speed = new Speed() { vx = 0, vy = 0 };
-        }
+        virtual public Image CurrentImage { get; set; }
+        virtual public int Y { get; set; }
+        virtual public int X { get; set; }
+
+
+        virtual public int W { get; set; }
+        virtual public int H { get; set; }
+
 
         //i don't love this because it's so imprecise but it does speed things up
         //to improve
@@ -36,9 +41,9 @@ namespace LeafCrunch.GameObjects
                 //1 2 3 4 5
                 //6 7 8 x 10
                 //player x is on tile 9
-                int row = Control.Top / GlobalVars.RoomTileSizeH;
-                int tileIndex = Control.Left / GlobalVars.RoomTileSizeW; //close enough it doesn't have to be exact
-                                                                         //if we're past the first row we need to do some addition
+                int row = Y / GlobalVars.RoomTileSizeH;
+                int tileIndex = X / GlobalVars.RoomTileSizeW; //close enough it doesn't have to be exact
+                                                              //if we're past the first row we need to do some addition
                 if (row > 0)
                 {
                     //get the max row length

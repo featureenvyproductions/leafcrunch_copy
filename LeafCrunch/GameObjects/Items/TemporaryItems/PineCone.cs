@@ -13,37 +13,12 @@ namespace LeafCrunch.GameObjects.Items.TemporaryItems
     {
         private int _multiplier = 2;
         private bool _displayingAsStat = false;
-        
-        //eventually we should actually have one object that handles displayed stats but for now we
-        //can just give this its own control to display them it's fine it's whatever
-      //  public Control DisplayControl { get; set; }
-
-        public PineCone(Control control) : base(control)
-        {
-        }
-
-        //this can be an operation to be done on a single leaf
-        //or can be a multi target operation that's fed multiple leaves
-        public PineCone(Control control, Operation operation, Control displayControl) : base(control, operation)
-        {
-            Operation.Params = null;
-       //     DisplayControl = displayControl;
-            Operation.ToExecute = ApplyPointMultiplier;
-        }
-
-        public PineCone(Control control, string operationName, Control displayControl) : base(control)
-        {
-         //   DisplayControl = displayControl;
-            if (!OperationMethodRegistry.TargetOperations.ContainsKey("Items.TemporaryItems.PineCode.ApplyPointMultiplier"))
-                OperationMethodRegistry.TargetOperations.Add("Items.TemporaryItems.PineCode.ApplyPointMultiplier", ApplyPointMultiplier);
-
-            InitializeMultiOperationFromRegistry(operationName);
-        }
 
         public PineCone(ItemData itemData) : base()
         {
             IsApplied = false;
             Active = false;
+
             if (!OperationMethodRegistry.TargetOperations.ContainsKey("Items.TemporaryItems.PineCode.ApplyPointMultiplier"))
                 OperationMethodRegistry.TargetOperations.Add("Items.TemporaryItems.PineCode.ApplyPointMultiplier", ApplyPointMultiplier);
 
@@ -67,40 +42,12 @@ namespace LeafCrunch.GameObjects.Items.TemporaryItems
             IsInitialized = true;
             
         }
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int H { get; set; }
-        public int W { get; set; }
-
-        public Image CurrentImage { get; set; }
-
-        override public int TileIndex
-        {
-            get
-            {
-                int row = Y / GlobalVars.RoomTileSizeH;
-                int tileIndex = X / GlobalVars.RoomTileSizeW; //close enough it doesn't have to be exact
-                                                                         //if we're past the first row we need to do some addition
-                if (row > 0)
-                {
-                    //get the max row length
-                    int maxCols = GlobalVars.RoomWidth / GlobalVars.RoomTileSizeW; //this is fine for our purposes even if decimals get truncated
-                    tileIndex += maxCols * row;
-                }
-                return tileIndex;
-            }
-        }
 
         //I feel like this doesn't belong here but eh we'll come back to it
         public override void ShowAsStat()
         {
-          //  if (DisplayControl == null) return;
             if (!_displayingAsStat)
             {
-                //align the top
-            //    Control.Top = DisplayControl.Top;
-                //line up the right side of one with the left of the other
-              //  Control.Left = DisplayControl.Left - Control.Width;
                 _displayingAsStat = true;
             }
         }

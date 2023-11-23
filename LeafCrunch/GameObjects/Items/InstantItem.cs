@@ -7,16 +7,7 @@ namespace LeafCrunch.GameObjects.Items
     {
         public InstantItem () : base()
         {
-            Control = new Control();
-        }
-
-        public InstantItem(Control control) : base(control)
-        {
-        }
-
-        public InstantItem(Control control, Operation operation)
-            : base(control, operation)
-        {
+            Control = null; //setting this to help me find problems
         }
 
         protected override void HandleResult(Result result)

@@ -1,7 +1,6 @@
 ﻿using LeafCrunch.GameObjects.ItemProperties;
 using LeafCrunch.Utilities;
 using LeafCrunch.Utilities.Entities;
-using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects.Items.Obstacles
 {
@@ -12,25 +11,6 @@ namespace LeafCrunch.GameObjects.Items.Obstacles
         //simple and dumb
         //we have a speed and we go that speed until we hit a thing
         //then we go the opposite way at the same speed until we hit a thing, etc
-
-        public MovingObstacle(Control control) : base(control)
-        {
-            //doesn't have to be these this is for testing
-            Speed = new Speed()
-            {
-                vx = 5,
-                vy = 5
-            };
-        }
-
-        public MovingObstacle(Control control, int speedx, int speedy) : base(control)
-        {
-            Speed = new Speed()
-            {
-                vx = speedx,
-                vy = speedy
-            };
-        }
 
         public MovingObstacle(ObstacleData obstacleData) : base(obstacleData)
         {

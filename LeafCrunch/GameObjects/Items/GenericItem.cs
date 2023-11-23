@@ -40,31 +40,13 @@ namespace LeafCrunch.GameObjects.Items
                 GenericGameObjectRegistry.RegisteredObjects.Add("GenericItem_" + GetHashCode().ToString(), this);
         }
 
-        public GenericItem(Control control) : base(control)
-        {
-            if (!GenericGameObjectRegistry.RegisteredObjects.ContainsValue(this))
-                GenericGameObjectRegistry.RegisteredObjects.Add("GenericItem_" + GetHashCode().ToString(), this);
-            //idk man I got myself into constructor hell IDK if we want this to be a case or not
-            Active = false;
-            // Operation = null;
-            MarkedForDeletion = false;
-        }
-
-        public GenericItem(Control control, Operation operation)
-            : base(control)
-        {
-            if (!GenericGameObjectRegistry.RegisteredObjects.ContainsValue(this))
-                GenericGameObjectRegistry.RegisteredObjects.Add("GenericItem_" + GetHashCode().ToString(), this);
-            Active = false;
-            Operation = operation;
-            MarkedForDeletion = false;
-        }
-
         public void Cleanup()
         {
-            var parent = Control?.Parent;
-            if (parent != null)
-                parent.Controls.Remove(Control); //this is dumb I should figure out a better way to do this
+            //now that we're not using controls, what needs to happen here?
+            //tbd
+           // var parent = Control?.Parent;
+           // if (parent != null)
+             //   parent.Controls.Remove(Control); //this is dumb I should figure out a better way to do this
         }
 
         new virtual public void Update()
@@ -77,6 +59,8 @@ namespace LeafCrunch.GameObjects.Items
 
         virtual protected void HandleResult(Result result) { }
 
+        //this registry stuff should be in its own place
+        //tbd....
         //when an operation name is provided
         virtual protected void InitializeOperationFromRegistry(string operationName)
         {

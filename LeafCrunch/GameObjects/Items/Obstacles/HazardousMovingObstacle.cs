@@ -1,31 +1,12 @@
 ﻿using LeafCrunch.GameObjects.ItemProperties;
 using LeafCrunch.GameObjects.Items.ItemOperations;
 using LeafCrunch.Utilities.Entities;
-using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects.Items.Obstacles
 {
     //moves but can also inflict damage - so like reverse of items
     public class HazardousMovingObstacle : MovingObstacle, IHazard
     {
-        public HazardousMovingObstacle(Control control) : base(control)
-        {
-        }
-
-        public HazardousMovingObstacle(Control control, int speedx, int speedy, Operation operation) : base(control, speedx, speedy)
-        {
-            Operation = operation;
-            Operation.ToExecute = InflictDamage;
-        }
-
-        public HazardousMovingObstacle(Control control, int speedx, int speedy, string operationName) : base(control, speedx, speedy)
-        {
-            if (!OperationMethodRegistry.TargetOperations.ContainsKey("Items.Obstacles.HazardousMovingObstacle.InflictDamage"))
-                OperationMethodRegistry.TargetOperations.Add("Items.Obstacles.HazardousMovingObstacle.InflictDamage", InflictDamage);
-
-            InitializeOperationFromRegistry(operationName);
-        }
-
         public HazardousMovingObstacle(ObstacleData obstacleData) : base(obstacleData)
         {
             IsInitialized = false;

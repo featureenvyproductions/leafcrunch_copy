@@ -91,16 +91,13 @@ namespace LeafCrunch.GameObjects
         #endregion
 
         #region IDrawable
-        public Image CurrentImage 
+        override public Image CurrentImage 
         { 
             get
             {
                 return Sprite.CurrentImage;
             }
         }
-
-        public int X { get; set; }
-        public int Y { get; set; }
         #endregion
 
         #region Loading and Initialization
@@ -154,11 +151,11 @@ namespace LeafCrunch.GameObjects
             GenericGameObjectRegistry.RegisteredObjects.Add(_objectName, this);
         }
 
-        public int W 
+        override public int W 
         {
             get { return Sprite.CurrentImage.Width; }
         }
-        public int H
+        override public int H
         {
             get { return Sprite.CurrentImage.Height; }
         }
@@ -291,23 +288,7 @@ namespace LeafCrunch.GameObjects
         #endregion
 
         #region Collision Handling
-        override public int TileIndex
-        {
-            get
-            {
-                int row = Y / GlobalVars.RoomTileSizeH;
-                int tileIndex = X / GlobalVars.RoomTileSizeW; //close enough it doesn't have to be exact
-                                                                         //if we're past the first row we need to do some addition
-                if (row > 0)
-                {
-                    //get the max row length
-                    int maxCols = GlobalVars.RoomWidth / GlobalVars.RoomTileSizeW; //this is fine for our purposes even if decimals get truncated
-                    tileIndex += maxCols * row;
-                }
-                return tileIndex;
-            }
-        }
-
+        
         private void ForceStop(Axis axisOfMotion)
         {
             //stop the player moving a direction and do the equivalent of forcing a key release
