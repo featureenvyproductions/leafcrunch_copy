@@ -455,7 +455,7 @@ namespace LeafCrunch.GameObjects
                 //StatsDisplay.Control.DrawToBitmap(bg, new Rectangle(StatsDisplay.Control.Left, StatsDisplay.Control.Top, StatsDisplay.Control.Width, StatsDisplay.Control.Height));
                 foreach (var v in Player.PointVisualizers)
                 {
-                    g.DrawString(v._control.Text, new Font("Tahoma", 8), v.pos ? Brushes.Green : Brushes.Red, new Rectangle(v._control.Left, v._control.Top, v._control.Width, v._control.Height));
+                    g.DrawString(v.Text, new Font("Tahoma", 8), v.Gain ? Brushes.Green : Brushes.Red, new Rectangle(v.X, v.Y, v.W, v.H));
                 }
             }
 
