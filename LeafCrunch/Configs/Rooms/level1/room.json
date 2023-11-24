@@ -7,6 +7,7 @@
   "InitialPlayerX": 320,
   "InitialPlayerY":  320,
   "BackgroundImagePath": "Images/Background/level1/bg.png",
+  "StatsBackgroundImage": "Images/Background/level1/point displaysm.png",
   "WinConditions": [
     {
       "PropertyName": "TotalPoints",
