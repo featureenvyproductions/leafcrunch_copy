@@ -5,9 +5,11 @@
   "TileSizeH": 64,
   "TileSizeW": 64,
   "InitialPlayerX": 10,
-  "InitialPlayerY": 10,
+  "InitialPlayerY": 80,
   "BackgroundImagePath": "Images/Background/level2/level2-nightmarelevel.png",
   "StatsBackgroundImage": "Images/Background/level2/point displaysm.png",
+  "RainbowBarOverlay": "Images/Background/level1/rainbowbaroverlay.png",
+  "RainbowBar": "Images/Background/level1/rainbowbar.png",
   "WinConditions": [
     {
       "PropertyName": "TotalPoints",

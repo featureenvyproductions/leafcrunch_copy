@@ -172,7 +172,10 @@ namespace LeafCrunch.GameObjects
         protected bool TileObjectPlayerCollision(GenericItem i) => i.TileIndex == Player.TileIndex;
         #endregion
 
+        //got some cleaning up to do but
         public Image StatsImage { get; set; }
+        public Image RainbowBarOverlay { get; set; }
+        public Image RainbowBar { get; set; }
 
         #region Constructors
         //eventually we're going to load control names from a file I think so I won't need this fucking list
@@ -207,7 +210,13 @@ namespace LeafCrunch.GameObjects
             //and room controller can see its image path and window location
             if (!string.IsNullOrEmpty(roomData.StatsBackgroundImage))
                 StatsImage = UtilityMethods.ImageFromPath(roomData.StatsBackgroundImage);
+
+            if (!string.IsNullOrEmpty(roomData.RainbowBarOverlay))
+                RainbowBarOverlay = UtilityMethods.ImageFromPath(roomData.RainbowBarOverlay);
+            if (!string.IsNullOrEmpty(roomData.RainbowBar))
+                RainbowBar = UtilityMethods.ImageFromPath(roomData.RainbowBar);
             //end hacky bit
+
 
             var img = UtilityMethods.ImageFromPath(roomData.BackgroundImagePath);
             Control = new PictureBox()
@@ -457,10 +466,35 @@ namespace LeafCrunch.GameObjects
                     g.DrawImage(new Bitmap(movingobstacle.CurrentImage), movingobstacle.X, movingobstacle.Y);
                 }
 
-                if (StatsImage != null)
-                    g.DrawImage(new Bitmap(StatsImage),StatsDisplay.X, StatsDisplay.Y, StatsDisplay.W, StatsDisplay.H);
+                //if (StatsImage != null)
+                  //  g.DrawImage(new Bitmap(StatsImage),StatsDisplay.X, StatsDisplay.Y, StatsDisplay.W, StatsDisplay.H);
                 //wow this is awful. need to fix these coordinates
-                g.DrawString(StatsDisplay.Text, new Font("Tahoma", 8), Brushes.Black, StatsDisplay.X + StatsDisplay.W/2 - StatsDisplay.MarginX, StatsDisplay.Y + StatsDisplay.H/2 - StatsDisplay.MarginY);
+                //g.DrawString(StatsDisplay.Text, new Font("Tahoma", 8), Brushes.Black, StatsDisplay.X + StatsDisplay.W/2 - StatsDisplay.MarginX, StatsDisplay.Y + StatsDisplay.H/2 - StatsDisplay.MarginY);
+
+                if (RainbowBar != null && RainbowBarOverlay != null)
+                {
+                    //fix this to not be hard coded later
+                    //may also want to only do the calculation when the points have changed.
+                    //and I want to freeze for a sec and show the full rainbow bar maybe
+                    //and when we take a hit i want to show the bar breaking
+                    //you have to heal the bar before you can store points
+                    double percentage = (double)Player.RainbowPoints / 100.0;
+                    int widthtodraw = (int)(percentage * (double)RainbowBar.Width);
+                    if (widthtodraw > 0)
+                    {
+                        Bitmap cropImage(Bitmap img)
+                        {
+                            Rectangle CropArea = new Rectangle(0, 0, widthtodraw, img.Height);
+                            Bitmap bmpCrop = img.Clone(CropArea, img.PixelFormat);
+                            return bmpCrop;
+                        }
+
+                        var cropped = cropImage(new Bitmap(RainbowBar));
+                        g.DrawImage(cropped, 5, 10, cropped.Width, RainbowBar.Height / 2);
+                    }
+                    //g.DrawImage(new Bitmap(RainbowBar), 5, 10, widthtodraw, RainbowBar.Height);
+                    g.DrawImage(new Bitmap(RainbowBarOverlay), 5, 10, RainbowBarOverlay.Width, RainbowBarOverlay.Height/2);
+                }
                 foreach (var v in Player.PointVisualizers)
                 {
                     g.DrawString(v.Text, new Font("Tahoma", 8), v.Gain ? Brushes.Green : Brushes.Red, new Rectangle(v.X, v.Y, v.W, v.H));

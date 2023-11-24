@@ -34,12 +34,12 @@ namespace LeafCrunch
         private int roomIndex = -1;
         private List<string> OrderedRooms = new List<string>()
         {
-            "intro",
+            /*"intro",
             "intro2",
             "intro3",
             "intro4",
             "intro5",
-            "instructions",
+            "instructions",*/
             "level1",
             //note to self: we need to have a bunch of EXCRUCIATINGLY normal levels
             //then the character starts to age
