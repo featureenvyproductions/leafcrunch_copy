@@ -11,7 +11,7 @@
     {
       "PropertyName": "TotalTicks",
       "ValueType": "Integer",
-      "Value": 100,
+      "Value": 60,
       "Comparison": ">="
     }
   ],
