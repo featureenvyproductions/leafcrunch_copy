@@ -98,6 +98,7 @@ namespace LeafCrunch.Utilities.Entities
         public int PointMultiplier { get; set; }
 
         public DisplayControlData DisplayControl { get; set; }
+        public string SoundFile { get; set; }
     }
 
     public class ItemDataCollection
