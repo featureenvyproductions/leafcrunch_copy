@@ -39,6 +39,12 @@ using System.Drawing.Imaging;
 //also also why isn't the generic game object class the thing that registers shit in the fucking registry
 //what is my problem
 
+//hoo boy do i need a level builder
+//and/or i could make it so when you only include an x or y coordinate it means just repeat that obstacle along that whole axis
+
+
+//oh i need to draw a T-wall oops
+
 namespace LeafCrunch.GameObjects
 {
     public class RoomController : GenericGameObject
@@ -161,6 +167,8 @@ namespace LeafCrunch.GameObjects
         protected bool TileObjectPlayerCollision(GenericItem i) => i.TileIndex == Player.TileIndex;
         #endregion
 
+        public Image StatsImage { get; set; }
+
         #region Constructors
         //eventually we're going to load control names from a file I think so I won't need this fucking list
         //or we're gonna initialize the controls on the fly with a location and a type
@@ -187,6 +195,14 @@ namespace LeafCrunch.GameObjects
             GlobalVars.RoomHeight = roomData.Height;
             GlobalVars.RoomTileSizeW = roomData.TileSizeW;
             GlobalVars.RoomTileSizeH = roomData.TileSizeH;
+
+            //hacky....make it make sense
+            //image to help stats show up better
+            //like really this needs to be its own object associated with whatever it's displaying
+            //and room controller can see its image path and window location
+            if (!string.IsNullOrEmpty(roomData.StatsBackgroundImage))
+                StatsImage = UtilityMethods.ImageFromPath(roomData.StatsBackgroundImage);
+            //end hacky bit
 
             var img = UtilityMethods.ImageFromPath(roomData.BackgroundImagePath);
             Control = new PictureBox()
@@ -218,8 +234,8 @@ namespace LeafCrunch.GameObjects
 
             if (Player != null)
             {
-                if (roomData.InitialPlayerX >= 0) Player.Control.Left = roomData.InitialPlayerX;
-                if (roomData.InitialPlayerY >= 0) Player.Control.Top = roomData.InitialPlayerY;
+                if (roomData.InitialPlayerX >= 0) Player.X = roomData.InitialPlayerX;
+                if (roomData.InitialPlayerY >= 0) Player.Y = roomData.InitialPlayerY;
             }
             _isInitialized = true;
         }
@@ -393,6 +409,8 @@ namespace LeafCrunch.GameObjects
             {
                 g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
 
+                //hack but we need to revisit and make more flexible
+                var itemsAsStats = new List<GenericItem>();
                 //we need to clean this up
                 foreach (var item in _items)
                 {
@@ -405,19 +423,26 @@ namespace LeafCrunch.GameObjects
                     var pinecone = (item as PineCone);
                     if (pinecone != null)
                     {
-                        Bitmap itemsource = new Bitmap(pinecone.CurrentImage);
+                        //Bitmap itemsource = new Bitmap(pinecone.CurrentImage);
                         if (pinecone.DisplayingAsStat)
                         {
-                            g.DrawImage(itemsource, pinecone.CountdownDisplayX - pinecone.W, pinecone.CountdownDisplayY);
-                            g.DrawString(pinecone.CountdownDisplayText, new Font("Tahoma", 8), Brushes.Black, new Rectangle(pinecone.CountdownDisplayX, pinecone.CountdownDisplayY, pinecone.CountdownDisplayWidth, pinecone.CountdownDisplayHeight));
+                            //draw later on top of everything else
+                            itemsAsStats.Add(pinecone);
+                            //Bitmap itemsource = new Bitmap(pinecone.CurrentImage);
+                            // g.DrawImage(itemsource, pinecone.CountdownDisplayX - pinecone.W, pinecone.CountdownDisplayY);
+                            //g.DrawString(pinecone.CountdownDisplayText, new Font("Tahoma", 8), Brushes.Black, new Rectangle(pinecone.CountdownDisplayX, pinecone.CountdownDisplayY, pinecone.CountdownDisplayWidth, pinecone.CountdownDisplayHeight));
                         }
                         else
                         {
+                            Bitmap itemsource = new Bitmap(pinecone.CurrentImage);
                             g.DrawImage(itemsource, pinecone.X, pinecone.Y);
                         }//shouldn't have named this stuff countdown it might not always be a countdown
                     }
                 }
-
+               
+                //draw the player on top of objects to use and behind obstacles
+                g.DrawImage(playersource, Player.X, Player.Y);
+                
                 foreach (var obstacle in _obstacles)
                 {
                     g.DrawImage(new Bitmap(obstacle.CurrentImage), obstacle.X, obstacle.Y);
@@ -426,11 +451,27 @@ namespace LeafCrunch.GameObjects
                 {
                     g.DrawImage(new Bitmap(movingobstacle.CurrentImage), movingobstacle.X, movingobstacle.Y);
                 }
-                g.DrawImage(playersource, Player.X, Player.Y);
-                g.DrawString(StatsDisplay.Text, new Font("Tahoma", 8), Brushes.Black, new Rectangle(StatsDisplay.X, StatsDisplay.Y, StatsDisplay.W, StatsDisplay.H));
+
+                if (StatsImage != null)
+                    g.DrawImage(new Bitmap(StatsImage),StatsDisplay.X, StatsDisplay.Y, StatsDisplay.W, StatsDisplay.H);
+                //wow this is awful. need to fix these coordinates
+                g.DrawString(StatsDisplay.Text, new Font("Tahoma", 8), Brushes.Black, StatsDisplay.X + StatsDisplay.W/2 - StatsDisplay.MarginX, StatsDisplay.Y + StatsDisplay.H/2 - StatsDisplay.MarginY);
                 foreach (var v in Player.PointVisualizers)
                 {
                     g.DrawString(v.Text, new Font("Tahoma", 8), v.Gain ? Brushes.Green : Brushes.Red, new Rectangle(v.X, v.Y, v.W, v.H));
+                }
+
+                //what I'm gathering here is we need to make this part of the overall class for this
+                foreach (var stat in itemsAsStats)
+                {
+                    var pinecone = stat as PineCone;
+                    if (pinecone != null)
+                    {
+                        if (StatsImage != null)
+                            g.DrawImage(new Bitmap(StatsImage), pinecone.CountdownDisplayX - pinecone.W - 10, /*i want it lined up with the other thing*/StatsDisplay.Y, StatsDisplay.W, 45);
+                        g.DrawImage(new Bitmap(pinecone.CurrentImage), pinecone.CountdownDisplayX - pinecone.W, StatsDisplay.Y + 10/*pinecone.CountdownDisplayY*/);
+                        g.DrawString(pinecone.CountdownDisplayText, new Font("Tahoma", 8), Brushes.Black, new Rectangle(pinecone.CountdownDisplayX, StatsDisplay.Y + 10/*pinecone.CountdownDisplayY*/, pinecone.CountdownDisplayWidth, pinecone.CountdownDisplayHeight));
+                    }
                 }
             }
 

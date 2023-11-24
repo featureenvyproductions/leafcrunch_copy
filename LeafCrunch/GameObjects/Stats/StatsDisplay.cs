@@ -12,15 +12,18 @@ namespace LeafCrunch.GameObjects.Stats
         private Player _player { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
-        public int W { get { return 150; } }
-        public int H { get { return 20; } }
+        public int W { get { return 60; } }
+        public int H { get { return 25; } }
         public string Text { get; set; }
+
+        public int MarginX { get; set; } = 5;
+        public int MarginY { get; set; } = 7;
 
         public StatsDisplay(Player player): base()
         {
             _player = player;
-            X = 50;
-            Y = 30;
+            X = 10;//50;
+            Y = 5;//30;
             Text = "";
         }
 
