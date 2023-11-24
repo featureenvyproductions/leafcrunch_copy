@@ -7,6 +7,7 @@
   "InitialPlayerX": -64,
   "InitialPlayerY": -64,
   "BackgroundImagePath": "Images/Background/transitionscreen.png",
+  "MusicPath": "\\Sounds\\Levels\\win.mid",
   "WinConditions": [
     {
       "PropertyName": "TotalTicks",

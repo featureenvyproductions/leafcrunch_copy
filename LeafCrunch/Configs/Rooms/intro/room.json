@@ -7,6 +7,7 @@
   "InitialPlayerX": -64,
   "InitialPlayerY": -64,
   "BackgroundImagePath": "Images/Background/intro.png",
+  "MusicPath": "\\Sounds\\Levels\\intro.mp3",
   "WinConditions": [
     {
       "PropertyName": "TotalTicks",
