@@ -55,6 +55,8 @@ namespace LeafCrunch.Utilities.Entities
         public string RoomType { get; set; }
         public string ContinueKey { get; set; }
         public string StatsBackgroundImage { get; set; }
+        public string RainbowBarOverlay { get; set; }
+        public string RainbowBar { get; set; }
     }
 
     public class ObstacleData
