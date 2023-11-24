@@ -3,7 +3,7 @@
     {
       "Type": "Leaf",
       "Operation": "Items.InstantItems.Leaf.PointIncrement",
-      "SingleImage": "Images/PointItems/redleaf.png",
+      "SingleImage": "Images/PointItems/redmaple.png",
       "X": 100,
       "Y": 150,
       "PointIncrement": 100

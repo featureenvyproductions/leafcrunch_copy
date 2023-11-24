@@ -4,6 +4,7 @@
     {
         public static int RoomWidth { get; set; }
         public static int RoomHeight { get; set; }
+        public static int RoomTopMargin { get; set; } //leave some room for the stats or whatever
 
         public static int RoomTileSizeW { get; set; }
         public static int RoomTileSizeH { get; set; }

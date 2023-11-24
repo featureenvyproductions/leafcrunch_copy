@@ -22,16 +22,43 @@ namespace LeafCrunch
     {
         private RoomController RoomController { get; set; }
 
+        //note: when we refactor the interrupt controller
+        //we'll also need to fix the draw code.
+        //also because I need a way to change the text bc it'll need to be slightly different for stuff like
+        //the nightmare levels
+        //especially when the nightmares show up in the real world. 
+        //also rather than wiping out the whole room control I can probably just make a thing called "animated transition"
+        //and it's a sequence of images instead of just one
         private InterruptController InterruptController { get; set; }
 
         private int roomIndex = -1;
         private List<string> OrderedRooms = new List<string>()
         {
             "intro",
+            "intro2",
+            "intro3",
+            "intro4",
+            "intro5",
             "instructions",
-            "test",
+            "level1",
+            //note to self: we need to have a bunch of EXCRUCIATINGLY normal levels
+            //then the character starts to age
+            //then we have a nightmare level with nothing
+            //then as they get older we have more nightmare levels
+            //but as long as you can get to the leaf you'll be ok
+            //then there is a series of only nightmare levels
+            //and then the nightmares show up in the real world
+            //and then everything goes black
+            //and you have to try to find the leaf in the darkness and step on it
+            //I think the help text will remain ominously the same the first time you encounter hazards
+            //and as you encounter more there will be more tips, but the help menu will be visibly worn down
+            //the last level will be after you find the leaf
+            //you're a guy now and there's leaves everywhere
+            //maybe there's nightmares too but either they'll be on the outside of where you are bouncing around
+            //or the leaves will form a boundary or something
+            //idk what the right thing is
             "transition1",
-            "testlevel2",
+            "level2",
             "outro"
         };
 

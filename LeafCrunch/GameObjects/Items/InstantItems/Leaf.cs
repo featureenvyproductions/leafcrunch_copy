@@ -2,53 +2,23 @@
 using LeafCrunch.GameObjects.Items.ItemOperations;
 using LeafCrunch.Utilities;
 using LeafCrunch.Utilities.Entities;
-using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects.Items.InstantItems
 {
-    //you know once we do the dynamic loading for items, we probaby won't have to have different classes anymore
-    //maybe?
-    //just if we use this we should make sure the point multiplier still works....
-    public class Leaf : InstantItem
+    public class Leaf : InstantItem, IDrawable
     {
         protected int _pointIncrement = 10;
         
-        //hacky but eh
         virtual public int PointIncrement
         {
             get { return _pointIncrement; }
             set { _pointIncrement = value; }
         }
 
-        public Leaf(Control control) : base(control)
-        {
-        }
-
-        public Leaf(Control control, Operation operation)
-            : base(control, operation)
-        {
-            ActivationKey = Keys.Enter;
-            Operation.ToExecute = Apply;
-            Operation.Params = new Dictionary<string, object> {
-                { "RainbowPoints", PointIncrement }
-            };
-        }
-
-        //tbr....we actually will load the operation data as part of the control configs
-        //and pass an operation data structure to this when initializing
-        //but for now we'll parse this here to start.
-
-        //oh we could also use the registry to get the room instead of passing a parent control but idk
-        public Leaf(Control control, string operationName) : base(control)
-        {
-            if (!OperationMethodRegistry.TargetOperations.ContainsKey("Items.InstantItems.Leaf.Apply"))
-                OperationMethodRegistry.TargetOperations.Add("Items.InstantItems.Leaf.Apply", Apply);
-
-            ActivationKey = Keys.Enter;
-
-            InitializeOperationFromRegistry(operationName);
-        }
+        private Image _image;
+        override public Image CurrentImage { get { return _image; } }
 
         //create from item data loaded from file
         public Leaf (ItemData itemData) :base()
@@ -58,15 +28,12 @@ namespace LeafCrunch.GameObjects.Items.InstantItems
 
             ActivationKey = Keys.Enter;
 
-            var img = UtilityMethods.ImageFromPath(itemData.SingleImage);
-            Control = new PictureBox()
-            {
-                Left = itemData.X,
-                Top = itemData.Y,
-                Image = img,
-                Width = img.Width,
-                Height = img.Height
-            };
+            //this could probably go in the generic item code but whatever
+            _image = UtilityMethods.ImageFromPath(itemData.SingleImage);
+            X = itemData.X;
+            Y = itemData.Y;
+            W = _image.Width;
+            H = _image.Height;
             _pointIncrement = itemData.PointIncrement;
             InitializeOperationFromRegistry(itemData.Operation);
 

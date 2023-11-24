@@ -1,0 +1,214 @@
+{
+  "Obstacles": [
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/tiny tree.png",
+      "X": 416,
+      "Y": 192
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/southnorthwall.png",
+      "X": 0,
+      "Y": 32
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/southnorthwall.png",
+      "X": 32,
+      "Y": 32
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/southnorthwall.png",
+      "X": 64,
+      "Y": 32
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/southnorthwall.png",
+      "X": 96,
+      "Y": 32
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/southnorthwall.png",
+      "X": 128,
+      "Y": 32
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/southnorthwall.png",
+      "X": 160,
+      "Y": 32
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/southnorthwall.png",
+      "X": 192,
+      "Y": 32
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/southnorthwall.png",
+      "X": 224,
+      "Y": 32
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/southnorthwall.png",
+      "X": 256,
+      "Y": 32
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/southnorthwall.png",
+      "X": 288,
+      "Y": 32
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/southnorthwall.png",
+      "X": 320,
+      "Y": 32
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/southnorthwall.png",
+      "X": 352,
+      "Y": 32
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/southnorthwall.png",
+      "X": 384,
+      "Y": 32
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/southnorthwall.png",
+      "X": 416,
+      "Y": 32
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/southnorthwall.png",
+      "X": 448,
+      "Y": 32
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/southnorthwall.png",
+      "X": 480,
+      "Y": 32
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/southnorthwall.png",
+      "X": 512,
+      "Y": 32
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/southnorthwall.png",
+      "X": 544,
+      "Y": 32
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/southnorthwall.png",
+      "X": 576,
+      "Y": 32
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/southnorthwall.png",
+      "X": 608,
+      "Y": 32
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/westwall.png",
+      "X": 0,
+      "Y": 64
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/westwall.png",
+      "X": 0,
+      "Y": 96
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/westwall.png",
+      "X": 0,
+      "Y": 128
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/westwall.png",
+      "X": 0,
+      "Y": 160
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/westwall.png",
+      "X": 0,
+      "Y": 192
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/westwall.png",
+      "X": 0,
+      "Y": 224
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/westwall.png",
+      "X": 0,
+      "Y": 256
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/westwall.png",
+      "X": 0,
+      "Y": 288
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/westwall.png",
+      "X": 0,
+      "Y": 320
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/westwall.png",
+      "X": 0,
+      "Y": 352
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/westwall.png",
+      "X": 0,
+      "Y": 384
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/westwall.png",
+      "X": 0,
+      "Y": 416
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/westwall.png",
+      "X": 0,
+      "Y": 448
+    },
+    {
+      "Type": "Obstacle",
+      "SingleImage": "Images/Obstacles/westwall.png",
+      "X": 0,
+      "Y": 480
+    }
+  ]
+}

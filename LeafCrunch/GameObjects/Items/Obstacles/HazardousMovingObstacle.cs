@@ -1,31 +1,15 @@
 ﻿using LeafCrunch.GameObjects.ItemProperties;
 using LeafCrunch.GameObjects.Items.ItemOperations;
 using LeafCrunch.Utilities.Entities;
-using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects.Items.Obstacles
 {
     //moves but can also inflict damage - so like reverse of items
+
+    //i want to make a version of this that can only collide with the form edges and the player so i can like
+    //trap the player in a maze with hazards
     public class HazardousMovingObstacle : MovingObstacle, IHazard
     {
-        public HazardousMovingObstacle(Control control) : base(control)
-        {
-        }
-
-        public HazardousMovingObstacle(Control control, int speedx, int speedy, Operation operation) : base(control, speedx, speedy)
-        {
-            Operation = operation;
-            Operation.ToExecute = InflictDamage;
-        }
-
-        public HazardousMovingObstacle(Control control, int speedx, int speedy, string operationName) : base(control, speedx, speedy)
-        {
-            if (!OperationMethodRegistry.TargetOperations.ContainsKey("Items.Obstacles.HazardousMovingObstacle.InflictDamage"))
-                OperationMethodRegistry.TargetOperations.Add("Items.Obstacles.HazardousMovingObstacle.InflictDamage", InflictDamage);
-
-            InitializeOperationFromRegistry(operationName);
-        }
-
         public HazardousMovingObstacle(ObstacleData obstacleData) : base(obstacleData)
         {
             IsInitialized = false;

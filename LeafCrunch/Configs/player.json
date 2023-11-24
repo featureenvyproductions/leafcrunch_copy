@@ -43,25 +43,33 @@
       "South": {
         "ImagePaths": [
           "Images/Player/Animation/player_south_00.png",
-          "Images/Player/Animation/player_south_01.png"
+          "Images/Player/Animation/player_south_01.png",
+          "Images/Player/Animation/player_south_02.png",
+          "Images/Player/Animation/player_south_03.png"
         ]
       },
       "North": {
         "ImagePaths": [
           "Images/Player/Animation/player_north_00.png",
-          "Images/Player/Animation/player_north_01.png"
+          "Images/Player/Animation/player_north_01.png",
+          "Images/Player/Animation/player_north_02.png",
+          "Images/Player/Animation/player_north_03.png"
         ]
       },
       "East": {
         "ImagePaths": [
           "Images/Player/Animation/player_east_00.png",
-          "Images/Player/Animation/player_east_01.png"
+          "Images/Player/Animation/player_east_01.png",
+          "Images/Player/Animation/player_east_02.png",
+          "Images/Player/Animation/player_east_03.png"
         ]
       },
       "West": {
         "ImagePaths": [
           "Images/Player/Animation/player_west_00.png",
-          "Images/Player/Animation/player_west_01.png"
+          "Images/Player/Animation/player_west_01.png",
+          "Images/Player/Animation/player_west_02.png",
+          "Images/Player/Animation/player_west_03.png"
         ]
       }
     }

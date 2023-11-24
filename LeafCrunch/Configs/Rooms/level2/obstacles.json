@@ -1,0 +1,31 @@
+{
+  "Obstacles": [
+    {
+      "Type": "HazardousMovingObstacle",
+      "SingleImage": "Images/Obstacles/hazard.png",
+      "OperationName": "Items.Obstacles.HazardousMovingObstacle.MinorPointDecrement",
+      "X": 100,
+      "Y": 200,
+      "InitialSpeedX": 15,
+      "InitialSpeedY": 15
+    },
+    {
+      "Type": "HazardousMovingObstacle",
+      "SingleImage": "Images/Obstacles/hazard.png",
+      "OperationName": "Items.Obstacles.HazardousMovingObstacle.MinorPointDecrement",
+      "X": 120,
+      "Y": 700,
+      "InitialSpeedX": 0,
+      "InitialSpeedY": -20
+    },
+    {
+      "Type": "HazardousMovingObstacle",
+      "SingleImage": "Images/Obstacles/hazard.png",
+      "OperationName": "Items.Obstacles.HazardousMovingObstacle.MinorPointDecrement",
+      "X": 10,
+      "Y": 710,
+      "InitialSpeedX": 20,
+      "InitialSpeedY": 0
+    }
+  ]
+}

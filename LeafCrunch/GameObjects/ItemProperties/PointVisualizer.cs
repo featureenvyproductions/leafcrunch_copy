@@ -6,8 +6,6 @@ namespace LeafCrunch.GameObjects.ItemProperties
     public class PointVisualizer
     {
         private int _displayTicks = 10;
-        private Label _control { get; set; }
-        private Control _parent { get; set; }
         private Timer _timer = new Timer();
         private int _currentTicks = 0;
 
@@ -19,22 +17,25 @@ namespace LeafCrunch.GameObjects.ItemProperties
             }
         }
 
-        public PointVisualizer(Control parent, int points)
+        public bool Gain { get; set; }
+        public string Text { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+
+        //shouldn't hardcode this....fix eventually
+        public int W { get { return 150; } }
+        public int H { get { return 20; } }
+
+        public bool IsVisible { get; set; }
+
+        public PointVisualizer(int points, int x, int y)
         {
-            _parent = parent;
-            _control = new Label();
             var sign = points > 0 ? "+" : string.Empty;
-            _control.Text = $"{sign}{points}";
-            _control.Parent = parent;
-            _parent.Controls.Add(_control);
-            _control.Visible = true;
-            _control.ForeColor = System.Drawing.Color.Black;
-            _control.BackColor = System.Drawing.Color.Transparent;
-
-            //uhg this all still makes it disappear when it goes off the person :<
-            //i'll have to figure that out....
-
-            _control.BringToFront();
+            Gain = (points > 0);
+            Text = $"{sign}{points}";
+            X = x;
+            Y = y;
+            IsVisible = true;
             _timer.Tick += Timer_Tick;
             _timer.Start();
         }
@@ -43,15 +44,14 @@ namespace LeafCrunch.GameObjects.ItemProperties
         {
             if (++_currentTicks == _displayTicks)
             {
-                _control.Visible = false;
-                _parent.Controls.Remove(_control);
+                IsVisible = false;
                 _timer.Stop();
             }
             else
             {
                 //animate it because that's neat
-                _control.Top--;
-                _control.Left--;
+                Y--;
+                X--;
             }
         }
     }

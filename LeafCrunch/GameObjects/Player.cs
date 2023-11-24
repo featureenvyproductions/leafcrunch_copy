@@ -5,10 +5,11 @@ using LeafCrunch.GameObjects.Items.Obstacles;
 using LeafCrunch.GameObjects.ItemProperties;
 using LeafCrunch.Utilities.Animation;
 using LeafCrunch.Utilities.Entities;
+using System.Drawing;
 
 namespace LeafCrunch.GameObjects
 {
-    public class Player : InteractiveGameObject, IReboundable, ICollidable, IDamageReceptor, IItemUser, IAnimated
+    public class Player : InteractiveGameObject, IDrawable, IReboundable, ICollidable, IDamageReceptor, IItemUser, IAnimated
     {
         private string _objectName = "Player";
 
@@ -18,6 +19,12 @@ namespace LeafCrunch.GameObjects
 
         #region Points Properties
         private List<PointVisualizer> _pointVisualizer = new List<PointVisualizer>();
+
+        //this is overkill, we really need a way to draw text on the fly. 
+        public List<PointVisualizer> PointVisualizers
+        {
+            get { return _pointVisualizer; }
+        }
         private int _maxRainbowPoints = 100;
         private int _rainbowPoints = 0;
         public int RainbowPoints
@@ -29,7 +36,7 @@ namespace LeafCrunch.GameObjects
                 if (value > _maxRainbowPoints) _rainbowPoints = _maxRainbowPoints;
                 else _rainbowPoints = value;
                 var diff = _rainbowPoints - current;
-                _pointVisualizer.Add(new PointVisualizer(Control, diff));
+                _pointVisualizer.Add(new PointVisualizer(diff, X, Y));
             }
         }
         #endregion
@@ -83,6 +90,16 @@ namespace LeafCrunch.GameObjects
         public AnimatedSprite Sprite { get; set; }
         #endregion
 
+        #region IDrawable
+        override public Image CurrentImage 
+        { 
+            get
+            {
+                return Sprite.CurrentImage;
+            }
+        }
+        #endregion
+
         #region Loading and Initialization
         //how should we do the data
         //i guess let's have a file for each entity maybe
@@ -123,29 +140,24 @@ namespace LeafCrunch.GameObjects
                 vx = playerData.Stats.InitialSpeedX,
                 vy = playerData.Stats.InitialSpeedY
             };
-            Sprite = playerData.Sprite; //of course things could have gone wrong when initializing this but i don't have
-            //emotional energy to check all that.
-            //I'll make some friggin validator code later or some shit but right now
-            //the game should just stop working anyway if the stuff isn't there that needs to be there
-
-            //it looks like everything is initializing to show an image right away BUT I'M JUST CHECKING
+            Sprite = playerData.Sprite; //I am once again reminding myself i need validator code
+            //and need to account for special sprites eventually
             Sprite.UpdateSequence(Direction.South, true);
 
-            //double check that adding this to the child controls of the room will set the parent of this to the room
-            Control = new PictureBox()
-            {
-                Name = _objectName,
-                Image = Sprite.CurrentImage,
-                Width = Sprite.CurrentImage.Width,
-                Height = Sprite.CurrentImage.Height,
-                Top = playerData.Stats.InitialY,
-                Left = playerData.Stats.InitialX
-            };
+            X = playerData.Stats.InitialX;
+            Y = playerData.Stats.InitialY;
 
-            //eventually we'll probably need to have special sprites as well but we'll come back to that
-            //like the stomp animation
             IsInitialized = true;
             GenericGameObjectRegistry.RegisteredObjects.Add(_objectName, this);
+        }
+
+        override public int W 
+        {
+            get { return Sprite.CurrentImage.Width; }
+        }
+        override public int H
+        {
+            get { return Sprite.CurrentImage.Height; }
         }
         #endregion
 
@@ -210,27 +222,25 @@ namespace LeafCrunch.GameObjects
         #region Motion
         protected void UpdateLocation()
         {
-            if (Control == null) return;
-
-            Control.Left += Speed.vx;
-            if (Control.Left <= 0)
+            X += Speed.vx;
+            if (X <= 0)
             {
-                while (Control.Left <= 0) Control.Left++;
+                while (X <= 0) X++;
             }
 
-            Control.Top += Speed.vy;
-            if (Control.Top <= 0)
+            Y += Speed.vy;
+            if (Y <= GlobalVars.RoomTopMargin)
             {
-                while (Control.Top <= 0) Control.Top++;
+                while (Y <= GlobalVars.RoomTopMargin) Y++;
             }
 
-            if ((Control.Left + Control.Width) >= GlobalVars.RoomWidth)
+            if ((X + W) >= GlobalVars.RoomWidth)
             {
-                while ((Control.Left + Control.Width) >= GlobalVars.RoomWidth) Control.Left--;
+                while ((X + W) >= GlobalVars.RoomWidth) X--;
             }
-            if ((Control.Top + Control.Height) >= GlobalVars.RoomHeight)
+            if ((Y + H) >= GlobalVars.RoomHeight)
             {
-                while ((Control.Top + Control.Height) >= GlobalVars.RoomHeight) Control.Top--;
+                while ((Y + H) >= GlobalVars.RoomHeight) Y--;
             }
         }
 
@@ -278,6 +288,7 @@ namespace LeafCrunch.GameObjects
         #endregion
 
         #region Collision Handling
+        
         private void ForceStop(Axis axisOfMotion)
         {
             //stop the player moving a direction and do the equivalent of forcing a key release
@@ -298,15 +309,15 @@ namespace LeafCrunch.GameObjects
 
         private bool CollisionX(Obstacle obstacle)
         {
-            return (obstacle.CollisionX(Control.Left) ||
-                    obstacle.CollisionX(Control.Right) ||
+            return (obstacle.CollisionX(X) ||
+                    obstacle.CollisionX(X + W) ||
                     obstacle.TileIndex == TileIndex);
         }
 
         private bool CollisionY(Obstacle obstacle)
         {
-            return obstacle.CollisionY(Control.Top) ||
-                    obstacle.CollisionY(Control.Bottom) ||
+            return obstacle.CollisionY(Y) ||
+                    obstacle.CollisionY(Y + H) ||
                     obstacle.TileIndex == TileIndex;
         }
 
@@ -354,7 +365,7 @@ namespace LeafCrunch.GameObjects
             {
                 while (CollisionX(obstacle))
                 {
-                    Control.Left += reboundSpeedx;
+                    X += reboundSpeedx;
                 }
                 ForceStop(Axis.Horizontal);
             }
@@ -362,7 +373,7 @@ namespace LeafCrunch.GameObjects
             {
                 while (CollisionY(obstacle))
                 {
-                    Control.Top += reboundSpeedy;
+                    Y += reboundSpeedy;
                 }
                 ForceStop(Axis.Vertical);
             }
@@ -460,7 +471,7 @@ namespace LeafCrunch.GameObjects
 
             //whatever happens, make sure we're displaying the right image in the control
             //this had better be a picture box or we have bigger problems
-            (Control as PictureBox).Image = Sprite.CurrentImage;
+          //  (Control as PictureBox).Image = Sprite.CurrentImage;
         }
         #endregion
     }

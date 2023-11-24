@@ -2,6 +2,7 @@
 using LeafCrunch.GameObjects.Items.ItemOperations;
 using LeafCrunch.Utilities;
 using LeafCrunch.Utilities.Entities;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects.Items.TemporaryItems
@@ -12,55 +13,27 @@ namespace LeafCrunch.GameObjects.Items.TemporaryItems
     {
         private int _multiplier = 2;
         private bool _displayingAsStat = false;
-        
-        //eventually we should actually have one object that handles displayed stats but for now we
-        //can just give this its own control to display them it's fine it's whatever
-        public Control DisplayControl { get; set; }
-
-        public PineCone(Control control) : base(control)
-        {
-        }
-
-        //this can be an operation to be done on a single leaf
-        //or can be a multi target operation that's fed multiple leaves
-        public PineCone(Control control, Operation operation, Control displayControl) : base(control, operation)
-        {
-            Operation.Params = null;
-            DisplayControl = displayControl;
-            Operation.ToExecute = ApplyPointMultiplier;
-        }
-
-        public PineCone(Control control, string operationName, Control displayControl) : base(control)
-        {
-            DisplayControl = displayControl;
-            if (!OperationMethodRegistry.TargetOperations.ContainsKey("Items.TemporaryItems.PineCode.ApplyPointMultiplier"))
-                OperationMethodRegistry.TargetOperations.Add("Items.TemporaryItems.PineCode.ApplyPointMultiplier", ApplyPointMultiplier);
-
-            InitializeMultiOperationFromRegistry(operationName);
-        }
 
         public PineCone(ItemData itemData) : base()
         {
+            IsApplied = false;
+            Active = false;
+
             if (!OperationMethodRegistry.TargetOperations.ContainsKey("Items.TemporaryItems.PineCode.ApplyPointMultiplier"))
                 OperationMethodRegistry.TargetOperations.Add("Items.TemporaryItems.PineCode.ApplyPointMultiplier", ApplyPointMultiplier);
 
-            DisplayControl = new Label()
-            {
-                Left = itemData.DisplayControl.X,
-                Top = itemData.DisplayControl.Y,
-                BackColor = System.Drawing.Color.Transparent
-                //will it work without an initial width and height?
-            };
+            CountdownDisplayX = itemData.DisplayControl.X;
+            CountdownDisplayY = itemData.DisplayControl.Y;
+            CountdownDisplayWidth = 150;
+            CountdownDisplayHeight = 50;
+            
+            CurrentImage = UtilityMethods.ImageFromPath(itemData.SingleImage);
+            
+            X = itemData.X;
+            Y = itemData.Y;
+            W = CurrentImage.Width;
+            H = CurrentImage.Height;
 
-            var img = UtilityMethods.ImageFromPath(itemData.SingleImage);
-            Control = new PictureBox()
-            {
-                Left = itemData.X,
-                Top = itemData.Y,
-                Image = img,
-                Width = img.Width,
-                Height = img.Height
-            };
             _multiplier = itemData.PointMultiplier;
 
             InitializeMultiOperationFromRegistry(itemData.Operation);
@@ -73,26 +46,39 @@ namespace LeafCrunch.GameObjects.Items.TemporaryItems
         //I feel like this doesn't belong here but eh we'll come back to it
         public override void ShowAsStat()
         {
-            if (DisplayControl == null) return;
             if (!_displayingAsStat)
             {
-                //align the top
-                Control.Top = DisplayControl.Top;
-                //line up the right side of one with the left of the other
-                Control.Left = DisplayControl.Left - Control.Width;
                 _displayingAsStat = true;
+            }
+        }
+
+        public bool DisplayingAsStat
+        {
+            get { return _displayingAsStat; }
+        }
+        public int CountdownDisplayX
+        {
+            get; set;
+        }
+        public int CountdownDisplayY
+        { get; set; }
+        public int CountdownDisplayWidth
+        { get; set; }
+        public int CountdownDisplayHeight
+        { get; set; }
+        public string CountdownDisplayText
+        {
+            get
+            {
+                if (Ticks <= 0) return string.Empty;
+                return Ticks.ToString();
             }
         }
 
         public override void Update()
         {
             if (IsSuspended) return;
-            base.Update(); //do what the base does
-            //but we also want to update the count down
-            if (DisplayControl == null) return;
-            DisplayControl.Text = Ticks.ToString();
-            if (Ticks <= 0) DisplayControl.Visible = false;
-            DisplayControl.Refresh();
+            base.Update();
         }
 
         private Result ApplyPointMultiplier(GenericGameObject genericGameObject, object paramList)

@@ -12,6 +12,17 @@ using LeafCrunch.Utilities.Entities;
 using System.IO;
 using static LeafCrunch.Utilities.GlobalVars;
 using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+
+//when we fill up the rainbow bar, fix the text to show points as percentages of 100 points rather than
+//explicitly showing points
+//also for some exceptionally hard levels, you win if you get any points at all.
+
+//ohhhhh i need to account for things drawing over the protgonist like tree trunks
+//like in a better way than i did
+
+//also i need to change the size of the young sprite
 
 //you know one thing i should do is when i actually implement the dynamic loading of the game board
 //i should make it so that i only place things exactly in tiles
@@ -32,6 +43,12 @@ using System;
 
 //also also why isn't the generic game object class the thing that registers shit in the fucking registry
 //what is my problem
+
+//hoo boy do i need a level builder
+//and/or i could make it so when you only include an x or y coordinate it means just repeat that obstacle along that whole axis
+
+
+//oh i need to draw a T-wall oops
 
 namespace LeafCrunch.GameObjects
 {
@@ -155,6 +172,8 @@ namespace LeafCrunch.GameObjects
         protected bool TileObjectPlayerCollision(GenericItem i) => i.TileIndex == Player.TileIndex;
         #endregion
 
+        public Image StatsImage { get; set; }
+
         #region Constructors
         //eventually we're going to load control names from a file I think so I won't need this fucking list
         //or we're gonna initialize the controls on the fly with a location and a type
@@ -172,10 +191,23 @@ namespace LeafCrunch.GameObjects
             var jsonLoader = new JsonLoader();
             var roomData = jsonLoader.LoadFromJson<RoomData>(jsonString);
 
+            //really eventually we'll have a specific stats control and get the margin based on that
+            //but we're just doing this for now
+            GlobalVars.RoomTopMargin = 40;
             GlobalVars.RoomWidth = roomData.Width;
+            //we're gonna leave some padding to avoid stats items i think but idk how I want to do that
+            //i may need to have a room top coordinate
             GlobalVars.RoomHeight = roomData.Height;
             GlobalVars.RoomTileSizeW = roomData.TileSizeW;
             GlobalVars.RoomTileSizeH = roomData.TileSizeH;
+
+            //hacky....make it make sense
+            //image to help stats show up better
+            //like really this needs to be its own object associated with whatever it's displaying
+            //and room controller can see its image path and window location
+            if (!string.IsNullOrEmpty(roomData.StatsBackgroundImage))
+                StatsImage = UtilityMethods.ImageFromPath(roomData.StatsBackgroundImage);
+            //end hacky bit
 
             var img = UtilityMethods.ImageFromPath(roomData.BackgroundImagePath);
             Control = new PictureBox()
@@ -199,19 +231,16 @@ namespace LeafCrunch.GameObjects
                 _interactive = false;
 
                 //set continue key if the pause is indefinite
-                //Keys continueKey;
                 Enum.TryParse(roomData.ContinueKey ?? "None", out _continueKey);
-                //_continueKey = continueKey;
                 return;
             }
             LoadLoseConditions(roomData.LoseConditions);
-            //note to self: need to re-init the player location with each room and account for that
             LoadRoomObjects();
 
             if (Player != null)
             {
-                if (roomData.InitialPlayerX >= 0) Player.Control.Left = roomData.InitialPlayerX;
-                if (roomData.InitialPlayerY >= 0) Player.Control.Top = roomData.InitialPlayerY;
+                if (roomData.InitialPlayerX >= 0) Player.X = roomData.InitialPlayerX;
+                if (roomData.InitialPlayerY >= 0) Player.Y = roomData.InitialPlayerY;
             }
             _isInitialized = true;
         }
@@ -248,63 +277,32 @@ namespace LeafCrunch.GameObjects
         #endregion
 
         #region Loading and Initialization
-        //for now this just loads the test level
-        //oh yeah don't forget when we do real loading we need to have stuff that clears the board
-        //like removes the items from the list and the item controls
         protected void LoadRoomObjects()
         {
             LoadPlayer();
             LoadOperations();
             LoadItems();
             LoadObstacles();            
-
-            //then we can add sounds maybe and some better images
-            //then dynamically load subsequent room configurations and game goals etc
-            //i realize i probably need to register obstacles as well do i do that?
-            //i think i do that at the object level but
-            //also I should give every item and obstacle a name
-            //and the factory should load everything into a dictionary rather than a list
-            //so the room can pick and choose what it wants maybe? idk. 
-
-            //oh you know what actually it would be easier to just have a different set of configs for each room and just
-            //reconfigure the path to account for the room folder
-            //yeah let's do that. way better than cramming shit into like 4 files for a whole game.
         }
 
         protected void LoadPlayer()
         {
             Player = new Player();
-            if (Player.IsInitialized) Control.Controls.Add(Player.Control);
-            StatsDisplay = new StatsDisplay(Player);
-            Control.Controls.Add(StatsDisplay.Control);
+            if (Player.IsInitialized)
+            {
+                StatsDisplay = new StatsDisplay(Player);
+            }
         }
 
         protected void LoadOperations()
         {
-            //let's try loading up all the operations and stuffing them in the registry
             OperationRegistry.Load();
         }
 
         protected void LoadItems()
         {
             var itemFactory = new ItemFactory();
-            var gi = itemFactory.LoadItems(_roomName);
-
-            foreach (var item in gi)
-            {
-                if (item.IsInitialized)
-                {
-                    Control.Controls.Add(item.Control);
-                    if (item is PineCone)
-                    {
-                        //special case...although I probably should have a thing where we like just check everything for a display control
-                        Control.Controls.Add((item as PineCone).DisplayControl);
-                    }
-                }
-            }
-
-            _items = gi;
-
+            _items = itemFactory.LoadItems(_roomName);
             RegisterTemporaryItems();
         }
 
@@ -318,6 +316,11 @@ namespace LeafCrunch.GameObjects
             }
         }
 
+
+        //to be updated.....i don't want the obstacles using controls either
+        //there shouldn't be a single goddamn control in this game except what i'm using as a canvas
+        //unrelated reminder to myself...
+        //dont forget to add the player x0y0 reinit code
         public void LoadObstacles()
         {
             var obstacleFactory = new ObstacleFactory();
@@ -329,7 +332,6 @@ namespace LeafCrunch.GameObjects
             {
                 if (obstacle.IsInitialized)
                 {
-                    Control.Controls.Add(obstacle.Control);
                     if (obstacle is MovingObstacle) _movingObstacles.Add((MovingObstacle)obstacle);
                     else _obstacles.Add(obstacle);
                 }
@@ -393,8 +395,95 @@ namespace LeafCrunch.GameObjects
                 UpdateStationaryObstacles();
                 UpdateMovingObstacles();
                 TotalTicks++; //I only want to update this when the room is actually active
-                //in case we use it for a level timer or something
+                              //in case we use it for a level timer or something
+
+                Draw();
             }
+        }
+
+        Image bgimg = null;
+
+        public void Draw()
+        {
+            if (bgimg == null) bgimg = (Image)((Control as PictureBox).Image.Clone());
+
+            Bitmap bg = new Bitmap(bgimg);
+            Bitmap playersource = new Bitmap(Player.Sprite.CurrentImage);
+
+            using (Graphics g = Graphics.FromImage(bg))
+            {
+                g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
+
+                //hack but we need to revisit and make more flexible
+                var itemsAsStats = new List<GenericItem>();
+                //we need to clean this up
+                foreach (var item in _items)
+                {
+                    var leaf = (item as Leaf);
+                    if (leaf != null)
+                    {
+                        Bitmap itemsource = new Bitmap(leaf.CurrentImage);
+                        g.DrawImage(itemsource, leaf.X, leaf.Y);
+                    }
+                    var pinecone = (item as PineCone);
+                    if (pinecone != null)
+                    {
+                        //Bitmap itemsource = new Bitmap(pinecone.CurrentImage);
+                        if (pinecone.DisplayingAsStat)
+                        {
+                            //draw later on top of everything else
+                            itemsAsStats.Add(pinecone);
+                            //Bitmap itemsource = new Bitmap(pinecone.CurrentImage);
+                            // g.DrawImage(itemsource, pinecone.CountdownDisplayX - pinecone.W, pinecone.CountdownDisplayY);
+                            //g.DrawString(pinecone.CountdownDisplayText, new Font("Tahoma", 8), Brushes.Black, new Rectangle(pinecone.CountdownDisplayX, pinecone.CountdownDisplayY, pinecone.CountdownDisplayWidth, pinecone.CountdownDisplayHeight));
+                        }
+                        else
+                        {
+                            Bitmap itemsource = new Bitmap(pinecone.CurrentImage);
+                            g.DrawImage(itemsource, pinecone.X, pinecone.Y);
+                        }//shouldn't have named this stuff countdown it might not always be a countdown
+                    }
+                }
+               
+                //draw the player on top of objects to use and behind obstacles
+                g.DrawImage(playersource, Player.X, Player.Y);
+                
+                foreach (var obstacle in _obstacles)
+                {
+                    g.DrawImage(new Bitmap(obstacle.CurrentImage), obstacle.X, obstacle.Y);
+                }
+                foreach (var movingobstacle in _movingObstacles)
+                {
+                    g.DrawImage(new Bitmap(movingobstacle.CurrentImage), movingobstacle.X, movingobstacle.Y);
+                }
+
+                if (StatsImage != null)
+                    g.DrawImage(new Bitmap(StatsImage),StatsDisplay.X, StatsDisplay.Y, StatsDisplay.W, StatsDisplay.H);
+                //wow this is awful. need to fix these coordinates
+                g.DrawString(StatsDisplay.Text, new Font("Tahoma", 8), Brushes.Black, StatsDisplay.X + StatsDisplay.W/2 - StatsDisplay.MarginX, StatsDisplay.Y + StatsDisplay.H/2 - StatsDisplay.MarginY);
+                foreach (var v in Player.PointVisualizers)
+                {
+                    g.DrawString(v.Text, new Font("Tahoma", 8), v.Gain ? Brushes.Green : Brushes.Red, new Rectangle(v.X, v.Y, v.W, v.H));
+                }
+
+                //what I'm gathering here is we need to make this part of the overall class for this
+                foreach (var stat in itemsAsStats)
+                {
+                    var pinecone = stat as PineCone;
+                    if (pinecone != null)
+                    {
+                        if (StatsImage != null)
+                            g.DrawImage(new Bitmap(StatsImage), pinecone.CountdownDisplayX - pinecone.W - 10, /*i want it lined up with the other thing*/StatsDisplay.Y, StatsDisplay.W, 45);
+                        g.DrawImage(new Bitmap(pinecone.CurrentImage), pinecone.CountdownDisplayX - pinecone.W, StatsDisplay.Y + 10/*pinecone.CountdownDisplayY*/);
+                        g.DrawString(pinecone.CountdownDisplayText, new Font("Tahoma", 8), Brushes.Black, new Rectangle(pinecone.CountdownDisplayX, StatsDisplay.Y + 10/*pinecone.CountdownDisplayY*/, pinecone.CountdownDisplayWidth, pinecone.CountdownDisplayHeight));
+                    }
+                }
+            }
+
+            //System.IO.MemoryStream surewhynot = new System.IO.MemoryStream();
+            //bg.Save(surewhynot, ImageFormat.Png);
+            //var test = Image.FromStream(surewhynot);
+            (Control as PictureBox).Image = UtilityMethods.ImageFromBitmap(bg);//test;
         }
 
         public override void OnKeyPress(KeyEventArgs e)

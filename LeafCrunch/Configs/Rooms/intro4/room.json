@@ -1,0 +1,20 @@
+{
+  "Name": "intro",
+  "Width": 512,
+  "Height": 512,
+  "TileSizeH": 64,
+  "TileSizeW": 64,
+  "InitialPlayerX": -64,
+  "InitialPlayerY": -64,
+  "BackgroundImagePath": "Images/Background/intro4.png",
+  "WinConditions": [
+    {
+      "PropertyName": "TotalTicks",
+      "ValueType": "Integer",
+      "Value": 30,
+      "Comparison": ">="
+    }
+  ],
+  "LoseConditions": [],
+  "RoomType": "Transition"
+}

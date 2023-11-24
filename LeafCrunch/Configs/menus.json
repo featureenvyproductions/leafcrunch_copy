@@ -6,9 +6,9 @@
       "BackgroundImagePath": "Images/Menus/help.png",
       "ActivationKey": "F1",
       "Text": {
-        "Text": "one day this will have helpful information",
+        "Text": "It's fall and every leaf is\nthe perfect level of crunchy!\n\nUsing your arrow keys to navigate,\nstand on top of a leaf and press\nENTER to stomp on it and\nget points.\n\nTip: Picking up pinecones will\ndouble the points you get from\nleaves for a short time.\nTo pick up a pine cone\nsimply walk over it.\n\nGet 100 points to win!\n\n\nYou can leave or activate this menu\nagain any time with your F1 key.",
         "X": 50,
-        "Y": 50,
+        "Y": 100,
         "Transparent": "True"
       }
     },

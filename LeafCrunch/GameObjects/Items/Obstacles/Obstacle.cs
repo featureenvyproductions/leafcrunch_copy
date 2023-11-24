@@ -1,7 +1,7 @@
 ﻿using LeafCrunch.GameObjects.ItemProperties;
 using LeafCrunch.Utilities;
 using LeafCrunch.Utilities.Entities;
-using System.Windows.Forms;
+using System.Drawing;
 
 namespace LeafCrunch.GameObjects.Items.Obstacles
 {
@@ -10,32 +10,35 @@ namespace LeafCrunch.GameObjects.Items.Obstacles
     //for a future improvement we can also check a small group of tiles or like a bigger tile/region
     public class Obstacle : GenericItem, ICollidable
     {
-        public Obstacle(Control control) : base(control)
-        {
-        }
         public Obstacle(ObstacleData obstacleData) : base()
         {
-            var img = UtilityMethods.ImageFromPath(obstacleData.SingleImage);
-            Control = new PictureBox()
-            {
-                Left = obstacleData.X,
-                Top = obstacleData.Y,
-                Image = img,
-                Width = img.Width,
-                Height = img.Height
-            };
+            _currentImage = UtilityMethods.ImageFromPath(obstacleData.SingleImage);
+
+            X = obstacleData.X;
+            Y = obstacleData.Y;
+            W = CurrentImage.Width;
+            H = CurrentImage.Height;
+           
             IsInitialized = true;
         }
 
-        //checks if x is within the bounds of the control
+        private Image _currentImage;
+        override public Image CurrentImage 
+        { 
+            get
+            { 
+                return _currentImage; 
+            }
+        }
+
         public bool CollisionX(int x)
         {
-            return (x >= Control.Left && x <= Control.Right);
+            return (x >= X && x <= X + W);
         }
 
         public bool CollisionY(int y)
         {
-            return (y <= Control.Top && y >= Control.Bottom);
+            return (y <= Y && y >= Y + H);
         }
     }
 }

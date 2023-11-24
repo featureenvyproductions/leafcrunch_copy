@@ -6,6 +6,12 @@ namespace LeafCrunch.Utilities
 {
     public class UtilityMethods
     {
+        public static Image ImageFromBitmap(Bitmap img)
+        {
+            if (img == null) return null; //we should probably throw an exception actually
+            return Image.FromHbitmap(img.GetHbitmap());
+        }
+
         public static Image ImageFromPath(string relPath)
         {
             return Image.FromFile(Path.Combine(

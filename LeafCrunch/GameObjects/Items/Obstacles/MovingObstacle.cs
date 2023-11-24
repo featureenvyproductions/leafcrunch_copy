@@ -1,7 +1,6 @@
 ﻿using LeafCrunch.GameObjects.ItemProperties;
 using LeafCrunch.Utilities;
 using LeafCrunch.Utilities.Entities;
-using System.Windows.Forms;
 
 namespace LeafCrunch.GameObjects.Items.Obstacles
 {
@@ -12,25 +11,6 @@ namespace LeafCrunch.GameObjects.Items.Obstacles
         //simple and dumb
         //we have a speed and we go that speed until we hit a thing
         //then we go the opposite way at the same speed until we hit a thing, etc
-
-        public MovingObstacle(Control control) : base(control)
-        {
-            //doesn't have to be these this is for testing
-            Speed = new Speed()
-            {
-                vx = 5,
-                vy = 5
-            };
-        }
-
-        public MovingObstacle(Control control, int speedx, int speedy) : base(control)
-        {
-            Speed = new Speed()
-            {
-                vx = speedx,
-                vy = speedy
-            };
-        }
 
         public MovingObstacle(ObstacleData obstacleData) : base(obstacleData)
         {
@@ -68,52 +48,81 @@ namespace LeafCrunch.GameObjects.Items.Obstacles
         //revisit
         protected void UpdateLocation()
         {
-            if (Control == null) return;
-
-            Control.Left += Speed.vx;
-            if (Control.Left <= 0)
+            X += Speed.vx;
+            if (X <= 0)
             {
-                while (Control.Left <= 0) Control.Left++;
+                while (X <= 0) X++;
                 Speed.vx *= -1;
             }
 
-            Control.Top += Speed.vy;
-            if (Control.Top <= 0)
+            Y += Speed.vy;
+            if (Y <= GlobalVars.RoomTopMargin)
             {
-                while (Control.Top <= 0) Control.Top++;
+                while (Y <= GlobalVars.RoomTopMargin) Y++;
                 Speed.vy *= -1;
             }
 
-            if ((Control.Left + Control.Width) >= GlobalVars.RoomWidth)
+            if ((X + W) >= GlobalVars.RoomWidth)
             {
-                while ((Control.Left + Control.Width) >= GlobalVars.RoomWidth) Control.Left--;
+                while ((X + W) >= GlobalVars.RoomWidth) X--;
                 //bounce
                 Speed.vx *= -1;
             }
-            if ((Control.Top + Control.Height) >= GlobalVars.RoomHeight)
+            if ((Y + H) >= GlobalVars.RoomHeight)
             {
-                while ((Control.Top + Control.Height) >= GlobalVars.RoomHeight) Control.Top--;
+                while ((Y + H) >= GlobalVars.RoomHeight) Y--;
                 //bounce
                 Speed.vy *= -1;
             }
         }
 
-        private void ResolveCollision(Control control)
+        private void ResolveCollisionWithPlayer(Player player)
         {
             if (Speed.vx != 0) //if we aren't moving in this direction, there's nothing to resolve
             {
-                while (CollisionX(control.Left))
+                while (CollisionX(player.X))
                 {
-                    Control.Left += Speed.vx;
+                    X += Speed.vx;
                 }
             }
             if (Speed.vy != 0)
             {
-                while (CollisionY(control.Top))
+                while (CollisionY(player.Y))
                 {
-                    Control.Top += Speed.vy;
+                    Y += Speed.vy;
                 }
             }
+        }
+
+        private void ResolveCollisionWithObstacle(Obstacle obstacle)
+        {
+            if (Speed.vx != 0) //if we aren't moving in this direction, there's nothing to resolve
+            {
+                while (CollisionX(obstacle.X))
+                {
+                    X += Speed.vx;
+                }
+            }
+            if (Speed.vy != 0)
+            {
+                while (CollisionY(obstacle.Y))
+                {
+                    Y += Speed.vy;
+                }
+            }
+        }
+
+        //this will be less messy when all the x y stuff is in the base class
+        private void ResolveCollision(InteractiveGameObject obj)
+        {
+            var player = obj as Player;
+            if (player != null)
+            { 
+                ResolveCollisionWithPlayer(player);
+                return;
+            }
+            var obstacle = obj as Obstacle;
+            if (obstacle != null) ResolveCollisionWithObstacle(obstacle);
         }
 
         private void Rebound(Player player)
@@ -122,7 +131,8 @@ namespace LeafCrunch.GameObjects.Items.Obstacles
             Speed.vy = player.Speed.vy > 0 ? player.Speed.vy : Speed.vy * -1;
             Speed.vx = player.Speed.vx > 0 ? player.Speed.vx : Speed.vx * -1;
 
-            ResolveCollision(player.Control);
+            //could probably simplify
+            ResolveCollision(player);
         }
 
         private void Rebound (Obstacle obstacle)
@@ -130,7 +140,7 @@ namespace LeafCrunch.GameObjects.Items.Obstacles
             Speed.vy *= -1;
             Speed.vx *= -1;
 
-            ResolveCollision(obstacle.Control);
+            ResolveCollision(obstacle);
         }
     }
 }

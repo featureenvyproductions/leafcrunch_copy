@@ -1,0 +1,27 @@
+{
+  "Name": "level2",
+  "Width": 256,
+  "Height": 750,
+  "TileSizeH": 64,
+  "TileSizeW": 64,
+  "InitialPlayerX": 10,
+  "InitialPlayerY": 10,
+  "BackgroundImagePath": "Images/Background/level2/level2-nightmarelevel.png",
+  "StatsBackgroundImage": "Images/Background/level2/point displaysm.png",
+  "WinConditions": [
+    {
+      "PropertyName": "TotalPoints",
+      "ValueType": "Integer",
+      "Value": 100,
+      "Comparison": ">="
+    }
+  ],
+  "LoseConditions": [
+    {
+      "PropertyName": "TotalPoints",
+      "ValueType": "Integer",
+      "Value": -15,
+      "Comparison": "<="
+    }
+  ]
+}
