@@ -7,7 +7,7 @@
       "X": 400,
       "Y": 250,
       "PointIncrement": 1,
-      "SoundFile": "Sounds/PointItems/crunch.wav"
+      "SoundFile": "\\Sounds\\PointItems\\crunch.wav"
     },
     {
       "Type": "Leaf",
@@ -16,7 +16,7 @@
       "X": 400,
       "Y": 400,
       "PointIncrement": 5,
-      "SoundFile": "Sounds/PointItems/crunch.wav"
+      "SoundFile": "\\Sounds\\PointItems\\crunch.wav"
     },
     {
       "Type": "Leaf",
@@ -25,7 +25,7 @@
       "X": 500,
       "Y": 400,
       "PointIncrement": 10,
-      "SoundFile": "Sounds/PointItems/crunch.wav"
+      "SoundFile": "\\Sounds\\PointItems\\crunch.wav"
     },
     {
       "Type": "Leaf",
@@ -34,7 +34,7 @@
       "X": 200,
       "Y": 300,
       "PointIncrement": 25,
-      "SoundFile": "Sounds/PointItems/crunch.wav"
+      "SoundFile": "\\Sounds\\PointItems\\crunch.wav"
     },
     {
       "Type": "Leaf",
@@ -43,7 +43,7 @@
       "X": 100,
       "Y": 300,
       "PointIncrement": 25,
-      "SoundFile": "Sounds/PointItems/crunch.wav"
+      "SoundFile": "\\Sounds\\PointItems\\crunch.wav"
     },
     {
       "Type": "Leaf",
@@ -52,7 +52,7 @@
       "X": 300,
       "Y": 320,
       "PointIncrement": 23,
-      "SoundFile": "Sounds/PointItems/crunch.wav"
+      "SoundFile": "\\Sounds\\PointItems\\crunch.wav"
     },
     {
       "Type": "Leaf",
@@ -61,7 +61,7 @@
       "X": 170,
       "Y": 390,
       "PointIncrement": 20,
-      "SoundFile": "Sounds/PointItems/crunch.wav"
+      "SoundFile": "\\Sounds\\PointItems\\crunch.wav"
     },
     {
       "Type": "Leaf",
@@ -70,7 +70,7 @@
       "X": 100,
       "Y": 80,
       "PointIncrement": 12,
-      "SoundFile": "Sounds/PointItems/crunch.wav"
+      "SoundFile": "\\Sounds\\PointItems\\crunch.wav"
     },
     {
       "Type": "PineCone",

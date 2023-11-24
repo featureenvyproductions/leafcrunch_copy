@@ -10,6 +10,7 @@
   "StatsBackgroundImage": "Images/Background/level2/point displaysm.png",
   "RainbowBarOverlay": "Images/Background/level1/rainbowbaroverlay.png",
   "RainbowBar": "Images/Background/level1/rainbowbar.png",
+  "MusicPath": "STOPPED",
   "WinConditions": [
     {
       "PropertyName": "TotalPoints",
