@@ -51,7 +51,10 @@ namespace LeafCrunch.Menus
                         Left = 0,
                         Width = img.Width,
                         Height = img.Height,
-                        Image = img
+                        Image = img,
+                        //temporary so it looks intentional till I rewrite the menu draw code
+                        BackColor = System.Drawing.Color.DarkMagenta,
+                        BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
                     };
                     var Text = new Label()
                     {

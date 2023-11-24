@@ -22,13 +22,19 @@ namespace LeafCrunch
     {
         private RoomController RoomController { get; set; }
 
+        //note: when we refactor the interrupt controller
+        //we'll also need to fix the draw code.
         private InterruptController InterruptController { get; set; }
 
         private int roomIndex = -1;
         private List<string> OrderedRooms = new List<string>()
         {
-           // "intro",
-            //"instructions",
+            /*"intro",
+            "intro2",
+            "intro3",
+            "intro4",
+            "intro5",*/
+            "instructions",
             "level1",
             "transition1",
             "testlevel2",

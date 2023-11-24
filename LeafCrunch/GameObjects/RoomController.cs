@@ -15,7 +15,12 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 
+//when we fill up the rainbow bar, fix the text to show points as percentages of 100 points rather than
+//explicitly showing points
+//also for some exceptionally hard levels, you win if you get any points at all.
+
 //ohhhhh i need to account for things drawing over the protgonist like tree trunks
+//like in a better way than i did
 
 //also i need to change the size of the young sprite
 

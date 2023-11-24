@@ -1,7 +1,7 @@
 {
   "Name": "intro",
-  "Width": 400,
-  "Height": 400,
+  "Width": 512,
+  "Height": 512,
   "TileSizeH": 64,
   "TileSizeW": 64,
   "InitialPlayerX": -64,

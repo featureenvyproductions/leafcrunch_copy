@@ -1,17 +1,17 @@
 {
-  "Name": "transition1",
+  "Name": "intro",
   "Width": 512,
   "Height": 512,
   "TileSizeH": 64,
   "TileSizeW": 64,
   "InitialPlayerX": -64,
   "InitialPlayerY": -64,
-  "BackgroundImagePath": "Images/Background/transitionscreen.png",
+  "BackgroundImagePath": "Images/Background/intro5.png",
   "WinConditions": [
     {
       "PropertyName": "TotalTicks",
       "ValueType": "Integer",
-      "Value": 100,
+      "Value": 50,
       "Comparison": ">="
     }
   ],

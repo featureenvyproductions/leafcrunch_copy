@@ -5,6 +5,9 @@ using LeafCrunch.Utilities.Entities;
 namespace LeafCrunch.GameObjects.Items.Obstacles
 {
     //moves but can also inflict damage - so like reverse of items
+
+    //i want to make a version of this that can only collide with the form edges and the player so i can like
+    //trap the player in a maze with hazards
     public class HazardousMovingObstacle : MovingObstacle, IHazard
     {
         public HazardousMovingObstacle(ObstacleData obstacleData) : base(obstacleData)
