@@ -57,6 +57,7 @@ namespace LeafCrunch.Utilities.Entities
         public string StatsBackgroundImage { get; set; }
         public string RainbowBarOverlay { get; set; }
         public string RainbowBar { get; set; }
+        public string MusicPath { get; set; }
     }
 
     public class ObstacleData
@@ -98,6 +99,7 @@ namespace LeafCrunch.Utilities.Entities
         public int PointMultiplier { get; set; }
 
         public DisplayControlData DisplayControl { get; set; }
+        public string SoundFile { get; set; }
     }
 
     public class ItemDataCollection

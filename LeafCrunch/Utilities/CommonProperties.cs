@@ -1,7 +1,10 @@
-﻿namespace LeafCrunch.Utilities
+﻿using LeafCrunch.Utilities.Sound;
+
+namespace LeafCrunch.Utilities
 {
     public class GlobalVars
     {
+        public static SoundController BackgroundMusicController { get; set; }
         public static int RoomWidth { get; set; }
         public static int RoomHeight { get; set; }
         public static int RoomTopMargin { get; set; } //leave some room for the stats or whatever

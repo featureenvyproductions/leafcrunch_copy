@@ -14,6 +14,7 @@ using static LeafCrunch.Utilities.GlobalVars;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Windows.Media;
 
 //when we fill up the rainbow bar, fix the text to show points as percentages of 100 points rather than
 //explicitly showing points
@@ -125,6 +126,17 @@ namespace LeafCrunch.GameObjects
         private List<MovingObstacle> _movingObstacles = new List<MovingObstacle>();
         #endregion
 
+        //no idea if this will work with the other sounds
+        private System.Media.SoundPlayer _soundPlayer = new System.Media.SoundPlayer();
+
+        private void PlayBGMusic()
+        {
+            if (_soundPlayer != null && _soundPlayer.SoundLocation != null)
+            {
+                _soundPlayer.Play();
+            }
+        }
+
         #region Player Properties
         //i guess we should know about the player
         protected Player Player { get; set; }
@@ -193,6 +205,29 @@ namespace LeafCrunch.GameObjects
             var jsonString = File.ReadAllText(UtilityMethods.GetConfigPath($"Rooms/{_roomName}/room.json"));
             var jsonLoader = new JsonLoader();
             var roomData = jsonLoader.LoadFromJson<RoomData>(jsonString);
+
+            //play music if specified, otherwise just let whatever is playing continue
+            if (!string.IsNullOrEmpty(roomData.MusicPath))
+            {
+                if (GlobalVars.BackgroundMusicController == null)
+                    GlobalVars.BackgroundMusicController = new Utilities.Sound.SoundController();
+
+                if (roomData.MusicPath == "STOPPED")
+                {
+                    //special cases...if it just says this we stop the music
+                    GlobalVars.BackgroundMusicController.Stop();
+                }
+                else if (roomData.MusicPath == "RESUME")
+                {
+                    //just continue whatever music is there
+                    GlobalVars.BackgroundMusicController.Play(true);
+                }
+                else
+                {
+                    GlobalVars.BackgroundMusicController.SoundURI = new System.Uri(Application.StartupPath + roomData.MusicPath);
+                    GlobalVars.BackgroundMusicController.Play(true);
+                }
+            }
 
             //really eventually we'll have a specific stats control and get the margin based on that
             //but we're just doing this for now
@@ -367,6 +402,11 @@ namespace LeafCrunch.GameObjects
             {
                 item.IsSuspended = true;
             }
+
+            if (GlobalVars.BackgroundMusicController != null)
+            {
+                GlobalVars.BackgroundMusicController.Pause();
+            }
         }
 
         public void Resume()
@@ -377,6 +417,11 @@ namespace LeafCrunch.GameObjects
             foreach (var item in _items)
             {
                 item.IsSuspended = false;
+            }
+
+            if (GlobalVars.BackgroundMusicController != null)
+            {
+                GlobalVars.BackgroundMusicController.Resume();
             }
         }
         #endregion
@@ -497,7 +542,7 @@ namespace LeafCrunch.GameObjects
                 }
                 foreach (var v in Player.PointVisualizers)
                 {
-                    g.DrawString(v.Text, new Font("Tahoma", 8), v.Gain ? Brushes.Green : Brushes.Red, new Rectangle(v.X, v.Y, v.W, v.H));
+                    g.DrawString(v.Text, new Font("Tahoma", 8), v.Gain ? System.Drawing.Brushes.Green : System.Drawing.Brushes.Red, new Rectangle(v.X, v.Y, v.W, v.H));
                 }
 
                 //what I'm gathering here is we need to make this part of the overall class for this
@@ -509,7 +554,7 @@ namespace LeafCrunch.GameObjects
                         if (StatsImage != null)
                             g.DrawImage(new Bitmap(StatsImage), pinecone.CountdownDisplayX - pinecone.W - 10, /*i want it lined up with the other thing*/StatsDisplay.Y, StatsDisplay.W, 45);
                         g.DrawImage(new Bitmap(pinecone.CurrentImage), pinecone.CountdownDisplayX - pinecone.W, StatsDisplay.Y + 10/*pinecone.CountdownDisplayY*/);
-                        g.DrawString(pinecone.CountdownDisplayText, new Font("Tahoma", 8), Brushes.Black, new Rectangle(pinecone.CountdownDisplayX, StatsDisplay.Y + 10/*pinecone.CountdownDisplayY*/, pinecone.CountdownDisplayWidth, pinecone.CountdownDisplayHeight));
+                        g.DrawString(pinecone.CountdownDisplayText, new Font("Tahoma", 8), System.Drawing.Brushes.Black, new Rectangle(pinecone.CountdownDisplayX, StatsDisplay.Y + 10/*pinecone.CountdownDisplayY*/, pinecone.CountdownDisplayWidth, pinecone.CountdownDisplayHeight));
                     }
                 }
             }
