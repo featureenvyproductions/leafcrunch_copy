@@ -6,7 +6,8 @@
       "SingleImage": "Images/PointItems/glowingmaple.png",
       "X": 215,
       "Y": 715,
-      "PointIncrement": 1000
+      "PointIncrement": 1000,
+      "SoundFile": "\\Sounds\\PointItems\\crunch.wav"
     }
   ]
 }
