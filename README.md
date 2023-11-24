@@ -1,0 +1,1 @@
+this is just a thing i made when bored and depressed one week because i was walking around and there were crunchy leaves on the ground and i stepped on them and it was fun. in this game you run around, you crunch leaves, you awaken to the horrors surrounding you, normal things. it's not anywhere close to done but it works
